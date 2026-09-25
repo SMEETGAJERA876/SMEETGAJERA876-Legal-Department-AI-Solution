@@ -1,0 +1,2567 @@
+{
+  "version": "1.0.0",
+  "description": "ClauseLens document taxonomy. File format (pdf, docx, jpg...) is NOT part of a document type; it is recorded separately on the document.",
+  "file_formats": {
+    "mvp": [
+      "pdf",
+      "docx",
+      "jpg",
+      "jpeg",
+      "png"
+    ],
+    "secondary": [
+      "doc",
+      "txt",
+      "tiff",
+      "xlsx",
+      "xls",
+      "csv",
+      "pptx",
+      "html",
+      "htm",
+      "xml",
+      "eml",
+      "msg"
+    ],
+    "implemented": [
+      "pdf"
+    ]
+  },
+  "categories": [
+    {
+      "id": "government",
+      "name": "Government",
+      "description": "Documents issued by a government, ministry, department or public authority.",
+      "typical_structure": [
+        "Government / Department",
+        "Reference number",
+        "Date",
+        "Subject",
+        "Authority",
+        "Background",
+        "Purpose",
+        "Orders / Provisions",
+        "Effective date",
+        "Conditions",
+        "Responsibilities",
+        "Signature / Authority",
+        "Annexures"
+      ],
+      "expected_fields": [
+        "authority",
+        "reference_number",
+        "date",
+        "subject",
+        "effective_date",
+        "signatory"
+      ]
+    },
+    {
+      "id": "legal",
+      "name": "Legal / Contracts",
+      "description": "Agreements and contracts between parties, and terms that bind users of a service.",
+      "typical_structure": [
+        "Title",
+        "Parties",
+        "Recitals / Background",
+        "Definitions",
+        "Scope",
+        "Obligations",
+        "Payment",
+        "Term",
+        "Renewal",
+        "Termination",
+        "Confidentiality",
+        "Intellectual property",
+        "Liability",
+        "Indemnification",
+        "Warranty",
+        "Dispute resolution",
+        "Governing law",
+        "Jurisdiction",
+        "Notice",
+        "Amendments",
+        "Assignment",
+        "Signatures",
+        "Schedules",
+        "Annexures"
+      ],
+      "expected_fields": [
+        "parties",
+        "effective_date",
+        "term",
+        "payment",
+        "termination",
+        "notice_period",
+        "governing_law"
+      ]
+    },
+    {
+      "id": "employment",
+      "name": "Employment",
+      "description": "Documents about a job: offers, contracts, HR policies, warnings and exit letters.",
+      "typical_structure": [
+        "Title / Letterhead",
+        "Employer and employee",
+        "Position",
+        "Compensation",
+        "Probation",
+        "Working hours",
+        "Leave",
+        "Benefits",
+        "Confidentiality",
+        "Intellectual property",
+        "Termination",
+        "Notice period",
+        "Restrictive covenants",
+        "Dispute resolution",
+        "Signatures"
+      ],
+      "expected_fields": [
+        "employer",
+        "employee",
+        "job_title",
+        "joining_date",
+        "salary",
+        "notice_period"
+      ]
+    },
+    {
+      "id": "court",
+      "name": "Court / Judicial",
+      "description": "Documents produced by or filed in courts and tribunals.",
+      "typical_structure": [
+        "Court name",
+        "Case number",
+        "Case type",
+        "Parties",
+        "Bench / Judge",
+        "Date",
+        "Background",
+        "Facts",
+        "Issues",
+        "Arguments",
+        "Evidence",
+        "Law / Precedents",
+        "Court's analysis",
+        "Findings",
+        "Order / Directions",
+        "Signature"
+      ],
+      "expected_fields": [
+        "court_name",
+        "case_number",
+        "parties",
+        "judge",
+        "date",
+        "final_order"
+      ]
+    },
+    {
+      "id": "corporate",
+      "name": "Corporate / Company",
+      "description": "Documents of companies: constitution, resolutions, reports, policies and commercial agreements.",
+      "typical_structure": [
+        "Company name",
+        "Document number / date",
+        "Purpose / Scope",
+        "Definitions",
+        "Provisions / Policy statements",
+        "Responsibilities",
+        "Compliance",
+        "Approval / Signatures"
+      ],
+      "expected_fields": [
+        "company",
+        "effective_date",
+        "scope",
+        "responsibilities",
+        "approver"
+      ]
+    },
+    {
+      "id": "public_notice",
+      "name": "Public Notices",
+      "description": "Notices addressed to the public: recruitment, exams, admissions, auctions, utilities, advisories.",
+      "typical_structure": [
+        "Authority",
+        "Notice number",
+        "Date",
+        "Subject",
+        "Purpose",
+        "Eligibility",
+        "Important dates",
+        "Deadline",
+        "Required documents",
+        "Fee",
+        "Procedure",
+        "Contact information",
+        "Authority / Signatory"
+      ],
+      "expected_fields": [
+        "authority",
+        "notice_number",
+        "date",
+        "deadline",
+        "eligibility",
+        "fee",
+        "contact"
+      ]
+    },
+    {
+      "id": "financial",
+      "name": "Financial",
+      "description": "Loans, insurance, invoices, tax and bank documents.",
+      "typical_structure": [
+        "Parties",
+        "Amount",
+        "Currency",
+        "Interest / Premium",
+        "Payment schedule",
+        "Due dates",
+        "Late fee / Penalty",
+        "Default",
+        "Security / Collateral",
+        "Signatures"
+      ],
+      "expected_fields": [
+        "amount",
+        "currency",
+        "interest_rate",
+        "due_date",
+        "late_fee",
+        "penalty"
+      ]
+    },
+    {
+      "id": "property",
+      "name": "Property",
+      "description": "Documents about land and buildings: sale, lease, registration, possession, tax.",
+      "typical_structure": [
+        "Parties",
+        "Property description",
+        "Address",
+        "Area",
+        "Consideration / Rent",
+        "Deposit",
+        "Term",
+        "Possession",
+        "Registration",
+        "Restrictions",
+        "Termination",
+        "Signatures / Witnesses"
+      ],
+      "expected_fields": [
+        "property",
+        "owner",
+        "address",
+        "area",
+        "rent",
+        "deposit",
+        "sale_price"
+      ]
+    },
+    {
+      "id": "education",
+      "name": "Education",
+      "description": "Documents of schools and universities: admissions, rules, scholarships, fees, hostels.",
+      "typical_structure": [
+        "Institution",
+        "Reference / Date",
+        "Scope",
+        "Eligibility",
+        "Rules / Regulations",
+        "Fees",
+        "Deadlines",
+        "Discipline",
+        "Contact"
+      ],
+      "expected_fields": [
+        "institution",
+        "eligibility",
+        "fee",
+        "deadline",
+        "procedure"
+      ]
+    },
+    {
+      "id": "policy",
+      "name": "Policy / Regulatory",
+      "description": "Policies, rules, regulations, standards and guidelines that set requirements.",
+      "typical_structure": [
+        "Title",
+        "Objective",
+        "Scope",
+        "Definitions",
+        "Eligibility",
+        "Procedure",
+        "Responsibilities",
+        "Implementation",
+        "Timeline",
+        "Exceptions",
+        "Compliance",
+        "Monitoring"
+      ],
+      "expected_fields": [
+        "objective",
+        "scope",
+        "effective_date",
+        "responsibilities",
+        "compliance"
+      ]
+    },
+    {
+      "id": "other",
+      "name": "Other Official Documents",
+      "description": "Official documents that do not fit another category, or cannot be classified with confidence.",
+      "typical_structure": [
+        "Title",
+        "Issuer",
+        "Date",
+        "Body",
+        "Signature"
+      ],
+      "expected_fields": [
+        "issuer",
+        "date"
+      ]
+    }
+  ],
+  "document_types": [
+    {
+      "id": "government.notification",
+      "name": "Notification",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "notification",
+        "it is hereby notified"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.order",
+      "name": "Order",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "government order",
+        "g.o.",
+        "it is hereby ordered"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.circular",
+      "name": "Circular",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "circular"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.office_memorandum",
+      "name": "Office Memorandum",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "office memorandum",
+        "o.m."
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.departmental_circular",
+      "name": "Departmental Circular",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "departmental circular"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.gazette_notification",
+      "name": "Gazette Notification",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "gazette",
+        "extraordinary"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.official_notice",
+      "name": "Official Notice",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "official notice"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.administrative_order",
+      "name": "Administrative Order",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "administrative order"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.executive_order",
+      "name": "Executive Order",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "executive order"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.resolution",
+      "name": "Resolution",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "government resolution",
+        "resolved that"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.bye_laws",
+      "name": "Bye-laws",
+      "category": "government",
+      "secondary_categories": [
+        "policy"
+      ],
+      "title_keywords": [
+        "bye-laws",
+        "byelaws",
+        "by-laws"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.recruitment_notification",
+      "name": "Recruitment Notification",
+      "category": "government",
+      "secondary_categories": [
+        "public_notice",
+        "employment"
+      ],
+      "title_keywords": [
+        "recruitment",
+        "vacancies",
+        "applications are invited"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.tender_notice",
+      "name": "Tender Notice",
+      "category": "government",
+      "secondary_categories": [
+        "public_notice",
+        "financial"
+      ],
+      "title_keywords": [
+        "tender",
+        "bids are invited",
+        "e-tender"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.procurement_document",
+      "name": "Procurement Document",
+      "category": "government",
+      "secondary_categories": [
+        "financial"
+      ],
+      "title_keywords": [
+        "procurement",
+        "request for proposal",
+        "rfp",
+        "bid document"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.corrigendum",
+      "name": "Corrigendum",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "corrigendum",
+        "erratum"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.amendment_notification",
+      "name": "Amendment Notification",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "amendment",
+        "amended as follows"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.press_release",
+      "name": "Press Release",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "press release",
+        "press note"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.public_consultation",
+      "name": "Public Consultation",
+      "category": "government",
+      "secondary_categories": [
+        "policy",
+        "public_notice"
+      ],
+      "title_keywords": [
+        "public consultation",
+        "comments are invited",
+        "consultation paper"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.rti_document",
+      "name": "RTI Document",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "right to information",
+        "rti",
+        "public information officer"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.government_form",
+      "name": "Government Form",
+      "category": "government",
+      "secondary_categories": [],
+      "title_keywords": [
+        "form no",
+        "application form"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "government.application_guidelines",
+      "name": "Application Guidelines",
+      "category": "government",
+      "secondary_categories": [
+        "public_notice"
+      ],
+      "title_keywords": [
+        "guidelines for applicants",
+        "how to apply",
+        "application guidelines"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "government.advisory",
+      "name": "Advisory",
+      "category": "government",
+      "secondary_categories": [
+        "public_notice"
+      ],
+      "title_keywords": [
+        "advisory"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.service_agreement",
+      "name": "Service Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "service agreement",
+        "services agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.consulting_agreement",
+      "name": "Consulting Agreement",
+      "category": "legal",
+      "secondary_categories": [],
+      "title_keywords": [
+        "consulting agreement",
+        "consultancy agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.vendor_agreement",
+      "name": "Vendor Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "vendor agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.partnership_agreement",
+      "name": "Partnership Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "partnership agreement",
+        "partnership deed"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.franchise_agreement",
+      "name": "Franchise Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "franchise agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.sale_agreement",
+      "name": "Sale Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "property"
+      ],
+      "title_keywords": [
+        "agreement for sale",
+        "sale agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.purchase_agreement",
+      "name": "Purchase Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "purchase agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.distribution_agreement",
+      "name": "Distribution Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "distribution agreement",
+        "distributor"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.nda",
+      "name": "NDA",
+      "category": "legal",
+      "secondary_categories": [
+        "employment",
+        "corporate"
+      ],
+      "title_keywords": [
+        "non-disclosure agreement",
+        "confidentiality agreement",
+        "nda"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.non_compete_agreement",
+      "name": "Non-Compete Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "employment"
+      ],
+      "title_keywords": [
+        "non-compete",
+        "non-competition"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.non_solicitation_agreement",
+      "name": "Non-Solicitation Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "employment"
+      ],
+      "title_keywords": [
+        "non-solicitation"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.licensing_agreement",
+      "name": "Licensing Agreement",
+      "category": "legal",
+      "secondary_categories": [],
+      "title_keywords": [
+        "licence agreement",
+        "license agreement",
+        "licensing agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.software_license_agreement",
+      "name": "Software License Agreement",
+      "category": "legal",
+      "secondary_categories": [],
+      "title_keywords": [
+        "software licence",
+        "software license",
+        "end user licence",
+        "eula"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.saas_agreement",
+      "name": "SaaS Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "saas",
+        "software as a service",
+        "subscription agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.master_service_agreement",
+      "name": "Master Service Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "master service agreement",
+        "master services agreement",
+        "msa"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.statement_of_work",
+      "name": "Statement of Work",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "statement of work",
+        "sow"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.memorandum_of_understanding",
+      "name": "Memorandum of Understanding",
+      "category": "legal",
+      "secondary_categories": [
+        "government",
+        "corporate"
+      ],
+      "title_keywords": [
+        "memorandum of understanding",
+        "mou"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.memorandum_of_agreement",
+      "name": "Memorandum of Agreement",
+      "category": "legal",
+      "secondary_categories": [],
+      "title_keywords": [
+        "memorandum of agreement",
+        "moa"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.settlement_agreement",
+      "name": "Settlement Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "court"
+      ],
+      "title_keywords": [
+        "settlement agreement",
+        "full and final settlement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.indemnity_agreement",
+      "name": "Indemnity Agreement",
+      "category": "legal",
+      "secondary_categories": [],
+      "title_keywords": [
+        "indemnity agreement",
+        "indemnity bond",
+        "deed of indemnity"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.joint_venture_agreement",
+      "name": "Joint Venture Agreement",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "joint venture"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.terms_of_service",
+      "name": "Terms of Service",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "terms of service",
+        "terms of use"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.terms_and_conditions",
+      "name": "Terms and Conditions",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "terms and conditions",
+        "t&c"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.privacy_policy",
+      "name": "Privacy Policy",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "privacy policy",
+        "privacy notice"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.refund_policy",
+      "name": "Refund Policy",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "refund policy"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "legal.cancellation_policy",
+      "name": "Cancellation Policy",
+      "category": "legal",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "cancellation policy"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.offer_letter",
+      "name": "Offer Letter",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "offer letter",
+        "pleased to offer"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.appointment_letter",
+      "name": "Appointment Letter",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "appointment letter",
+        "letter of appointment",
+        "pleased to appoint"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.employment_agreement",
+      "name": "Employment Agreement",
+      "category": "employment",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "employment agreement",
+        "contract of employment",
+        "employment contract"
+      ],
+      "commonly_scanned": false,
+      "typical_structure": [
+        "Title",
+        "Parties",
+        "Appointment / Position",
+        "Commencement",
+        "Probation",
+        "Duties",
+        "Compensation",
+        "Working hours and leave",
+        "Confidentiality",
+        "Intellectual property",
+        "Termination",
+        "Notice period",
+        "Non-compete / Non-solicitation",
+        "Governing law",
+        "Signatures"
+      ]
+    },
+    {
+      "id": "employment.internship_agreement",
+      "name": "Internship Agreement",
+      "category": "employment",
+      "secondary_categories": [
+        "education"
+      ],
+      "title_keywords": [
+        "internship agreement",
+        "internship offer",
+        "intern"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.joining_letter",
+      "name": "Joining Letter",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "joining letter",
+        "joining report"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.promotion_letter",
+      "name": "Promotion Letter",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "promotion letter",
+        "pleased to promote"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.salary_revision_letter",
+      "name": "Salary Revision Letter",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "salary revision",
+        "revised compensation",
+        "increment letter"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.employee_handbook",
+      "name": "Employee Handbook",
+      "category": "employment",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "employee handbook",
+        "code of conduct"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.hr_policy",
+      "name": "HR Policy",
+      "category": "employment",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "hr policy",
+        "human resources policy"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.leave_policy",
+      "name": "Leave Policy",
+      "category": "employment",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "leave policy"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.work_from_home_policy",
+      "name": "Work From Home Policy",
+      "category": "employment",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "work from home",
+        "wfh policy",
+        "remote work policy"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.remote_work_agreement",
+      "name": "Remote Work Agreement",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "remote work agreement",
+        "telework agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.termination_letter",
+      "name": "Termination Letter",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "termination letter",
+        "termination of employment",
+        "services are terminated"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.resignation_acceptance",
+      "name": "Resignation Acceptance",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "resignation acceptance",
+        "acceptance of resignation"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.experience_letter",
+      "name": "Experience Letter",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "experience letter",
+        "experience certificate",
+        "to whom it may concern"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.relieving_letter",
+      "name": "Relieving Letter",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "relieving letter",
+        "relieved from"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.warning_letter",
+      "name": "Warning Letter",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "warning letter",
+        "final warning"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.show_cause_notice",
+      "name": "Show Cause Notice",
+      "category": "employment",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "show cause notice",
+        "show cause"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.performance_improvement_plan",
+      "name": "Performance Improvement Plan",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "performance improvement plan",
+        "pip"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.disciplinary_notice",
+      "name": "Disciplinary Notice",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "disciplinary notice",
+        "disciplinary action",
+        "charge sheet"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "employment.employee_consent_form",
+      "name": "Employee Consent Form",
+      "category": "employment",
+      "secondary_categories": [],
+      "title_keywords": [
+        "consent form",
+        "i hereby consent"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "court.judgment",
+      "name": "Judgment",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "judgment",
+        "judgement",
+        "coram",
+        "delivered by"
+      ],
+      "commonly_scanned": true,
+      "typical_structure": [
+        "Court name",
+        "Case number",
+        "Parties",
+        "Coram / Bench",
+        "Date",
+        "Facts",
+        "Arguments",
+        "Issues",
+        "Evidence",
+        "Applicable law",
+        "Court's reasoning",
+        "Findings",
+        "Final order"
+      ]
+    },
+    {
+      "id": "court.order",
+      "name": "Order",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "court order",
+        "it is ordered",
+        "order sheet"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.interim_order",
+      "name": "Interim Order",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "interim order",
+        "ad-interim",
+        "interim relief"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.final_order",
+      "name": "Final Order",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "final order"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.decree",
+      "name": "Decree",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "decree"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.petition",
+      "name": "Petition",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "petition",
+        "petitioner",
+        "writ petition"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.plaint",
+      "name": "Plaint",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "plaint",
+        "plaintiff"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.written_statement",
+      "name": "Written Statement",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "written statement"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.affidavit",
+      "name": "Affidavit",
+      "category": "court",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "affidavit",
+        "deponent",
+        "solemnly affirm"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.application",
+      "name": "Application",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "interlocutory application",
+        "application under section"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.reply",
+      "name": "Reply",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "reply on behalf of",
+        "reply affidavit"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.rejoinder",
+      "name": "Rejoinder",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "rejoinder"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.counter_affidavit",
+      "name": "Counter-Affidavit",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "counter affidavit",
+        "counter-affidavit"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.court_notice",
+      "name": "Court Notice",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "court notice",
+        "notice is hereby given that the case"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.summons",
+      "name": "Summons",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "summons",
+        "you are hereby summoned"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.warrant",
+      "name": "Warrant",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "warrant of arrest",
+        "warrant"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.bail_order",
+      "name": "Bail Order",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "bail",
+        "released on bail"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.appeal",
+      "name": "Appeal",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "memorandum of appeal",
+        "appellant"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.revision_petition",
+      "name": "Revision Petition",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "revision petition",
+        "criminal revision",
+        "civil revision"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.review_petition",
+      "name": "Review Petition",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "review petition"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.evidence_document",
+      "name": "Evidence Document",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "exhibit",
+        "evidence"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "court.written_submissions",
+      "name": "Written Submissions",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "written submissions",
+        "written arguments"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "court.legal_memorandum",
+      "name": "Legal Memorandum",
+      "category": "court",
+      "secondary_categories": [],
+      "title_keywords": [
+        "legal memorandum",
+        "memo of parties"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.memorandum_of_association",
+      "name": "Memorandum of Association",
+      "category": "corporate",
+      "secondary_categories": [],
+      "title_keywords": [
+        "memorandum of association"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.articles_of_association",
+      "name": "Articles of Association",
+      "category": "corporate",
+      "secondary_categories": [],
+      "title_keywords": [
+        "articles of association"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.board_resolution",
+      "name": "Board Resolution",
+      "category": "corporate",
+      "secondary_categories": [],
+      "title_keywords": [
+        "board resolution",
+        "resolved that the board"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.shareholder_resolution",
+      "name": "Shareholder Resolution",
+      "category": "corporate",
+      "secondary_categories": [],
+      "title_keywords": [
+        "shareholders' resolution",
+        "special resolution",
+        "ordinary resolution"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.shareholder_agreement",
+      "name": "Shareholder Agreement",
+      "category": "corporate",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "shareholders agreement",
+        "shareholder agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.annual_report",
+      "name": "Annual Report",
+      "category": "corporate",
+      "secondary_categories": [
+        "financial"
+      ],
+      "title_keywords": [
+        "annual report",
+        "directors' report"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.company_policy",
+      "name": "Company Policy",
+      "category": "corporate",
+      "secondary_categories": [],
+      "title_keywords": [
+        "company policy",
+        "policy statement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.internal_circular",
+      "name": "Internal Circular",
+      "category": "corporate",
+      "secondary_categories": [],
+      "title_keywords": [
+        "internal circular",
+        "internal memo"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.compliance_notice",
+      "name": "Compliance Notice",
+      "category": "corporate",
+      "secondary_categories": [],
+      "title_keywords": [
+        "compliance notice",
+        "non-compliance"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.customer_agreement",
+      "name": "Customer Agreement",
+      "category": "corporate",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "customer agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.supplier_agreement",
+      "name": "Supplier Agreement",
+      "category": "corporate",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "supplier agreement",
+        "supply agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.cookie_policy",
+      "name": "Cookie Policy",
+      "category": "corporate",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "cookie policy",
+        "cookies"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.acceptable_use_policy",
+      "name": "Acceptable Use Policy",
+      "category": "corporate",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "acceptable use"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.data_protection_policy",
+      "name": "Data Protection Policy",
+      "category": "corporate",
+      "secondary_categories": [
+        "policy"
+      ],
+      "title_keywords": [
+        "data protection",
+        "personal data"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.information_security_policy",
+      "name": "Information Security Policy",
+      "category": "corporate",
+      "secondary_categories": [
+        "policy"
+      ],
+      "title_keywords": [
+        "information security",
+        "infosec"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.procurement_policy",
+      "name": "Procurement Policy",
+      "category": "corporate",
+      "secondary_categories": [],
+      "title_keywords": [
+        "procurement policy",
+        "purchase policy"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "corporate.compliance_policy",
+      "name": "Compliance Policy",
+      "category": "corporate",
+      "secondary_categories": [
+        "policy"
+      ],
+      "title_keywords": [
+        "compliance policy",
+        "anti-bribery",
+        "whistleblower"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.public_notice",
+      "name": "Public Notice",
+      "category": "public_notice",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "public notice",
+        "notice is hereby given"
+      ],
+      "commonly_scanned": false,
+      "typical_structure": [
+        "Authority",
+        "Notice number and date",
+        "Subject",
+        "Notice text",
+        "Eligibility",
+        "Important dates",
+        "Documents required",
+        "Fee",
+        "Procedure",
+        "Contact",
+        "Signatory"
+      ]
+    },
+    {
+      "id": "public_notice.examination_notice",
+      "name": "Examination Notice",
+      "category": "public_notice",
+      "secondary_categories": [
+        "education"
+      ],
+      "title_keywords": [
+        "examination notice",
+        "exam schedule",
+        "admit card"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.admission_notice",
+      "name": "Admission Notice",
+      "category": "public_notice",
+      "secondary_categories": [
+        "education"
+      ],
+      "title_keywords": [
+        "admission notice",
+        "admissions open"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.auction_notice",
+      "name": "Auction Notice",
+      "category": "public_notice",
+      "secondary_categories": [
+        "property",
+        "financial"
+      ],
+      "title_keywords": [
+        "auction notice",
+        "e-auction",
+        "sale notice"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.property_notice",
+      "name": "Property Notice",
+      "category": "public_notice",
+      "secondary_categories": [
+        "property"
+      ],
+      "title_keywords": [
+        "property notice"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.land_acquisition_notice",
+      "name": "Land Acquisition Notice",
+      "category": "public_notice",
+      "secondary_categories": [
+        "property",
+        "government"
+      ],
+      "title_keywords": [
+        "land acquisition"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.tax_notice",
+      "name": "Tax Notice",
+      "category": "public_notice",
+      "secondary_categories": [
+        "financial",
+        "government"
+      ],
+      "title_keywords": [
+        "tax notice",
+        "demand notice",
+        "assessment"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.utility_notice",
+      "name": "Utility Notice",
+      "category": "public_notice",
+      "secondary_categories": [],
+      "title_keywords": [
+        "electricity",
+        "water supply",
+        "power shutdown"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.transport_notice",
+      "name": "Transport Notice",
+      "category": "public_notice",
+      "secondary_categories": [],
+      "title_keywords": [
+        "transport notice",
+        "traffic advisory",
+        "route diversion"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.railway_notice",
+      "name": "Railway Notice",
+      "category": "public_notice",
+      "secondary_categories": [],
+      "title_keywords": [
+        "railway",
+        "train services"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.municipal_notice",
+      "name": "Municipal Notice",
+      "category": "public_notice",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "municipal corporation",
+        "municipality",
+        "nagar"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.environmental_notice",
+      "name": "Environmental Notice",
+      "category": "public_notice",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "environmental clearance",
+        "pollution control"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.health_advisory",
+      "name": "Health Advisory",
+      "category": "public_notice",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "health advisory",
+        "public health"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.disaster_management_notice",
+      "name": "Disaster Management Notice",
+      "category": "public_notice",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "disaster management",
+        "evacuation",
+        "cyclone",
+        "flood warning"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.school_notice",
+      "name": "School Notice",
+      "category": "public_notice",
+      "secondary_categories": [
+        "education"
+      ],
+      "title_keywords": [
+        "school notice",
+        "dear parents"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.university_notice",
+      "name": "University Notice",
+      "category": "public_notice",
+      "secondary_categories": [
+        "education"
+      ],
+      "title_keywords": [
+        "university notice",
+        "registrar"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "public_notice.public_announcement",
+      "name": "Public Announcement",
+      "category": "public_notice",
+      "secondary_categories": [],
+      "title_keywords": [
+        "public announcement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.loan_agreement",
+      "name": "Loan Agreement",
+      "category": "financial",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "loan agreement",
+        "borrower",
+        "lender"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.credit_agreement",
+      "name": "Credit Agreement",
+      "category": "financial",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "credit agreement",
+        "credit facility"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.mortgage_agreement",
+      "name": "Mortgage Agreement",
+      "category": "financial",
+      "secondary_categories": [
+        "property",
+        "legal"
+      ],
+      "title_keywords": [
+        "mortgage",
+        "mortgagor"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.insurance_policy",
+      "name": "Insurance Policy",
+      "category": "financial",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "insurance policy",
+        "policy schedule",
+        "sum insured",
+        "insured"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.insurance_claim",
+      "name": "Insurance Claim",
+      "category": "financial",
+      "secondary_categories": [],
+      "title_keywords": [
+        "claim form",
+        "claim settlement"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "financial.invoice",
+      "name": "Invoice",
+      "category": "financial",
+      "secondary_categories": [],
+      "title_keywords": [
+        "invoice",
+        "bill to",
+        "gstin"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.purchase_order",
+      "name": "Purchase Order",
+      "category": "financial",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "purchase order",
+        "p.o. no"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.tax_document",
+      "name": "Tax Document",
+      "category": "financial",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "income tax",
+        "form 16",
+        "assessment year"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.gst_document",
+      "name": "GST Document",
+      "category": "financial",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "gst",
+        "goods and services tax",
+        "gstr"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.financial_statement",
+      "name": "Financial Statement",
+      "category": "financial",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "balance sheet",
+        "profit and loss",
+        "financial statement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.audit_report",
+      "name": "Audit Report",
+      "category": "financial",
+      "secondary_categories": [
+        "corporate"
+      ],
+      "title_keywords": [
+        "audit report",
+        "auditor's report"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.bank_notice",
+      "name": "Bank Notice",
+      "category": "financial",
+      "secondary_categories": [],
+      "title_keywords": [
+        "bank notice",
+        "dear customer"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.payment_notice",
+      "name": "Payment Notice",
+      "category": "financial",
+      "secondary_categories": [],
+      "title_keywords": [
+        "payment notice",
+        "payment due",
+        "reminder"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "financial.recovery_notice",
+      "name": "Recovery Notice",
+      "category": "financial",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "recovery notice",
+        "sarfaesi",
+        "outstanding dues"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "property.sale_deed",
+      "name": "Sale Deed",
+      "category": "property",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "sale deed",
+        "conveyance deed"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "property.lease_agreement",
+      "name": "Lease Agreement",
+      "category": "property",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "lease agreement",
+        "lease deed",
+        "lessor",
+        "lessee"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "property.rental_agreement",
+      "name": "Rental Agreement",
+      "category": "property",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "rental agreement",
+        "rent agreement",
+        "leave and licence",
+        "tenancy agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "property.property_agreement",
+      "name": "Property Agreement",
+      "category": "property",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "property agreement"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "property.property_tax_notice",
+      "name": "Property Tax Notice",
+      "category": "property",
+      "secondary_categories": [
+        "government",
+        "financial"
+      ],
+      "title_keywords": [
+        "property tax"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "property.possession_letter",
+      "name": "Possession Letter",
+      "category": "property",
+      "secondary_categories": [],
+      "title_keywords": [
+        "possession letter",
+        "handing over possession"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "property.allotment_letter",
+      "name": "Allotment Letter",
+      "category": "property",
+      "secondary_categories": [],
+      "title_keywords": [
+        "allotment letter",
+        "allotted"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "property.registration_document",
+      "name": "Registration Document",
+      "category": "property",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "registration",
+        "sub-registrar"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "property.power_of_attorney",
+      "name": "Power of Attorney",
+      "category": "property",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "power of attorney"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "property.development_agreement",
+      "name": "Development Agreement",
+      "category": "property",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "development agreement",
+        "joint development"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "property.gift_deed",
+      "name": "Gift Deed",
+      "category": "property",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "gift deed"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "education.admission_agreement",
+      "name": "Admission Agreement",
+      "category": "education",
+      "secondary_categories": [
+        "legal"
+      ],
+      "title_keywords": [
+        "admission agreement",
+        "undertaking by the student"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "education.student_handbook",
+      "name": "Student Handbook",
+      "category": "education",
+      "secondary_categories": [],
+      "title_keywords": [
+        "student handbook",
+        "prospectus"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "education.university_regulations",
+      "name": "University Regulations",
+      "category": "education",
+      "secondary_categories": [
+        "policy"
+      ],
+      "title_keywords": [
+        "university regulations",
+        "ordinance"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "education.examination_rules",
+      "name": "Examination Rules",
+      "category": "education",
+      "secondary_categories": [],
+      "title_keywords": [
+        "examination rules",
+        "rules for examination",
+        "unfair means"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "education.scholarship_guidelines",
+      "name": "Scholarship Guidelines",
+      "category": "education",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "scholarship"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "education.fee_policy",
+      "name": "Fee Policy",
+      "category": "education",
+      "secondary_categories": [],
+      "title_keywords": [
+        "fee policy",
+        "fee structure",
+        "tuition fee"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "education.hostel_rules",
+      "name": "Hostel Rules",
+      "category": "education",
+      "secondary_categories": [],
+      "title_keywords": [
+        "hostel rules",
+        "hostel"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "education.academic_regulations",
+      "name": "Academic Regulations",
+      "category": "education",
+      "secondary_categories": [],
+      "title_keywords": [
+        "academic regulations",
+        "credit system"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "education.student_disciplinary_notice",
+      "name": "Student Disciplinary Notice",
+      "category": "education",
+      "secondary_categories": [],
+      "title_keywords": [
+        "disciplinary committee",
+        "student conduct"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "policy.government_policy",
+      "name": "Government Policy",
+      "category": "policy",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "national policy",
+        "state policy",
+        "policy document"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "policy.draft_policy",
+      "name": "Draft Policy",
+      "category": "policy",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "draft policy",
+        "draft"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "policy.regulatory_framework",
+      "name": "Regulatory Framework",
+      "category": "policy",
+      "secondary_categories": [],
+      "title_keywords": [
+        "regulatory framework"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "policy.guidelines",
+      "name": "Guidelines",
+      "category": "policy",
+      "secondary_categories": [],
+      "title_keywords": [
+        "guidelines"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "policy.standards",
+      "name": "Standards",
+      "category": "policy",
+      "secondary_categories": [],
+      "title_keywords": [
+        "standard",
+        "specification"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "policy.rules",
+      "name": "Rules",
+      "category": "policy",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "rules,",
+        "these rules may be called"
+      ],
+      "commonly_scanned": false,
+      "typical_structure": [
+        "Title and commencement",
+        "Definitions",
+        "Chapters",
+        "Rules and sub-rules",
+        "Penalties",
+        "Repeal and savings",
+        "Schedules"
+      ]
+    },
+    {
+      "id": "policy.regulations",
+      "name": "Regulations",
+      "category": "policy",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "regulations,",
+        "these regulations may be called"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "policy.act",
+      "name": "Act",
+      "category": "policy",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "act,",
+        "be it enacted"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "policy.framework_document",
+      "name": "Framework Document",
+      "category": "policy",
+      "secondary_categories": [],
+      "title_keywords": [
+        "framework"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "policy.implementation_guidelines",
+      "name": "Implementation Guidelines",
+      "category": "policy",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "implementation guidelines",
+        "standard operating procedure",
+        "sop"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "policy.scheme_guidelines",
+      "name": "Scheme Guidelines",
+      "category": "policy",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "scheme",
+        "yojana",
+        "operational guidelines"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "other.certificate",
+      "name": "Certificate",
+      "category": "other",
+      "secondary_categories": [
+        "government",
+        "education"
+      ],
+      "title_keywords": [
+        "certificate",
+        "this is to certify"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "other.licence_permit",
+      "name": "Licence / Permit",
+      "category": "other",
+      "secondary_categories": [
+        "government"
+      ],
+      "title_keywords": [
+        "licence",
+        "license",
+        "permit"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "other.will",
+      "name": "Will",
+      "category": "other",
+      "secondary_categories": [
+        "legal",
+        "property"
+      ],
+      "title_keywords": [
+        "last will",
+        "testament",
+        "testator"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "other.first_information_report",
+      "name": "First Information Report",
+      "category": "other",
+      "secondary_categories": [
+        "court",
+        "government"
+      ],
+      "title_keywords": [
+        "first information report",
+        "fir"
+      ],
+      "commonly_scanned": true
+    },
+    {
+      "id": "other.legal_notice",
+      "name": "Legal Notice",
+      "category": "other",
+      "secondary_categories": [
+        "legal",
+        "court"
+      ],
+      "title_keywords": [
+        "legal notice",
+        "under instructions from my client"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "other.letter",
+      "name": "Letter",
+      "category": "other",
+      "secondary_categories": [],
+      "title_keywords": [
+        "dear sir",
+        "dear madam",
+        "yours faithfully"
+      ],
+      "commonly_scanned": false
+    },
+    {
+      "id": "other.unknown",
+      "name": "Unknown",
+      "category": "other",
+      "secondary_categories": [],
+      "title_keywords": [],
+      "commonly_scanned": false
+    }
+  ]
+}

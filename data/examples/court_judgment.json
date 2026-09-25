@@ -1,0 +1,458 @@
+{
+  "schema_version": "1.0",
+  "document": {
+    "id": "DOC-CRT-001",
+    "title": "R. Menon v. State of Example State — Judgment",
+    "original_filename": "judgment.jpg",
+    "format": "jpg",
+    "mime_type": "image/jpeg",
+    "language": "en",
+    "date": "2026-08-20",
+    "reference_number": "W.P. No. 1234 of 2026",
+    "page_count": 2,
+    "is_scanned": true,
+    "classification": {
+      "category": "court",
+      "document_type": "court.judgment",
+      "confidence": 0.91,
+      "confidence_level": "high",
+      "status": "confirmed",
+      "method": "rules",
+      "signals": [
+        "\"IN THE HIGH COURT OF\"",
+        "\"CORAM\"",
+        "heading \"JUDGMENT\"",
+        "Petitioner / Respondents"
+      ],
+      "alternatives": [
+        {
+          "document_type": "court.order",
+          "confidence": 0.06
+        }
+      ]
+    }
+  },
+  "parties": [
+    {
+      "entity_id": "E1",
+      "name": "R. Menon",
+      "role": "petitioner",
+      "page_number": 1
+    },
+    {
+      "entity_id": "E2",
+      "name": "State of Example State and Others",
+      "role": "respondent",
+      "page_number": 1
+    }
+  ],
+  "pages": [
+    {
+      "page_number": 1,
+      "text": "IN THE HIGH COURT OF EXAMPLE STATE\nW.P. No. 1234 of 2026\nCORAM: HON'BLE JUSTICE A. RAO\nDate of Judgment: 20 August 2026\nR. Menon ... Petitioner\nversus\nState of Example State and Others ... Respondents\nJUDGMENT\n1. Facts\n1.1 The petitioner was appointed as a clerk in 2019 and his services were terminated on 5 January 2026 without notice.\n2. Arguments\n2.1 Counsel for the petitioner contended that no notice was given before termination.\n2.2 Counsel for the respondents submitted that the appointment was temporary.",
+      "ocr": {
+        "used": true,
+        "engine": "tesseract-5",
+        "mean_confidence": 0.93
+      }
+    },
+    {
+      "page_number": 2,
+      "text": "3. Issue\n3.1 Whether the termination of the petitioner without notice was valid.\n4. Findings\n4.1 The appointment order required one month's notice before termination, which was not given.\n5. Order\n5.1 The writ petition is allowed. The respondents are directed to reinstate the petitioner within four (4) weeks.",
+      "ocr": {
+        "used": true,
+        "engine": "tesseract-5",
+        "mean_confidence": 0.93
+      }
+    }
+  ],
+  "sections": [
+    {
+      "id": "S1",
+      "number": "1",
+      "heading": "Facts",
+      "role": "facts",
+      "level": 1,
+      "page_start": 1,
+      "page_end": 1,
+      "clauses": [
+        {
+          "id": "C1.1",
+          "clause_number": "1.1",
+          "page_number": 1,
+          "text": "1.1 The petitioner was appointed as a clerk in 2019 and his services were terminated on 5 January 2026 without notice.",
+          "char_start": 219,
+          "char_end": 337,
+          "concepts": [
+            "court.fact"
+          ],
+          "fact_ids": [
+            "DOC-CRT-001-F005"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "number": "2",
+      "heading": "Arguments",
+      "role": "arguments",
+      "level": 1,
+      "page_start": 1,
+      "page_end": 1,
+      "clauses": [
+        {
+          "id": "C2.1",
+          "clause_number": "2.1",
+          "page_number": 1,
+          "text": "2.1 Counsel for the petitioner contended that no notice was given before termination.",
+          "char_start": 351,
+          "char_end": 436,
+          "concepts": [
+            "court.argument"
+          ],
+          "fact_ids": [
+            "DOC-CRT-001-F006"
+          ]
+        },
+        {
+          "id": "C2.2",
+          "clause_number": "2.2",
+          "page_number": 1,
+          "text": "2.2 Counsel for the respondents submitted that the appointment was temporary.",
+          "char_start": 437,
+          "char_end": 514,
+          "concepts": [
+            "court.argument"
+          ],
+          "fact_ids": [
+            "DOC-CRT-001-F007"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S3",
+      "number": "3",
+      "heading": "Issue",
+      "role": "issues",
+      "level": 1,
+      "page_start": 2,
+      "page_end": 2,
+      "clauses": [
+        {
+          "id": "C3.1",
+          "clause_number": "3.1",
+          "page_number": 2,
+          "text": "3.1 Whether the termination of the petitioner without notice was valid.",
+          "char_start": 9,
+          "char_end": 80,
+          "concepts": [
+            "court.issue"
+          ],
+          "fact_ids": [
+            "DOC-CRT-001-F008"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "number": "4",
+      "heading": "Findings",
+      "role": "findings",
+      "level": 1,
+      "page_start": 2,
+      "page_end": 2,
+      "clauses": [
+        {
+          "id": "C4.1",
+          "clause_number": "4.1",
+          "page_number": 2,
+          "text": "4.1 The appointment order required one month's notice before termination, which was not given.",
+          "char_start": 93,
+          "char_end": 187,
+          "concepts": [
+            "court.finding"
+          ],
+          "fact_ids": [
+            "DOC-CRT-001-F009"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "number": "5",
+      "heading": "Order",
+      "role": "final_order",
+      "level": 1,
+      "page_start": 2,
+      "page_end": 2,
+      "clauses": [
+        {
+          "id": "C5.1",
+          "clause_number": "5.1",
+          "page_number": 2,
+          "text": "5.1 The writ petition is allowed. The respondents are directed to reinstate the petitioner within four (4) weeks.",
+          "char_start": 197,
+          "char_end": 310,
+          "concepts": [
+            "court.final_order",
+            "court.direction"
+          ],
+          "fact_ids": [
+            "DOC-CRT-001-F010",
+            "DOC-CRT-001-F011"
+          ]
+        }
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "DOC-CRT-001-F001",
+      "document_id": "DOC-CRT-001",
+      "concept": "court.case_number",
+      "value": "W.P. No. 1234 of 2026",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "W.P. No. 1234 of 2026",
+        "char_start": 35,
+        "char_end": 56
+      },
+      "confidence": 0.97,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-CRT-001-F002",
+      "document_id": "DOC-CRT-001",
+      "concept": "court.court",
+      "value": "High Court of Example State",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "IN THE HIGH COURT OF EXAMPLE STATE",
+        "char_start": 0,
+        "char_end": 34
+      },
+      "confidence": 0.97,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-CRT-001-F003",
+      "document_id": "DOC-CRT-001",
+      "concept": "court.judge",
+      "value": "Justice A. Rao",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "CORAM: HON'BLE JUSTICE A. RAO",
+        "char_start": 57,
+        "char_end": 86
+      },
+      "confidence": 0.95,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-CRT-001-F004",
+      "document_id": "DOC-CRT-001",
+      "concept": "common.important_date",
+      "value": "20 August 2026",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "Date of Judgment: 20 August 2026",
+        "char_start": 87,
+        "char_end": 119
+      },
+      "confidence": 0.96,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "date",
+        "date": "2026-08-20",
+        "qualifier": "on"
+      }
+    },
+    {
+      "id": "DOC-CRT-001-F005",
+      "document_id": "DOC-CRT-001",
+      "concept": "court.fact",
+      "value": "Terminated on 5 January 2026 without notice",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "The petitioner was appointed as a clerk in 2019 and his services were terminated on 5 January 2026 without notice.",
+        "char_start": 223,
+        "char_end": 337,
+        "section": "Facts",
+        "clause_number": "1.1"
+      },
+      "confidence": 0.8,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-CRT-001-F006",
+      "document_id": "DOC-CRT-001",
+      "concept": "court.argument",
+      "value": "Petitioner: no notice was given",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "Counsel for the petitioner contended that no notice was given before termination.",
+        "char_start": 355,
+        "char_end": 436,
+        "section": "Arguments",
+        "clause_number": "2.1"
+      },
+      "confidence": 0.8,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-CRT-001-F007",
+      "document_id": "DOC-CRT-001",
+      "concept": "court.argument",
+      "value": "Respondents: appointment was temporary",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "Counsel for the respondents submitted that the appointment was temporary.",
+        "char_start": 441,
+        "char_end": 514,
+        "section": "Arguments",
+        "clause_number": "2.2"
+      },
+      "confidence": 0.8,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-CRT-001-F008",
+      "document_id": "DOC-CRT-001",
+      "concept": "court.issue",
+      "value": "Whether termination without notice was valid",
+      "evidence": {
+        "page_number": 2,
+        "source_text": "Whether the termination of the petitioner without notice was valid.",
+        "char_start": 13,
+        "char_end": 80,
+        "section": "Issue",
+        "clause_number": "3.1"
+      },
+      "confidence": 0.85,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-CRT-001-F009",
+      "document_id": "DOC-CRT-001",
+      "concept": "court.finding",
+      "value": "One month's notice was required and not given",
+      "evidence": {
+        "page_number": 2,
+        "source_text": "The appointment order required one month's notice before termination, which was not given.",
+        "char_start": 97,
+        "char_end": 187,
+        "section": "Findings",
+        "clause_number": "4.1"
+      },
+      "confidence": 0.85,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-CRT-001-F010",
+      "document_id": "DOC-CRT-001",
+      "concept": "court.final_order",
+      "value": "Petition allowed",
+      "evidence": {
+        "page_number": 2,
+        "source_text": "The writ petition is allowed.",
+        "char_start": 201,
+        "char_end": 230,
+        "section": "Order",
+        "clause_number": "5.1"
+      },
+      "confidence": 0.9,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-CRT-001-F011",
+      "document_id": "DOC-CRT-001",
+      "concept": "court.direction",
+      "value": "Reinstate within 4 weeks",
+      "evidence": {
+        "page_number": 2,
+        "source_text": "The respondents are directed to reinstate the petitioner within four (4) weeks.",
+        "char_start": 231,
+        "char_end": 310,
+        "section": "Order",
+        "clause_number": "5.1"
+      },
+      "confidence": 0.9,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "duration",
+        "number": 4,
+        "unit": "weeks",
+        "qualifier": "within"
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "E1",
+      "type": "person",
+      "text": "R. Menon",
+      "mentions": [
+        {
+          "page_number": 1
+        }
+      ]
+    },
+    {
+      "id": "E2",
+      "type": "authority",
+      "text": "State of Example State",
+      "mentions": [
+        {
+          "page_number": 1
+        }
+      ]
+    },
+    {
+      "id": "E3",
+      "type": "court",
+      "text": "High Court of Example State",
+      "mentions": [
+        {
+          "page_number": 1
+        }
+      ]
+    }
+  ],
+  "court": {
+    "court_name": "High Court of Example State",
+    "case_number": "W.P. No. 1234 of 2026",
+    "case_type": "Writ Petition",
+    "case_year": 2026,
+    "petitioners": [
+      "R. Menon"
+    ],
+    "respondents": [
+      "State of Example State and Others"
+    ],
+    "judges": [
+      "Justice A. Rao"
+    ],
+    "judgment_date": "2026-08-20",
+    "issues": [
+      "Whether the termination of the petitioner without notice was valid."
+    ],
+    "findings": [
+      "The appointment order required one month's notice before termination, which was not given."
+    ],
+    "final_order": "Writ petition allowed; respondents directed to reinstate the petitioner within four weeks."
+  },
+  "processing": {
+    "parser": "ImageOCRParser",
+    "parser_version": "planned",
+    "ocr_used": true,
+    "taxonomy_version": "1.0.0",
+    "processed_at": "2026-09-25T10:00:00Z",
+    "warnings": [
+      "Illustrative: OCR for images is designed but not implemented yet (see docs/AI_Pipeline.md)."
+    ]
+  }
+}

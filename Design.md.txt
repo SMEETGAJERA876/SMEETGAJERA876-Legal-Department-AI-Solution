@@ -1,0 +1,98 @@
+# ClauseLens AI — Design System
+
+## 1. Design Goal
+
+ClauseLens AI should feel:
+
+- Simple
+- Trustworthy
+- Modern
+- Calm
+- Professional
+- Human
+- Easy for non-lawyers
+
+It must NOT look like:
+
+- A complicated law firm system
+- A government portal
+- An old enterprise application
+- A generic AI chatbot
+
+---
+
+# 2. Design Inspiration
+
+The experience should combine:
+
+- Modern SaaS simplicity
+- Document applications
+- AI assistants
+- Premium productivity tools
+
+The user should immediately understand:
+
+"Upload a document and ask what it means."
+
+---
+
+# 3. Brand Personality
+
+Keywords:
+
+CLEAR
+TRUSTWORTHY
+INTELLIGENT
+SIMPLE
+CALM
+HELPFUL
+
+Avoid aggressive AI aesthetics.
+
+Avoid excessive gradients.
+
+Avoid excessive glassmorphism.
+
+Avoid neon colors.
+
+Avoid unnecessary animations.
+
+---
+
+# 4. Color System
+
+Primary:
+
+```text
+Ink:
+#172033
+
+Primary:
+#3157D5
+
+Primary Dark:
+#2444B3
+
+Background:
+#F7F8FC
+
+Surface:
+#FFFFFF
+
+Border:
+#E5E7EB
+
+Muted Text:
+#667085
+
+Success:
+#15803D
+
+Warning:
+#B45309
+
+Danger:
+#B42318
+
+Information:
+#2563EB

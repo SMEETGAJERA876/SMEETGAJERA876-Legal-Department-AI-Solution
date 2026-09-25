@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:clauselens:schema:legal-concept:v1",
+  "title": "Legal concept (taxonomy entry)",
+  "description": "One entry of data/taxonomy/legal_concepts.json: a kind of information ClauseLens can find in a document.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "group", "description", "aliases", "value_type", "example", "source_locations", "applies_to"],
+  "properties": {
+    "id": {
+      "description": "Stable identifier: <group>.<snake_case_name>. Never renamed once published.",
+      "type": "string",
+      "pattern": "^(contract|government|court|employment|financial|property|common)\\.[a-z0-9_]+$"
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "group": { "enum": ["contract", "government", "court", "employment", "financial", "property", "common"] },
+    "description": { "type": "string", "minLength": 1 },
+    "aliases": {
+      "description": "Words and phrases that signal the concept in documents and in user questions.",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "value_type": { "$ref": "#/$defs/value_type" },
+    "example": { "type": "string" },
+    "source_locations": {
+      "description": "Sections where the concept is usually found.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "applies_to": {
+      "description": "Document categories where the concept is relevant (see document_types.json).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/category" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "engine_key": {
+      "description": "Key used by the current extraction engine (backend/app/services/concepts.py), when implemented.",
+      "type": "string",
+      "pattern": "^[a-z_]+$"
+    }
+  },
+  "$defs": {
+    "value_type": {
+      "enum": [
+        "text", "duration", "date", "date_or_duration", "money", "percentage", "party", "party_list",
+        "person", "organization", "identifier", "reference", "address", "area", "contact", "list", "boolean"
+      ]
+    },
+    "category": {
+      "enum": [
+        "government", "legal", "employment", "court", "corporate", "public_notice",
+        "financial", "property", "education", "policy", "other"
+      ]
+    }
+  }
+}

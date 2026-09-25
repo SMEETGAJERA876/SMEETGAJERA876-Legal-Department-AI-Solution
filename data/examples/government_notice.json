@@ -1,0 +1,428 @@
+{
+  "schema_version": "1.0",
+  "document": {
+    "id": "DOC-GOV-001",
+    "title": "Property Tax Relief Scheme, 2026 — Public Notice",
+    "original_filename": "government_public_notice.pdf",
+    "format": "pdf",
+    "mime_type": "application/pdf",
+    "language": "en",
+    "date": "2026-03-10",
+    "reference_number": "REV/2026/114",
+    "page_count": 5,
+    "is_scanned": false,
+    "classification": {
+      "category": "public_notice",
+      "document_type": "public_notice.public_notice",
+      "confidence": 0.88,
+      "confidence_level": "high",
+      "status": "confirmed",
+      "method": "rules",
+      "signals": [
+        "heading \"PUBLIC NOTICE\"",
+        "\"Notice is hereby given\"",
+        "issued by a government department"
+      ],
+      "alternatives": [
+        {
+          "document_type": "policy.scheme_guidelines",
+          "confidence": 0.07
+        },
+        {
+          "document_type": "government.notification",
+          "confidence": 0.03
+        }
+      ]
+    }
+  },
+  "parties": [
+    {
+      "entity_id": "E1",
+      "name": "Department of Revenue, Government of Example State",
+      "role": "issuing_authority",
+      "page_number": 1
+    }
+  ],
+  "pages": [
+    {
+      "page_number": 1,
+      "text": "GOVERNMENT OF EXAMPLE STATE\nDEPARTMENT OF REVENUE\nNo. REV/2026/114 Dated: 10 March 2026\nPUBLIC NOTICE\nProperty Tax Relief Scheme, 2026\nNotice is hereby given that the State Government has introduced the Property Tax Relief Scheme, 2026 for owners of residential property in Example State."
+    },
+    {
+      "page_number": 2,
+      "text": "2. Eligibility\n2.1 An owner is eligible if the property is used only for residence.\n3. Documents Required\n3.1 The following documents must be attached to the application:\n(a) a self-attested copy of the property tax receipt;\n(b) proof of ownership, such as a sale deed;"
+    },
+    {
+      "page_number": 3,
+      "text": "4. Last Date and Time Limits\n4.1 Applications must be submitted on or before 30 April 2026.\n4.3 Before any site inspection, the owner shall be given seven (7) days' notice in writing."
+    },
+    {
+      "page_number": 5,
+      "text": "6. Appeal\n6.1 Any person aggrieved by a decision under this Scheme may file an appeal before the Deputy Commissioner (Revenue) within thirty (30) days of the decision.\n7. Contact\n7.1 For help, contact the Revenue Helpline at 1800-000-0000."
+    }
+  ],
+  "sections": [
+    {
+      "id": "S2",
+      "number": "2",
+      "heading": "Eligibility",
+      "role": "eligibility",
+      "level": 1,
+      "page_start": 2,
+      "page_end": 2,
+      "clauses": [
+        {
+          "id": "C2.1",
+          "clause_number": "2.1",
+          "page_number": 2,
+          "text": "2.1 An owner is eligible if the property is used only for residence.",
+          "char_start": 15,
+          "char_end": 83,
+          "concepts": [
+            "government.eligibility"
+          ],
+          "fact_ids": [
+            "DOC-GOV-001-F004"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S3",
+      "number": "3",
+      "heading": "Documents Required",
+      "role": "required_documents",
+      "level": 1,
+      "page_start": 2,
+      "page_end": 2,
+      "clauses": [
+        {
+          "id": "C3.1",
+          "clause_number": "3.1",
+          "page_number": 2,
+          "text": "3.1 The following documents must be attached to the application:",
+          "char_start": 106,
+          "char_end": 170,
+          "concepts": [
+            "government.required_documents"
+          ],
+          "fact_ids": [
+            "DOC-GOV-001-F005"
+          ]
+        },
+        {
+          "id": "C3.1a",
+          "clause_number": "3.1(a)",
+          "page_number": 2,
+          "text": "(a) a self-attested copy of the property tax receipt;",
+          "char_start": 171,
+          "char_end": 224,
+          "concepts": [
+            "government.required_documents"
+          ],
+          "fact_ids": []
+        },
+        {
+          "id": "C3.1b",
+          "clause_number": "3.1(b)",
+          "page_number": 2,
+          "text": "(b) proof of ownership, such as a sale deed;",
+          "char_start": 225,
+          "char_end": 269,
+          "concepts": [
+            "government.required_documents"
+          ],
+          "fact_ids": []
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "number": "4",
+      "heading": "Last Date and Time Limits",
+      "role": "important_dates",
+      "level": 1,
+      "page_start": 3,
+      "page_end": 3,
+      "clauses": [
+        {
+          "id": "C4.1",
+          "clause_number": "4.1",
+          "page_number": 3,
+          "text": "4.1 Applications must be submitted on or before 30 April 2026.",
+          "char_start": 29,
+          "char_end": 91,
+          "concepts": [
+            "government.deadline"
+          ],
+          "fact_ids": [
+            "DOC-GOV-001-F006"
+          ]
+        },
+        {
+          "id": "C4.3",
+          "clause_number": "4.3",
+          "page_number": 3,
+          "text": "4.3 Before any site inspection, the owner shall be given seven (7) days' notice in writing.",
+          "char_start": 92,
+          "char_end": 183,
+          "concepts": [
+            "contract.notice_period"
+          ],
+          "fact_ids": [
+            "DOC-GOV-001-F007"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S6",
+      "number": "6",
+      "heading": "Appeal",
+      "role": "appeal",
+      "level": 1,
+      "page_start": 5,
+      "page_end": 5,
+      "clauses": [
+        {
+          "id": "C6.1",
+          "clause_number": "6.1",
+          "page_number": 5,
+          "text": "6.1 Any person aggrieved by a decision under this Scheme may file an appeal before the Deputy Commissioner (Revenue) within thirty (30) days of the decision.",
+          "char_start": 10,
+          "char_end": 167,
+          "concepts": [
+            "common.appeal",
+            "government.deadline"
+          ],
+          "fact_ids": [
+            "DOC-GOV-001-F008"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S7",
+      "number": "7",
+      "heading": "Contact",
+      "role": "contact",
+      "level": 1,
+      "page_start": 5,
+      "page_end": 5,
+      "clauses": [
+        {
+          "id": "C7.1",
+          "clause_number": "7.1",
+          "page_number": 5,
+          "text": "7.1 For help, contact the Revenue Helpline at 1800-000-0000.",
+          "char_start": 179,
+          "char_end": 239,
+          "concepts": [
+            "government.contact"
+          ],
+          "fact_ids": [
+            "DOC-GOV-001-F009"
+          ]
+        }
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "DOC-GOV-001-F001",
+      "document_id": "DOC-GOV-001",
+      "concept": "government.reference_number",
+      "value": "REV/2026/114",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "No. REV/2026/114",
+        "char_start": 50,
+        "char_end": 66
+      },
+      "confidence": 0.9,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-GOV-001-F002",
+      "document_id": "DOC-GOV-001",
+      "concept": "common.important_date",
+      "value": "10 March 2026",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "Dated: 10 March 2026",
+        "char_start": 67,
+        "char_end": 87
+      },
+      "confidence": 0.95,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "date",
+        "date": "2026-03-10",
+        "qualifier": "on"
+      }
+    },
+    {
+      "id": "DOC-GOV-001-F003",
+      "document_id": "DOC-GOV-001",
+      "concept": "government.authority",
+      "value": "Department of Revenue, Government of Example State",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "GOVERNMENT OF EXAMPLE STATE\nDEPARTMENT OF REVENUE",
+        "char_start": 0,
+        "char_end": 49
+      },
+      "confidence": 0.9,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-GOV-001-F004",
+      "document_id": "DOC-GOV-001",
+      "concept": "government.eligibility",
+      "value": "Residential use only",
+      "evidence": {
+        "page_number": 2,
+        "source_text": "An owner is eligible if the property is used only for residence.",
+        "char_start": 19,
+        "char_end": 83,
+        "section": "Eligibility",
+        "clause_number": "2.1"
+      },
+      "confidence": 0.85,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "text",
+        "text": "property used only for residence"
+      }
+    },
+    {
+      "id": "DOC-GOV-001-F005",
+      "document_id": "DOC-GOV-001",
+      "concept": "government.required_documents",
+      "value": "Property tax receipt; proof of ownership",
+      "evidence": {
+        "page_number": 2,
+        "source_text": "The following documents must be attached to the application:",
+        "char_start": 110,
+        "char_end": 170,
+        "section": "Documents Required",
+        "clause_number": "3.1"
+      },
+      "confidence": 0.8,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-GOV-001-F006",
+      "document_id": "DOC-GOV-001",
+      "concept": "government.deadline",
+      "value": "on or before 30 April 2026",
+      "evidence": {
+        "page_number": 3,
+        "source_text": "Applications must be submitted on or before 30 April 2026.",
+        "char_start": 33,
+        "char_end": 91,
+        "section": "Last Date and Time Limits",
+        "clause_number": "4.1"
+      },
+      "confidence": 0.95,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "date",
+        "date": "2026-04-30",
+        "qualifier": "on_or_before"
+      }
+    },
+    {
+      "id": "DOC-GOV-001-F007",
+      "document_id": "DOC-GOV-001",
+      "concept": "contract.notice_period",
+      "value": "7 days",
+      "evidence": {
+        "page_number": 3,
+        "source_text": "Before any site inspection, the owner shall be given seven (7) days' notice in writing.",
+        "char_start": 96,
+        "char_end": 183,
+        "section": "Last Date and Time Limits",
+        "clause_number": "4.3"
+      },
+      "confidence": 0.9,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "duration",
+        "number": 7,
+        "unit": "days"
+      }
+    },
+    {
+      "id": "DOC-GOV-001-F008",
+      "document_id": "DOC-GOV-001",
+      "concept": "common.appeal",
+      "value": "Appeal to the Deputy Commissioner (Revenue) within 30 days",
+      "evidence": {
+        "page_number": 5,
+        "source_text": "Any person aggrieved by a decision under this Scheme may file an appeal before the Deputy Commissioner (Revenue) within thirty (30) days of the decision.",
+        "char_start": 14,
+        "char_end": 167,
+        "section": "Appeal",
+        "clause_number": "6.1"
+      },
+      "confidence": 0.9,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "duration",
+        "number": 30,
+        "unit": "days",
+        "qualifier": "within"
+      }
+    },
+    {
+      "id": "DOC-GOV-001-F009",
+      "document_id": "DOC-GOV-001",
+      "concept": "government.contact",
+      "value": "Revenue Helpline 1800-000-0000",
+      "evidence": {
+        "page_number": 5,
+        "source_text": "contact the Revenue Helpline at 1800-000-0000",
+        "char_start": 193,
+        "char_end": 238,
+        "section": "Contact",
+        "clause_number": "7.1"
+      },
+      "confidence": 0.9,
+      "extraction_method": "rule"
+    }
+  ],
+  "entities": [
+    {
+      "id": "E1",
+      "type": "authority",
+      "text": "Department of Revenue",
+      "normalized": "Department of Revenue, Government of Example State",
+      "mentions": [
+        {
+          "page_number": 1
+        }
+      ]
+    },
+    {
+      "id": "E2",
+      "type": "reference",
+      "text": "REV/2026/114",
+      "mentions": [
+        {
+          "page_number": 1
+        }
+      ]
+    }
+  ],
+  "processing": {
+    "parser": "PDFParser",
+    "parser_version": "pymupdf-1.28",
+    "ocr_used": false,
+    "taxonomy_version": "1.0.0",
+    "processed_at": "2026-09-25T10:00:00Z",
+    "warnings": [
+      "Example shows 4 of 5 pages."
+    ]
+  }
+}

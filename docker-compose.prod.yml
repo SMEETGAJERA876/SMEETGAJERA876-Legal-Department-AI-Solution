@@ -1,0 +1,69 @@
+# Full ClauseLens stack: PostgreSQL + pgvector, the API and the website.
+#
+#   cp .env.production.example .env.production   # fill in every value
+#   docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
+#
+# Put an HTTPS reverse proxy (Caddy, nginx, a cloud load balancer) in front of ports 3000/8000.
+# Secrets are required (":?") so the stack refuses to start with a missing value.
+
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: clauselens
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: clauselens
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clauselens"]
+      interval: 5s
+      retries: 10
+    # Not published: only the API can reach the database.
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ENVIRONMENT: production
+      DATABASE_URL: postgresql+psycopg://clauselens:${POSTGRES_PASSWORD}@db:5432/clauselens
+      CORS_ORIGINS: '["${PUBLIC_WEB_URL:?set PUBLIC_WEB_URL}"]'
+      AUTH_MODE: firebase
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID:?set FIREBASE_PROJECT_ID}
+      FILE_ENCRYPTION_KEY: ${FILE_ENCRYPTION_KEY:?set FILE_ENCRYPTION_KEY}
+      RATE_LIMIT_ENABLED: "true"
+      TRUST_PROXY_HEADERS: "true"
+      RETENTION_DAYS: ${RETENTION_DAYS:-0}
+      AI_PROVIDER: ${AI_PROVIDER:-none}
+      AI_API_KEY: ${AI_API_KEY:-}
+      WEB_WORKERS: ${WEB_WORKERS:-2}
+    volumes:
+      - uploads:/data/uploads
+    ports:
+      - "8000:8000"
+
+  web:
+    build:
+      context: frontend
+      args:
+        NEXT_PUBLIC_API_URL: ${PUBLIC_API_URL:?set PUBLIC_API_URL}
+        NEXT_PUBLIC_AUTH_MODE: firebase
+        NEXT_PUBLIC_FIREBASE_API_KEY: ${NEXT_PUBLIC_FIREBASE_API_KEY:?set NEXT_PUBLIC_FIREBASE_API_KEY}
+        NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:?set NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}
+        NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+        NEXT_PUBLIC_FIREBASE_APP_ID: ${NEXT_PUBLIC_FIREBASE_APP_ID:?set NEXT_PUBLIC_FIREBASE_APP_ID}
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+  uploads:

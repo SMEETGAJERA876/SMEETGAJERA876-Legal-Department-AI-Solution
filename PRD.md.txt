@@ -1,0 +1,612 @@
+# ClauseLens AI — Product Requirements Document
+
+## 1. Product Overview
+
+ClauseLens AI is an AI-powered legal document understanding and navigation platform.
+
+The product helps ordinary people understand long and complicated legal documents without requiring them to know legal terminology.
+
+Users can upload a legal document and ask questions such as:
+
+- "What is my notice period?"
+- "When does this agreement expire?"
+- "How much do I have to pay?"
+- "What happens if I leave early?"
+- "Who is responsible for maintenance?"
+- "Can the agreement be renewed?"
+- "Where does it mention termination?"
+- "Show me all payment-related clauses."
+
+The system finds the relevant information, explains it in simple language, and takes the user directly to the supporting page and clause in the original document.
+
+The system is an INFORMATION AND DOCUMENT-NAVIGATION TOOL.
+
+It is NOT a lawyer and must NOT present itself as a replacement for legal professionals.
+
+---
+
+# 2. Problem
+
+Legal documents are often:
+
+- Long
+- Written in difficult language
+- Filled with legal terminology
+- Poorly structured from a normal user's perspective
+- Difficult to search
+- Difficult to compare
+- Difficult to understand without professional assistance
+
+A normal PDF search only searches words.
+
+For example, if the user searches:
+
+"notice period"
+
+but the document says:
+
+"Either party may terminate this agreement by providing ninety (90) days written notice."
+
+A traditional search may not understand that this is the notice-period information.
+
+ClauseLens AI should understand the meaning behind the user's question.
+
+---
+
+# 3. Product Vision
+
+Make legal documents easier to understand and navigate.
+
+The core experience is:
+
+UPLOAD → SEARCH → UNDERSTAND → VERIFY → ACT
+
+The user should always be able to see where the information came from.
+
+---
+
+# 4. Target Users
+
+## Primary Users
+
+### 4.1 Everyday Users
+
+People who receive legal documents but do not have legal expertise.
+
+Examples:
+
+- Employees
+- Tenants
+- Freelancers
+- Customers
+- Small business owners
+- Students
+- Consumers
+- Service providers
+
+### 4.2 Students
+
+Students who want to understand legal documents and learn legal concepts.
+
+### 4.3 Small Businesses
+
+Small business owners reviewing:
+
+- Vendor agreements
+- Service contracts
+- Employment agreements
+- NDAs
+- Policies
+
+---
+
+# 5. Primary User Journey
+
+## Step 1
+
+User opens ClauseLens AI.
+
+## Step 2
+
+User sees:
+
+"Understand what your document says."
+
+## Step 3
+
+User uploads a PDF.
+
+## Step 4
+
+System processes the document.
+
+## Step 5
+
+System creates a document overview.
+
+Example:
+
+- 18 pages
+- 12 important clauses
+- 6 important dates
+- 4 payment-related items
+- 3 items requiring attention
+
+## Step 6
+
+User searches:
+
+"What is my notice period?"
+
+## Step 7
+
+System returns:
+
+NOTICE PERIOD
+
+90 days
+
+Source:
+Page 7
+Clause 12
+
+## Step 8
+
+User clicks "View in document."
+
+The PDF opens at Page 7.
+
+The relevant text is highlighted.
+
+## Step 9
+
+User can ask follow-up questions.
+
+## Step 10
+
+User can generate a discussion checklist for a legal professional.
+
+---
+
+# 6. Core Features
+
+## 6.1 Document Upload
+
+Supported initially:
+
+- PDF
+
+Future:
+
+- DOCX
+- Images
+- Scanned documents
+
+Requirements:
+
+- Drag and drop
+- File picker
+- Upload progress
+- File validation
+- Error handling
+- Processing status
+
+---
+
+# 6.2 Document Processing
+
+The system extracts:
+
+- Page number
+- Text
+- Paragraphs
+- Sections
+- Clauses
+
+Page information MUST be preserved.
+
+The system must never lose the relationship:
+
+Document → Page → Text → Clause
+
+---
+
+# 6.3 Document Overview
+
+After processing, display:
+
+- Document name
+- Number of pages
+- Document type
+- Parties if detectable
+- Important dates
+- Important amounts
+- Notice period
+- Termination information
+- Payment information
+- Important obligations
+
+---
+
+# 6.4 Exact Search
+
+Users can search exact words.
+
+Example:
+
+"notice"
+
+Return:
+
+- Page number
+- Matching text
+- Context
+
+---
+
+# 6.5 Semantic Search
+
+Users can ask questions naturally.
+
+Example:
+
+"What happens if I want to leave the agreement?"
+
+The system should retrieve relevant information related to:
+
+- Termination
+- Notice
+- Early termination
+- Expiry
+- Renewal
+- Penalty
+
+even when the exact search phrase is not present.
+
+---
+
+# 6.6 Legal Concept Extraction
+
+Initial concepts:
+
+1. Notice Period
+2. Termination
+3. Contract Duration
+4. Payment
+5. Renewal
+6. Penalty
+7. Obligations
+8. Dispute Resolution
+9. Confidentiality
+10. Liability
+11. Important Dates
+12. Parties
+
+---
+
+# 6.7 Ask Your Document
+
+Users can ask:
+
+"What is the notice period?"
+
+"What happens if I terminate early?"
+
+"When does the contract expire?"
+
+"Who pays maintenance?"
+
+"How much is the security deposit?"
+
+The AI must answer using retrieved document evidence.
+
+---
+
+# 6.8 Evidence and Citations
+
+Every factual AI response should show:
+
+- Page
+- Clause
+- Source text
+
+Example:
+
+Answer:
+90 days.
+
+Source:
+Page 7 · Clause 12
+
+Original text:
+"Either party may terminate..."
+
+The user should be able to click:
+
+"View source"
+
+and jump directly to the document.
+
+---
+
+# 6.9 PDF Navigation
+
+The PDF viewer must support:
+
+- Page navigation
+- Zoom
+- Search
+- Jump to page
+- Source navigation
+- Highlighting where technically possible
+
+---
+
+# 6.10 Clause Highlighting
+
+When the system identifies a relevant clause:
+
+1. Open the relevant page.
+2. Locate the source text.
+3. Highlight it.
+4. Display the explanation beside it.
+
+Never pretend to highlight text if the system cannot actually locate it.
+
+---
+
+# 6.11 Simple Explanation
+
+Every important result can be displayed as:
+
+### What the document says
+
+Original legal wording.
+
+### In simple language
+
+Plain-language explanation.
+
+### Why it matters
+
+Short contextual explanation.
+
+### Source
+
+Page and clause.
+
+---
+
+# 6.12 Related Information
+
+When a user searches:
+
+"Early termination"
+
+show related concepts:
+
+- Notice period
+- Termination
+- Penalty
+- Renewal
+- Contract duration
+- Deposit
+
+---
+
+# 6.13 Questions for a Legal Professional
+
+Generate questions based on the document.
+
+Example:
+
+"What happens if the 90-day notice cannot be completed?"
+
+The system should NOT answer with legal advice.
+
+Instead:
+
+"Questions you may want to discuss with a qualified legal professional."
+
+---
+
+# 6.14 Contract Comparison
+
+Users can upload two versions.
+
+Example:
+
+Contract A
+Contract B
+
+System identifies:
+
+- Added clauses
+- Removed clauses
+- Modified clauses
+- Changed amounts
+- Changed dates
+- Changed notice periods
+- Changed obligations
+
+---
+
+# 7. User Experience Principles
+
+The product must be understandable to a person who has never studied law.
+
+Avoid unnecessary legal terminology.
+
+Use:
+
+"Notice period"
+
+instead of:
+
+"Contractual termination notice obligation"
+
+Use:
+
+"Money you may need to pay"
+
+instead of:
+
+"Financial liability"
+
+when appropriate.
+
+---
+
+# 8. Main Screens
+
+## Home
+
+Purpose:
+
+Explain the product immediately.
+
+Hero:
+
+"Understand what your document says."
+
+Supporting text:
+
+"Upload a legal document, find important information, and jump directly to the source."
+
+CTA:
+
+"Upload document"
+
+Secondary CTA:
+
+"See how it works"
+
+---
+
+## Dashboard
+
+Show:
+
+- Recent documents
+- Upload document
+- Processing status
+- Important findings
+
+---
+
+## Document Workspace
+
+Three main areas:
+
+LEFT:
+Document navigation/search
+
+CENTER:
+PDF viewer
+
+RIGHT:
+AI insights
+
+---
+
+## Search Results
+
+Show:
+
+- Answer
+- Relevant clause
+- Page
+- Source text
+- View source button
+
+---
+
+## Comparison
+
+Show:
+
+Version A
+Version B
+Changes
+
+---
+
+# 9. Safety Requirements
+
+ClauseLens AI must:
+
+- Provide information rather than professional legal advice.
+- Clearly identify document-derived information.
+- Provide source references.
+- Say when information cannot be found.
+- Never fabricate clauses.
+- Never fabricate dates.
+- Never fabricate financial values.
+- Never invent legal rules.
+- Never guarantee legal outcomes.
+- Never claim to be a lawyer.
+
+---
+
+# 10. Success Criteria
+
+The MVP is successful when a user can:
+
+1. Upload a PDF.
+2. See processing progress.
+3. View the document.
+4. Search for a concept.
+5. Get a relevant answer.
+6. See the exact source page.
+7. Navigate to the source.
+8. Understand the clause in simple language.
+9. Ask follow-up questions.
+10. Generate questions for a legal professional.
+
+---
+
+# 11. MVP Scope
+
+MUST HAVE:
+
+- PDF upload
+- PDF text extraction
+- Page preservation
+- Exact search
+- Semantic search
+- AI Q&A
+- Source citations
+- PDF navigation
+- Legal concept extraction
+- Simple explanations
+
+SHOULD HAVE:
+
+- Highlighting
+- Related clauses
+- Question generation
+- Contract comparison
+
+NICE TO HAVE:
+
+- OCR
+- DOCX
+- Multilingual support
+- Voice interaction
+- Advanced analytics
+- Collaboration
+
+---
+
+# 12. Out of Scope for MVP
+
+Do NOT build:
+
+- AI lawyer
+- Court outcome prediction
+- Legal case prediction
+- Automatic legal representation
+- Lawyer marketplace
+- Court filing automation
+- Automated legal decisions
+- Large-scale legal research database

@@ -1,0 +1,366 @@
+
+# ClauseLens AI — Development Rules
+
+## 1. General Rule
+
+Build a reliable, understandable, maintainable application.
+
+Do not optimize for code volume.
+
+Do not create unnecessary complexity.
+
+Prefer simple solutions that work.
+
+---
+
+# 2. AI Coding Rules
+
+Claude Code must:
+
+1. Read PRD.md.
+2. Read Architecture.md.
+3. Read Rules.md.
+4. Read Phases.md.
+5. Read Design.md.
+
+Before implementing a phase:
+
+- Understand existing code.
+- Do not overwrite working functionality unnecessarily.
+- Reuse existing components.
+- Follow existing architecture.
+- Update documentation when architecture changes.
+
+---
+
+# 3. Technology Rules
+
+Use:
+
+Frontend:
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Lucide
+
+Backend:
+- Python
+- FastAPI
+- SQLAlchemy
+- Pydantic
+
+Database:
+- PostgreSQL
+- pgvector
+
+Do not introduce a new framework unless there is a clear technical reason.
+
+---
+
+# 4. Code Quality
+
+Use:
+
+- TypeScript strict mode
+- Python type hints
+- Clear function names
+- Small reusable functions
+- Service-layer architecture
+- Proper error handling
+
+Avoid:
+
+- giant components
+- duplicated code
+- magic numbers
+- hardcoded API keys
+- hardcoded URLs
+- unnecessary global state
+
+---
+
+# 5. Environment Variables
+
+Never hardcode:
+
+- API keys
+- Database passwords
+- Secret keys
+- Provider credentials
+
+Use `.env`.
+
+Provide `.env.example`.
+
+---
+
+# 6. Error Handling
+
+Errors must be understandable.
+
+Bad:
+
+"Something went wrong."
+
+Better:
+
+"Unable to extract text from this PDF. The document may be scanned or encrypted."
+
+Frontend errors should provide:
+
+- What happened
+- Why it may have happened
+- What the user can do
+
+---
+
+# 7. PDF Rules
+
+Always preserve page numbers.
+
+Never flatten an entire PDF into one text blob.
+
+Maintain:
+
+Document
+→ Page
+→ Chunk
+→ Clause
+→ Source
+
+The system must be able to trace an AI answer back to the original page.
+
+---
+
+# 8. AI Rules
+
+The AI must be retrieval-grounded.
+
+Do not answer from general model knowledge when answering questions about an uploaded document.
+
+Pipeline:
+
+Question
+→ Retrieve
+→ Context
+→ Answer
+→ Citation
+
+If evidence is insufficient:
+
+"I couldn't find enough information in the uploaded document to answer this."
+
+---
+
+# 9. Hallucination Prevention
+
+The AI must NEVER invent:
+
+- Clauses
+- Dates
+- Amounts
+- Notice periods
+- Obligations
+- Parties
+- Contract conditions
+- Legal conclusions
+
+Every factual document claim requires a source.
+
+---
+
+# 10. Legal Safety
+
+The application provides legal information.
+
+It does not provide professional legal advice.
+
+Do not:
+
+- Predict court outcomes.
+- Claim a document is definitely legal/illegal.
+- Tell users what legal action they must take.
+- Pretend to be a lawyer.
+- Guarantee outcomes.
+
+Use language such as:
+
+"According to the document..."
+
+"The document states..."
+
+"This clause appears to..."
+
+"You may wish to discuss this with a qualified legal professional."
+
+---
+
+# 11. UI Rules
+
+The UI must be understandable by ordinary people.
+
+Avoid making the application look like a law firm dashboard.
+
+Use familiar language.
+
+Prefer:
+
+"Ask about your document"
+
+instead of:
+
+"Query legal corpus"
+
+Prefer:
+
+"Important clauses"
+
+instead of:
+
+"Contractual provisions"
+
+---
+
+# 12. Accessibility
+
+The application should support:
+
+- Keyboard navigation
+- Visible focus states
+- Good contrast
+- Screen-reader-friendly labels
+- Reasonable font sizes
+- Clear error messages
+
+Do not rely only on color to communicate meaning.
+
+---
+
+# 13. Responsive Design
+
+The application must work on:
+
+- Desktop
+- Laptop
+- Tablet
+- Mobile
+
+Desktop can use the three-panel workspace.
+
+Mobile should collapse into:
+
+Document
+→ Search
+→ AI
+→ Source
+
+---
+
+# 14. Security
+
+Validate uploaded files.
+
+Allowed initially:
+
+PDF only.
+
+Set:
+
+- Maximum file size
+- Allowed MIME types
+- Safe filenames
+
+Never execute uploaded files.
+
+Never trust uploaded metadata.
+
+---
+
+# 15. API Rules
+
+All API endpoints must:
+
+- Validate input.
+- Return predictable JSON.
+- Use appropriate HTTP status codes.
+- Handle errors.
+- Avoid leaking internal stack traces.
+
+---
+
+# 16. Database Rules
+
+Use SQLAlchemy.
+
+Do not construct SQL queries through unsafe string concatenation.
+
+Use migrations.
+
+Add indexes to frequently queried fields.
+
+---
+
+# 17. Performance
+
+Do not send the entire document to the LLM for every question.
+
+Use retrieval.
+
+Cache where appropriate.
+
+Process embeddings once per document/chunk.
+
+Do not regenerate embeddings unnecessarily.
+
+---
+
+# 18. Testing
+
+Every major service must have tests.
+
+Critical paths:
+
+- Upload
+- Extraction
+- Search
+- Retrieval
+- AI answer
+- Citation
+- Comparison
+
+---
+
+# 19. Development Workflow
+
+For every phase:
+
+1. Inspect current implementation.
+2. Implement only the requested phase.
+3. Run tests.
+4. Run lint/type checks.
+5. Fix errors.
+6. Update documentation.
+7. Explain what changed.
+
+Do not silently skip errors.
+
+---
+
+# 20. Do Not Overengineer
+
+This is a hackathon MVP.
+
+Do not introduce:
+
+- Kubernetes
+- Microservices
+- Message queues
+- Complex event systems
+- Multiple databases
+- Complex authentication systems
+
+unless explicitly required.
+
+Keep the architecture understandable.

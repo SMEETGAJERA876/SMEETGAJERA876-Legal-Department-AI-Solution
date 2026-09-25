@@ -1,0 +1,369 @@
+"""One-file PDF summary of a document: key dates, notice periods, deadlines, money,
+process details, items to review and questions for a legal professional.
+
+Everything comes from facts already extracted from the document, each with its page and
+clause, so the summary never contains anything the document doesn't say.
+"""
+
+import re
+from dataclasses import dataclass
+from datetime import date
+from pathlib import Path
+
+from fpdf import FPDF, FontFace
+
+from app.models import LegalFact
+from app.services.concepts import CONCEPTS
+from app.services.document_check import Issue
+from app.services.questions import ProfessionalQuestion
+from app.services.text_utils import format_clause, normalize_whitespace
+
+# Design.md palette
+INK = (23, 32, 51)
+PRIMARY = (49, 87, 213)
+MUTED = (102, 112, 133)
+BORDER = (229, 231, 235)
+BACKGROUND = (247, 248, 252)
+WARNING = (180, 83, 9)
+WARNING_BG = (255, 247, 237)
+WHITE = (255, 255, 255)
+
+MARGIN = 18
+FOOTER_HEIGHT = 16
+MAX_FACTS_PER_TOPIC = 5
+MAX_QUOTE_CHARS = 170
+MAX_REVIEW_ITEMS = 12
+COLUMN_WIDTHS = (38, 104, 32)
+
+SECTIONS: list[tuple[str, str, tuple[str, ...]]] = [
+    (
+        "Document details",
+        "Reference numbers, court and case details, and the property described.",
+        ("reference_number", "court_name", "case_number", "job_title", "area"),
+    ),
+    (
+        "Dates, notice periods and deadlines",
+        "When things happen and how much time you have.",
+        ("notice_period", "probation", "time_limits", "important_dates", "effective_date",
+         "duration", "renewal", "cure_period"),
+    ),
+    (
+        "Money, fees and penalties",
+        "Amounts to pay and what happens if something is missed.",
+        ("salary", "rent", "deposit", "payment", "late_fee", "interest_rate", "penalty"),
+    ),
+    (
+        "Work terms",
+        "Working hours and leave.",
+        ("working_hours", "leave"),
+    ),
+    (
+        "Process, rights and responsibilities",
+        "Who can apply, what to submit, how to end or appeal, and who to contact.",
+        ("eligibility", "documents_required", "obligations", "rights", "termination", "appeal",
+         "authority", "contact"),
+    ),
+    (
+        "Disputes, confidentiality and restrictions",
+        "Which law applies, where disputes go, and what you must not do.",
+        ("governing_law", "jurisdiction", "arbitration", "dispute_resolution", "confidentiality",
+         "intellectual_property", "non_compete", "non_solicitation", "indemnification",
+         "liability", "force_majeure", "assignment"),
+    ),
+    ("Important notes", "Notes and notices written in the document.", ("notes",)),
+]  # fmt: skip
+AT_A_GLANCE = {
+    "notice_period": "Notice period",
+    "probation": "Probation",
+    "time_limits": "Deadlines",
+    "duration": "Duration",
+    "salary": "Salary",
+    "rent": "Rent",
+    "deposit": "Deposit",
+    "payment": "Amounts",
+}
+GLANCE_LABEL_WIDTH = 32
+MIN_QUOTE_REMAINDER = 20
+# Clutter before the sentence: "Termination 12.1 ", "Rule 5. Notice to vacate (1) ", "TITLE "
+_LEADING_NUMBER = re.compile(r"^.{0,60}?\b\d{1,3}(?:\.\d{1,3})+[.)]?\s+")
+_LEADING_BRACKET = re.compile(r"^.{0,60}?\(\w{1,4}\)\s+(?=[A-Z])")
+_LEADING_CAPS = re.compile(r"^(?:[A-Z][A-Z,'&-]+\s+)+(?=[A-Z][a-z])")
+
+_REPLACEMENTS = {
+    "“": '"', "”": '"', "‘": "'", "’": "'", "…": "...", "–": "-", "—": "-", "₹": "Rs.",
+    "•": "-", "→": "->", " ": " ", "−": "-",
+}  # fmt: skip
+
+
+def _safe(text: str) -> str:
+    """The built-in PDF fonts only cover Latin-1; map common symbols, replace the rest."""
+    for old, new in _REPLACEMENTS.items():
+        text = text.replace(old, new)
+    return text.encode("latin-1", "replace").decode("latin-1")
+
+
+def _markdown_safe(text: str) -> str:
+    """Stop document text from being read as table markdown (**bold**, __italic__)."""
+    text = re.sub(r"_{2,}", "[blank]", _safe(text))
+    return text.replace("**", "*").replace("--", "-")
+
+
+def _shorten(text: str, limit: int = MAX_QUOTE_CHARS) -> str:
+    text = normalize_whitespace(text)
+    return text if len(text) <= limit else text[: limit - 3].rsplit(" ", 1)[0] + "..."
+
+
+def _where(page: int, clause_ref: str | None) -> str:
+    return f"Page {page}\n{format_clause(clause_ref)}" if clause_ref else f"Page {page}"
+
+
+@dataclass
+class SummaryInput:
+    title: str
+    document_type: str | None
+    page_count: int
+    clause_count: int
+    parties: list[str]
+    facts: list[LegalFact]
+    review_issues: list[Issue]
+    questions: list[ProfessionalQuestion]
+
+
+class _SummaryPdf(FPDF):
+    generated_on = ""
+
+    def footer(self) -> None:
+        self.set_y(-FOOTER_HEIGHT + 4)
+        self.set_draw_color(*BORDER)
+        self.line(MARGIN, self.get_y() - 2, self.w - MARGIN, self.get_y() - 2)
+        self.set_font("Helvetica", "", 7.5)
+        self.set_text_color(*MUTED)
+        self.cell(
+            0, 5,
+            _safe(
+                f"Generated by ClauseLens AI on {self.generated_on}. Information about the "
+                "document, not legal advice."
+            ),
+            align="L",
+        )  # fmt: skip
+        self.set_x(-MARGIN - 30)
+        self.cell(30, 5, f"Page {self.page_no()} of {{nb}}", align="R")
+
+
+def _heading(pdf: _SummaryPdf, title: str, subtitle: str) -> None:
+    if pdf.get_y() > pdf.h - 60:
+        pdf.add_page()
+    pdf.ln(5)
+    y = pdf.get_y()
+    pdf.set_fill_color(*PRIMARY)
+    pdf.rect(MARGIN, y + 1, 1.4, 9, style="F")
+    pdf.set_x(MARGIN + 4)
+    pdf.set_font("Helvetica", "B", 12.5)
+    pdf.set_text_color(*INK)
+    pdf.cell(0, 6, _safe(title), new_x="LMARGIN", new_y="NEXT")
+    pdf.set_x(MARGIN + 4)
+    pdf.set_font("Helvetica", "", 8.5)
+    pdf.set_text_color(*MUTED)
+    pdf.cell(0, 4.5, _safe(subtitle), new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(2.5)
+
+
+def _header(pdf: _SummaryPdf, data: SummaryInput) -> None:
+    pdf.set_font("Helvetica", "B", 8)
+    pdf.set_text_color(*PRIMARY)
+    pdf.cell(0, 5, "CLAUSELENS AI  |  DOCUMENT SUMMARY", new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(1)
+    pdf.set_font("Helvetica", "B", 19)
+    pdf.set_text_color(*INK)
+    pdf.multi_cell(0, 9, _safe(data.title), new_x="LMARGIN", new_y="NEXT")
+    pdf.set_font("Helvetica", "", 9.5)
+    pdf.set_text_color(*MUTED)
+    details = [data.document_type or "Document", f"{data.page_count} pages"]
+    if data.parties:
+        details.append("Between " + " and ".join(data.parties))
+    pdf.multi_cell(0, 5, _safe("  |  ".join(details)), new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(4)
+
+    stats = [
+        (str(data.page_count), "pages"),
+        (str(data.clause_count), "clauses"),
+        (str(len(data.facts)), "key details found"),
+        (str(len(data.review_issues)), "items to review"),
+    ]
+    gap = 4
+    width = (pdf.w - 2 * MARGIN - gap * (len(stats) - 1)) / len(stats)
+    y = pdf.get_y()
+    for index, (number, label) in enumerate(stats):
+        x = MARGIN + index * (width + gap)
+        warn = label == "items to review" and number != "0"
+        pdf.set_fill_color(*(WARNING_BG if warn else BACKGROUND))
+        pdf.set_draw_color(*BORDER)
+        pdf.rect(x, y, width, 17, style="DF", round_corners=True, corner_radius=2)
+        pdf.set_xy(x + 4, y + 2.5)
+        pdf.set_font("Helvetica", "B", 15)
+        pdf.set_text_color(*(WARNING if warn else PRIMARY))
+        pdf.cell(width - 8, 7, number)
+        pdf.set_xy(x + 4, y + 9.5)
+        pdf.set_font("Helvetica", "", 8)
+        pdf.set_text_color(*MUTED)
+        pdf.cell(width - 8, 5, label)
+    pdf.set_y(y + 21)
+
+
+def _facts_by_concept(facts: list[LegalFact]) -> dict[str, list[LegalFact]]:
+    grouped: dict[str, list[LegalFact]] = {}
+    for fact in facts:
+        grouped.setdefault(fact.concept, []).append(fact)
+    return grouped
+
+
+def _at_a_glance(pdf: _SummaryPdf, grouped: dict[str, list[LegalFact]]) -> None:
+    lines = [(label, grouped[key][:3]) for key, label in AT_A_GLANCE.items() if grouped.get(key)]
+    if not lines:
+        return
+    _heading(pdf, "At a glance", "The most important numbers, with where to find them.")
+    top = pdf.get_y()
+    pdf.set_x(MARGIN + 5)
+    for label, facts in lines:
+        values = ";  ".join(f"{f.value} (p. {f.page_number})" for f in facts)
+        pdf.set_x(MARGIN + 5)
+        pdf.set_font("Helvetica", "B", 10)
+        pdf.set_text_color(*INK)
+        pdf.cell(GLANCE_LABEL_WIDTH, 6.5, _safe(label))
+        pdf.set_font("Helvetica", "", 10)
+        pdf.multi_cell(
+            pdf.w - 2 * MARGIN - GLANCE_LABEL_WIDTH - 10,
+            6.5,
+            _safe(values),
+            new_x="LMARGIN",
+            new_y="NEXT",
+        )
+    bottom = pdf.get_y() + 2
+    pdf.set_draw_color(*PRIMARY)
+    pdf.set_line_width(0.5)
+    pdf.line(MARGIN + 1, top - 1, MARGIN + 1, bottom)
+    pdf.set_line_width(0.2)
+    pdf.set_y(bottom + 1)
+
+
+def _clean_quote(text: str) -> str:
+    """Drop headings and clause numbers that come before the actual sentence."""
+    text = normalize_whitespace(text)
+    for pattern in (_LEADING_CAPS, _LEADING_NUMBER, _LEADING_BRACKET):
+        match = pattern.match(text)
+        if match and len(text) - match.end() > MIN_QUOTE_REMAINDER:
+            text = text[match.end() :]
+    return text
+
+
+def _fact_detail(fact: LegalFact) -> str:
+    quote = _shorten(_clean_quote(fact.source_text))
+    value = _shorten(fact.value, 90)
+    label = _clean_quote(fact.value).rstrip(".…")
+    if label in quote or value.endswith("...") or quote.startswith(label[:40]):
+        return f'"{_markdown_safe(quote)}"'
+    return f'**{_markdown_safe(value)}**\n"{_markdown_safe(quote)}"'
+
+
+def _facts_table(
+    pdf: _SummaryPdf, grouped: dict[str, list[LegalFact]], keys: tuple[str, ...]
+) -> None:
+    pdf.set_font("Helvetica", "", 9)
+    pdf.set_text_color(*INK)
+    pdf.set_draw_color(*BORDER)
+    pdf.set_fill_color(*BACKGROUND)  # the table fills alternate rows with the current colour
+    with pdf.table(
+        col_widths=COLUMN_WIDTHS,
+        headings_style=FontFace(emphasis="BOLD", color=WHITE, fill_color=PRIMARY),
+        borders_layout="HORIZONTAL_LINES",
+        cell_fill_color=BACKGROUND,
+        cell_fill_mode="ROWS",
+        line_height=4.8,
+        padding=(2, 2),
+        markdown=True,
+        text_align=("LEFT", "LEFT", "LEFT"),
+    ) as table:
+        table.row(("Topic", "What the document says", "Where"))
+        for key in keys:
+            for index, fact in enumerate(grouped.get(key, [])[:MAX_FACTS_PER_TOPIC]):
+                row = table.row()
+                row.cell(_safe(CONCEPTS[key].label) if index == 0 else "")
+                row.cell(_fact_detail(fact))
+                row.cell(_where(fact.page_number, fact.clause_ref))
+
+
+def _review_section(pdf: _SummaryPdf, issues: list[Issue]) -> None:
+    if not issues:
+        return
+    _heading(
+        pdf, "Needs your attention",
+        "Possible problems found in the document. Check these with the issuer or a "
+        "qualified legal professional.",
+    )  # fmt: skip
+    for issue in issues[:MAX_REVIEW_ITEMS]:
+        pdf.set_x(MARGIN + 2)
+        pdf.set_font("Helvetica", "B", 9)
+        pdf.set_text_color(*WARNING)
+        pdf.cell(20, 5, f"Page {issue.page_number}")
+        pdf.set_text_color(*INK)
+        pdf.multi_cell(
+            0, 5, _safe(f"{issue.label}: {issue.original}"), new_x="LMARGIN", new_y="NEXT"
+        )
+        pdf.set_x(MARGIN + 22)
+        pdf.set_font("Helvetica", "", 8.5)
+        pdf.set_text_color(*MUTED)
+        pdf.multi_cell(0, 4.5, _safe(issue.message), new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(1.5)
+
+
+def _questions_section(pdf: _SummaryPdf, questions: list[ProfessionalQuestion]) -> None:
+    if not questions:
+        return
+    _heading(
+        pdf, "Questions to ask a legal professional",
+        "Prompts for a conversation, not legal advice.",
+    )  # fmt: skip
+    for number, question in enumerate(questions, start=1):
+        pdf.set_x(MARGIN + 2)
+        pdf.set_font("Helvetica", "B", 9.5)
+        pdf.set_text_color(*PRIMARY)
+        pdf.cell(7, 5.2, f"{number}.")
+        pdf.set_font("Helvetica", "", 9.5)
+        pdf.set_text_color(*INK)
+        where = f"(page {question.fact.page_number})"
+        pdf.multi_cell(0, 5.2, _safe(f"{question.question} {where}"), new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(0.8)
+
+
+def build_summary_pdf(data: SummaryInput, destination: Path | None = None) -> bytes:
+    pdf = _SummaryPdf(format="A4")
+    pdf.generated_on = date.today().strftime("%d %B %Y")
+    pdf.set_title(_safe(f"Summary - {data.title}"))
+    pdf.set_author("ClauseLens AI")
+    pdf.set_margins(MARGIN, 16, MARGIN)
+    pdf.set_auto_page_break(auto=True, margin=FOOTER_HEIGHT + 4)
+    pdf.add_page()
+
+    _header(pdf, data)
+    grouped = _facts_by_concept(data.facts)
+    _at_a_glance(pdf, grouped)
+    for title, subtitle, keys in SECTIONS:
+        if any(grouped.get(key) for key in keys):
+            _heading(pdf, title, subtitle)
+            _facts_table(pdf, grouped, keys)
+    if not data.facts:
+        _heading(pdf, "Key details", "")
+        pdf.set_font("Helvetica", "", 10)
+        pdf.set_text_color(*MUTED)
+        pdf.multi_cell(
+            0, 5.5,
+            "No dates, notice periods, amounts or other key terms were detected automatically. "
+            "Open the document in ClauseLens to search it or ask questions.",
+        )  # fmt: skip
+    _review_section(pdf, data.review_issues)
+    _questions_section(pdf, data.questions)
+
+    content = bytes(pdf.output())
+    if destination is not None:
+        destination.write_bytes(content)
+    return content

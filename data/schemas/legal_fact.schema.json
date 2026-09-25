@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:clauselens:schema:legal-fact:v1",
+  "title": "Legal fact",
+  "description": "A piece of information extracted from a document. A fact is never stored without the evidence it came from.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "concept", "value", "evidence", "confidence", "extraction_method"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "document_id": { "type": "string", "minLength": 1 },
+    "concept": {
+      "description": "Concept id from data/taxonomy/legal_concepts.json, e.g. contract.notice_period.",
+      "type": "string",
+      "pattern": "^(contract|government|court|employment|financial|property|common)\\.[a-z0-9_]+$"
+    },
+    "value": {
+      "description": "The value as a person would read it, e.g. \"90 days\".",
+      "type": "string",
+      "minLength": 1
+    },
+    "normalized_value": { "$ref": "#/$defs/normalized_value" },
+    "evidence": { "$ref": "#/$defs/evidence" },
+    "confidence": {
+      "description": "0-1. Rule-based extraction uses fixed confidences per rule; see docs/AI_Pipeline.md.",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "extraction_method": { "enum": ["rule", "model", "llm", "manual"] },
+    "entity_ids": {
+      "description": "Entities (parties, authorities) this fact refers to.",
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "description": "Where the fact is written. Offsets are relative to the page text (pages[].text) and are end-exclusive.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page_number", "source_text"],
+      "properties": {
+        "page_number": { "type": "integer", "minimum": 1 },
+        "page_end": { "description": "Last page when the source text crosses a page break.", "type": "integer", "minimum": 1 },
+        "section_id": { "type": "string" },
+        "section": { "description": "Section heading, e.g. Termination.", "type": "string" },
+        "clause_id": { "type": "string" },
+        "clause_number": { "description": "As printed, e.g. 12.1, Section 5(1)(a), Rule 7.", "type": "string" },
+        "source_text": { "description": "Exact text copied from the document.", "type": "string", "minLength": 1 },
+        "char_start": { "type": "integer", "minimum": 0 },
+        "char_end": { "type": "integer", "minimum": 0 },
+        "bbox": {
+          "description": "Optional [x0, y0, x1, y1] in PDF points on page_number, for highlighting.",
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 4,
+          "maxItems": 4
+        }
+      }
+    },
+    "normalized_value": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "number", "unit"],
+          "properties": {
+            "kind": { "const": "duration" },
+            "number": { "type": "number", "minimum": 0 },
+            "unit": { "enum": ["hours", "days", "weeks", "months", "years"] },
+            "qualifier": { "enum": ["exactly", "at_least", "at_most", "within", "before", "after"] },
+            "calendar": { "enum": ["calendar", "business", "working", "clear"] }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "date"],
+          "properties": {
+            "kind": { "const": "date" },
+            "date": { "type": "string", "format": "date" },
+            "qualifier": { "enum": ["on", "on_or_before", "before", "after", "from", "until"] }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "amount", "currency"],
+          "properties": {
+            "kind": { "const": "money" },
+            "amount": { "type": "number" },
+            "currency": { "description": "ISO 4217, e.g. INR.", "type": "string", "pattern": "^[A-Z]{3}$" },
+            "period": { "enum": ["one_time", "per_day", "per_week", "per_month", "per_year"] }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "percentage" },
+            "value": { "type": "number" },
+            "period": { "enum": ["per_month", "per_year"] }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "text"],
+          "properties": {
+            "kind": { "const": "text" },
+            "text": { "type": "string" }
+          }
+        }
+      ]
+    }
+  }
+}

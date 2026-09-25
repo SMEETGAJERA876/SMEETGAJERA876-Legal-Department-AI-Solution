@@ -1,0 +1,239 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:clauselens:schema:normalized-document:v1",
+  "title": "Normalized document",
+  "description": "The common structure every parser (PDF, DOCX, image OCR, ...) produces: Document -> Page -> Section -> Clause -> Concept -> Fact -> Source evidence. Sections are document-level with a page range because real sections cross page breaks; every clause and fact still records its exact page.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "document", "pages", "sections", "facts"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "document": { "$ref": "#/$defs/document" },
+    "parties": { "type": "array", "items": { "$ref": "#/$defs/party" } },
+    "pages": { "type": "array", "items": { "$ref": "#/$defs/page" }, "minItems": 1 },
+    "sections": { "type": "array", "items": { "$ref": "#/$defs/section" } },
+    "facts": { "type": "array", "items": { "$ref": "urn:clauselens:schema:legal-fact:v1" } },
+    "entities": { "type": "array", "items": { "$ref": "#/$defs/entity" } },
+    "court": { "$ref": "#/$defs/court_metadata" },
+    "processing": { "$ref": "#/$defs/processing" }
+  },
+  "$defs": {
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "format", "language", "page_count", "classification"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "original_filename": { "type": "string" },
+        "format": {
+          "description": "FILE FORMAT (how the bytes are stored). Not the same as document type.",
+          "enum": ["pdf", "docx", "doc", "jpg", "jpeg", "png", "tiff", "txt", "xlsx", "xls", "csv", "pptx", "html", "htm", "xml", "eml", "msg"]
+        },
+        "mime_type": { "type": "string" },
+        "language": { "type": "string", "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]+)*$" },
+        "additional_languages": { "type": "array", "items": { "type": "string" } },
+        "date": { "description": "Date the document was issued/signed, if detected.", "type": "string", "format": "date" },
+        "reference_number": { "type": "string" },
+        "page_count": { "type": "integer", "minimum": 1 },
+        "is_scanned": { "type": "boolean" },
+        "classification": { "$ref": "#/$defs/classification" }
+      }
+    },
+    "classification": {
+      "description": "DOCUMENT TYPE (what the document is). Never forced: low confidence => status needs_review and document_type may be null.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "document_type", "confidence", "confidence_level", "status"],
+      "properties": {
+        "category": {
+          "anyOf": [
+            { "$ref": "urn:clauselens:schema:legal-concept:v1#/$defs/category" },
+            { "type": "null" }
+          ]
+        },
+        "document_type": {
+          "description": "Type id from data/taxonomy/document_types.json, or null when uncertain.",
+          "anyOf": [{ "type": "string", "pattern": "^[a-z_]+\\.[a-z0-9_]+$" }, { "type": "null" }]
+        },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "confidence_level": { "enum": ["high", "medium", "low"] },
+        "status": { "enum": ["confirmed", "needs_review", "user_verified", "unknown"] },
+        "method": { "enum": ["rules", "model", "llm", "user"] },
+        "signals": {
+          "description": "Human-readable reasons, e.g. 'title contains \"Employment Agreement\"'.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["document_type", "confidence"],
+            "properties": {
+              "document_type": { "type": "string" },
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "confidence_level": { "const": "low" } } },
+          "then": { "properties": { "status": { "enum": ["needs_review", "unknown", "user_verified"] } } }
+        }
+      ]
+    },
+    "party": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "role"],
+      "properties": {
+        "entity_id": { "type": "string" },
+        "name": { "type": "string", "minLength": 1 },
+        "role": {
+          "description": "Role in this document, e.g. employer, employee, landlord, tenant, petitioner, respondent, issuing_authority.",
+          "type": "string",
+          "pattern": "^[a-z_]+$"
+        },
+        "page_number": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page_number", "text"],
+      "properties": {
+        "page_number": { "type": "integer", "minimum": 1 },
+        "text": { "description": "Page text in reading order. Evidence offsets refer to this string.", "type": "string" },
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "ocr": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "used": { "type": "boolean" },
+            "engine": { "type": "string" },
+            "mean_confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "blocks": { "type": "array", "items": { "$ref": "#/$defs/block" } }
+      }
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "text"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "enum": ["heading", "paragraph", "list_item", "table", "header", "footer", "signature", "stamp", "image", "other"] },
+        "text": { "type": "string" },
+        "char_start": { "type": "integer", "minimum": 0 },
+        "char_end": { "type": "integer", "minimum": 0 },
+        "bbox": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 }
+      }
+    },
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "page_start", "clauses"],
+      "properties": {
+        "id": { "type": "string" },
+        "number": { "description": "As printed: 12, Section 5, Rule 7, Chapter II.", "type": "string" },
+        "heading": { "type": "string" },
+        "role": {
+          "description": "Structural role where known, e.g. termination, facts, arguments, findings, final_order, eligibility.",
+          "type": "string",
+          "pattern": "^[a-z_]+$"
+        },
+        "level": { "type": "integer", "minimum": 1 },
+        "parent_id": { "type": "string" },
+        "page_start": { "type": "integer", "minimum": 1 },
+        "page_end": { "type": "integer", "minimum": 1 },
+        "clauses": { "type": "array", "items": { "$ref": "#/$defs/clause" } }
+      }
+    },
+    "clause": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "page_number", "text"],
+      "properties": {
+        "id": { "type": "string" },
+        "clause_number": { "description": "As printed: 12.1, 5(1)(a), Rule 7(2).", "type": "string" },
+        "page_number": { "type": "integer", "minimum": 1 },
+        "page_end": { "type": "integer", "minimum": 1 },
+        "text": { "type": "string", "minLength": 1 },
+        "char_start": { "type": "integer", "minimum": 0 },
+        "char_end": { "type": "integer", "minimum": 0 },
+        "concepts": {
+          "description": "Concept ids present in this clause.",
+          "type": "array",
+          "items": { "type": "string", "pattern": "^(contract|government|court|employment|financial|property|common)\\.[a-z0-9_]+$" },
+          "uniqueItems": true
+        },
+        "fact_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "text"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "enum": ["person", "organization", "authority", "court", "location", "date", "money", "reference", "statute", "case_citation"] },
+        "text": { "type": "string", "minLength": 1 },
+        "normalized": { "type": "string" },
+        "mentions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["page_number"],
+            "properties": {
+              "page_number": { "type": "integer", "minimum": 1 },
+              "char_start": { "type": "integer", "minimum": 0 },
+              "char_end": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "court_metadata": {
+      "description": "Only for court.* document types (spec §9).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "court_name": { "type": "string" },
+        "case_number": { "type": "string" },
+        "case_type": { "type": "string" },
+        "case_year": { "type": "integer" },
+        "petitioners": { "type": "array", "items": { "type": "string" } },
+        "respondents": { "type": "array", "items": { "type": "string" } },
+        "judges": { "type": "array", "items": { "type": "string" } },
+        "bench": { "type": "string" },
+        "judgment_date": { "type": "string", "format": "date" },
+        "order_date": { "type": "string", "format": "date" },
+        "advocates": { "type": "array", "items": { "type": "string" } },
+        "sections": { "type": "array", "items": { "type": "string" } },
+        "acts": { "type": "array", "items": { "type": "string" } },
+        "citations": { "type": "array", "items": { "type": "string" } },
+        "issues": { "type": "array", "items": { "type": "string" } },
+        "findings": { "type": "array", "items": { "type": "string" } },
+        "final_order": { "type": "string" }
+      }
+    },
+    "processing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "parser": { "description": "e.g. PDFParser, DOCXParser, ImageOCRParser.", "type": "string" },
+        "parser_version": { "type": "string" },
+        "ocr_used": { "type": "boolean" },
+        "taxonomy_version": { "type": "string" },
+        "processed_at": { "type": "string", "format": "date-time" },
+        "warnings": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

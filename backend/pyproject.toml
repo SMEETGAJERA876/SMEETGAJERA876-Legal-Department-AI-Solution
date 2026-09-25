@@ -1,0 +1,71 @@
+[project]
+name = "clauselens-backend"
+version = "0.1.0"
+description = "ClauseLens AI backend API"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "pydantic>=2.8",
+    "pydantic-settings>=2.4",
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+    "psycopg[binary]>=3.2",
+    "pgvector>=0.3",
+    "pypdf>=6.19.0",
+    "python-multipart>=0.0.32",
+    "anthropic>=1.8.0",
+    "fastembed>=0.8.1",
+    "pymupdf>=1.28.2",
+    "pyspellchecker>=0.9.0",
+    "fpdf2>=2.8.8",
+    "google-auth>=2.58.1",
+    "requests>=2.34.2",
+    "rapidocr>=3.9.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "httpx>=0.27",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "jsonschema>=4.26.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# Sample document text: long sentences are the content itself.
+"scripts/make_sample_pdf.py" = ["E501"]
+"scripts/sample_government_docs.py" = ["E501"]
+# Classification rule tables: one rule per line reads best.
+"app/services/classification.py" = ["E501"]
+"tests/classification_cases.py" = ["E501"]
+"tests/extraction_cases.py" = ["E501"]
+"tests/real_document_cases.py" = ["E501"]
+# Extraction pattern tables: one regex per line reads best.
+"app/services/extraction.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["fastembed.*", "pgvector.*", "spellchecker.*", "fpdf.*", "pgserver.*", "rapidocr.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# PyMuPDF ships partial type hints.
+module = ["app.services.repair", "app.services.pdf_extraction", "app.services.parsing.pdf", "app.core.auth"]
+disallow_untyped_calls = false
+warn_return_any = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

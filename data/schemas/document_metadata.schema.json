@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:clauselens:schema:document-metadata:v1",
+  "title": "Dataset document metadata",
+  "description": "Metadata for a document in the training / evaluation dataset (dataset/). Never used for private user uploads unless the user gave explicit consent (docs/Data_Governance.md).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "document_id", "category", "document_type", "language", "format", "is_scanned", "page_count",
+    "split", "source", "license", "collection_method", "permission_status", "privacy_status"
+  ],
+  "properties": {
+    "document_id": { "type": "string", "pattern": "^DOC_[0-9]{5}$" },
+    "file_path": { "description": "Path relative to the repository root.", "type": "string" },
+    "sha256": { "description": "Content hash, used to catch duplicates across splits.", "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "category": { "$ref": "urn:clauselens:schema:legal-concept:v1#/$defs/category" },
+    "subcategory": { "type": "string" },
+    "document_type": {
+      "description": "Document type id from data/taxonomy/document_types.json.",
+      "type": "string",
+      "pattern": "^[a-z_]+\\.[a-z0-9_]+$"
+    },
+    "language": { "description": "BCP 47 code, e.g. en, hi, gu.", "type": "string", "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]+)*$" },
+    "format": { "enum": ["pdf", "docx", "doc", "jpg", "jpeg", "png", "tiff", "txt", "xlsx", "xls", "csv", "pptx", "html", "htm", "xml", "eml", "msg"] },
+    "is_scanned": { "type": "boolean" },
+    "ocr_required": { "type": "boolean" },
+    "page_count": { "type": "integer", "minimum": 1 },
+    "split": { "description": "Dataset split. A document (and its near-duplicates) belongs to exactly one.", "enum": ["train", "validation", "test", "evaluation"] },
+    "near_duplicate_group": { "description": "Documents in the same group must share a split.", "type": "string" },
+    "country": { "type": "string", "pattern": "^[A-Z]{2}$" },
+    "jurisdiction": { "description": "e.g. IN, IN-KA (Karnataka).", "type": "string" },
+    "date": { "type": "string", "format": "date" },
+    "document_version": { "type": "string" },
+    "has_tables": { "type": "boolean" },
+    "has_signature": { "type": "boolean" },
+    "has_annexure": { "type": "boolean" },
+    "contains_handwriting": { "type": "boolean" },
+    "contains_images": { "type": "boolean" },
+    "contains_stamps": { "type": "boolean" },
+    "contains_headers": { "type": "boolean" },
+    "contains_footers": { "type": "boolean" },
+    "source_type": { "enum": ["synthetic", "public_domain", "licensed", "user_contributed_with_consent", "government_open_data"] },
+    "source": { "description": "Where the document came from.", "type": "string", "minLength": 1 },
+    "license": { "description": "Licence that permits the use, e.g. CC-BY-4.0, GODL-India, project-owned.", "type": "string", "minLength": 1 },
+    "collection_method": { "enum": ["created", "downloaded_official_portal", "contributed", "purchased"] },
+    "permission_status": { "enum": ["owned", "licensed", "public_domain", "consent_given", "pending_review"] },
+    "copyright_status": { "type": "string" },
+    "privacy_status": {
+      "description": "Personal data must be removed or synthetic before a document enters any split.",
+      "enum": ["synthetic", "no_personal_data", "anonymised", "contains_personal_data"]
+    },
+    "annotations_path": { "description": "Annotation file (normalized document JSON) for this document.", "type": "string" }
+  }
+}

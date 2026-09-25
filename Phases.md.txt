@@ -1,0 +1,338 @@
+# ClauseLens AI — Development Phases
+
+## Phase 0 — Planning
+
+Read:
+
+- PRD.md
+- Architecture.md
+- Rules.md
+- Design.md
+
+Create the project structure.
+
+Do not implement application functionality yet.
+
+---
+
+# Phase 1 — Project Initialization
+
+Build:
+
+- Next.js frontend
+- FastAPI backend
+- PostgreSQL connection
+- SQLAlchemy
+- Environment configuration
+- Health endpoint
+
+Success:
+
+Frontend loads.
+
+Backend `/health` returns success.
+
+---
+
+# Phase 2 — Database
+
+Create:
+
+- users
+- documents
+- document_pages
+- document_chunks
+- clauses
+- legal_facts
+- conversations
+- messages
+- citations
+
+Add migrations.
+
+Success:
+
+Database starts successfully.
+
+Tables exist.
+
+---
+
+# Phase 3 — Document Upload
+
+Build:
+
+- Drag/drop
+- File picker
+- PDF validation
+- Upload progress
+- Upload API
+
+Success:
+
+User uploads PDF and receives document ID.
+
+---
+
+# Phase 4 — PDF Processing
+
+Build:
+
+- Page extraction
+- Page storage
+- Processing status
+
+Success:
+
+20-page PDF becomes 20 page records.
+
+---
+
+# Phase 5 — Exact Search
+
+Build:
+
+- Search box
+- Search API
+- Search results
+- Page numbers
+- Snippets
+
+Success:
+
+Searching "notice" finds matching pages.
+
+---
+
+# Phase 6 — PDF Viewer
+
+Build:
+
+- PDF viewer
+- Page navigation
+- Search result navigation
+- Zoom
+
+Success:
+
+Clicking Page 7 opens Page 7.
+
+---
+
+# Phase 7 — Semantic Search
+
+Build:
+
+- Embeddings
+- pgvector
+- Retrieval
+- Semantic search
+
+Success:
+
+Question:
+
+"What notice do I need before leaving?"
+
+finds a clause that says:
+
+"ninety days written notice."
+
+---
+
+# Phase 8 — Legal Concept Extraction
+
+Extract:
+
+- Notice period
+- Termination
+- Payment
+- Duration
+- Renewal
+- Penalty
+- Obligations
+- Dispute resolution
+- Confidentiality
+- Liability
+
+Success:
+
+Dashboard displays structured facts.
+
+---
+
+# Phase 9 — Document Q&A
+
+Build:
+
+- Question input
+- Retrieval
+- LLM
+- Answer
+- Sources
+
+Success:
+
+Every answer contains source references.
+
+---
+
+# Phase 10 — Source Navigation
+
+Build:
+
+- View source
+- Page navigation
+- Source panel
+- Highlighting
+
+Success:
+
+Clicking a citation takes the user to the relevant document location.
+
+---
+
+# Phase 11 — Related Clauses
+
+Build:
+
+- Related concept retrieval
+- Related clause UI
+
+Success:
+
+Searching termination also finds notice and penalty clauses where relevant.
+
+---
+
+# Phase 12 — Question Generator
+
+Build:
+
+- Generate questions
+- Source references
+
+Success:
+
+User can generate questions for a legal professional.
+
+---
+
+# Phase 13 — Contract Comparison
+
+Build:
+
+- Upload two documents
+- Compare concepts
+- Detect changes
+- Display changes
+- Source navigation
+
+Success:
+
+30-day notice → 60-day notice is detected.
+
+---
+
+# Phase 14 — Dashboard
+
+Build:
+
+- Home
+- Documents
+- Workspace
+- Search
+- Comparison
+
+Polish UI.
+
+---
+
+# Phase 15 — Safety
+
+Add:
+
+- Legal information disclaimer
+- Evidence indicators
+- Unsupported answer handling
+- Hallucination protection
+
+---
+
+# Phase 16 — Testing
+
+Test:
+
+- Multiple PDFs
+- Different document types
+- Search
+- Semantic questions
+- Incorrect questions
+- Missing information
+- Large documents
+
+---
+
+# Phase 17 — Performance
+
+Optimize:
+
+- PDF processing
+- Search
+- Embeddings
+- API responses
+- Frontend loading
+
+---
+
+# Phase 18 — Final Demo
+
+Prepare:
+
+Employment agreement.
+
+Demo:
+
+1. Upload.
+2. Process.
+3. Search "notice period".
+4. Show 90 days.
+5. Open Page 7.
+6. Highlight source.
+7. Ask "What happens if I leave early?"
+8. Show related clauses.
+9. Generate questions.
+
+---
+
+# Phase 19 — Deployment
+
+Prepare:
+
+- Production environment
+- Database
+- Environment variables
+- File storage
+- Frontend deployment
+- Backend deployment
+
+---
+
+# MVP STOP POINT
+
+If development time is limited, stop after:
+
+Phase 10.
+
+The MVP is:
+
+PDF
+→ Extraction
+→ Search
+→ Semantic Search
+→ AI
+→ Source
+→ Page Navigation
+→ Highlighting
+
+Everything after Phase 10 is enhancement.

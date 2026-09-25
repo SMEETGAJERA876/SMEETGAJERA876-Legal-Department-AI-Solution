@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: clauselens
+          POSTGRES_PASSWORD: clauselens
+          POSTGRES_DB: clauselens_test
+        ports: ["5433:5432"]
+        options: >-
+          --health-cmd "pg_isready -U clauselens" --health-interval 5s --health-retries 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.13"
+      - name: Enable pgvector
+        run: PGPASSWORD=clauselens psql -h localhost -p 5433 -U clauselens -d clauselens_test -c "CREATE EXTENSION IF NOT EXISTS vector"
+      - run: uv sync --frozen
+      - name: Lint
+        run: uv run ruff check app tests scripts && uv run ruff format --check app tests scripts
+      - name: Type check
+        run: uv run mypy app scripts
+      - name: Real statutes for the evaluation (India Code)
+        run: uv run python -m scripts.fetch_indiacode
+        continue-on-error: true # the evaluation test skips itself if the site is unreachable
+      - name: Tests (unit, API, security, OCR, evaluation)
+        run: uv run pytest -q
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_AUTH_MODE: disabled
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run build

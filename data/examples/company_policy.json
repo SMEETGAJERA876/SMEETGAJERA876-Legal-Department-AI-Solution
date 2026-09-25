@@ -1,0 +1,279 @@
+{
+  "schema_version": "1.0",
+  "document": {
+    "id": "DOC-COR-001",
+    "title": "Work From Home Policy",
+    "original_filename": "wfh_policy.docx",
+    "format": "docx",
+    "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "language": "en",
+    "date": "2026-07-01",
+    "reference_number": "HR/POL/07",
+    "page_count": 1,
+    "is_scanned": false,
+    "classification": {
+      "category": "employment",
+      "document_type": "employment.work_from_home_policy",
+      "confidence": 0.58,
+      "confidence_level": "medium",
+      "status": "confirmed",
+      "method": "rules",
+      "signals": [
+        "title \"WORK FROM HOME POLICY\"",
+        "issued by a company"
+      ],
+      "alternatives": [
+        {
+          "document_type": "corporate.company_policy",
+          "confidence": 0.3
+        },
+        {
+          "document_type": "employment.hr_policy",
+          "confidence": 0.1
+        }
+      ]
+    }
+  },
+  "parties": [
+    {
+      "entity_id": "E1",
+      "name": "Northwind Analytics Private Limited",
+      "role": "issuer",
+      "page_number": 1
+    }
+  ],
+  "pages": [
+    {
+      "page_number": 1,
+      "text": "NORTHWIND ANALYTICS PRIVATE LIMITED\nWORK FROM HOME POLICY\nPolicy No. HR/POL/07 Effective from 1 July 2026\n1. Purpose\n1.1 This policy explains when employees may work from home.\n2. Eligibility\n2.1 Employees who have completed probation are eligible to work from home for up to two (2) days per week.\n3. Responsibilities\n3.1 Employees must be reachable during core hours of 11:00 to 16:00.\n4. Data Security\n4.1 Company data must not be stored on personal devices.\n5. Withdrawal\n5.1 The Company may withdraw this facility by giving seven (7) days' notice."
+    }
+  ],
+  "sections": [
+    {
+      "id": "S2",
+      "number": "2",
+      "heading": "Eligibility",
+      "role": "eligibility",
+      "level": 1,
+      "page_start": 1,
+      "page_end": 1,
+      "clauses": [
+        {
+          "id": "C2.1",
+          "clause_number": "2.1",
+          "page_number": 1,
+          "text": "2.1 Employees who have completed probation are eligible to work from home for up to two (2) days per week.",
+          "char_start": 192,
+          "char_end": 298,
+          "concepts": [
+            "government.eligibility"
+          ],
+          "fact_ids": [
+            "DOC-COR-001-F003"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S3",
+      "number": "3",
+      "heading": "Responsibilities",
+      "role": "responsibilities",
+      "level": 1,
+      "page_start": 1,
+      "page_end": 1,
+      "clauses": [
+        {
+          "id": "C3.1",
+          "clause_number": "3.1",
+          "page_number": 1,
+          "text": "3.1 Employees must be reachable during core hours of 11:00 to 16:00.",
+          "char_start": 319,
+          "char_end": 387,
+          "concepts": [
+            "contract.obligation"
+          ],
+          "fact_ids": [
+            "DOC-COR-001-F004"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "number": "4",
+      "heading": "Data Security",
+      "role": "restrictions",
+      "level": 1,
+      "page_start": 1,
+      "page_end": 1,
+      "clauses": [
+        {
+          "id": "C4.1",
+          "clause_number": "4.1",
+          "page_number": 1,
+          "text": "4.1 Company data must not be stored on personal devices.",
+          "char_start": 405,
+          "char_end": 461,
+          "concepts": [
+            "contract.restriction"
+          ],
+          "fact_ids": [
+            "DOC-COR-001-F005"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "number": "5",
+      "heading": "Withdrawal",
+      "role": "termination",
+      "level": 1,
+      "page_start": 1,
+      "page_end": 1,
+      "clauses": [
+        {
+          "id": "C5.1",
+          "clause_number": "5.1",
+          "page_number": 1,
+          "text": "5.1 The Company may withdraw this facility by giving seven (7) days' notice.",
+          "char_start": 476,
+          "char_end": 552,
+          "concepts": [
+            "contract.notice_period"
+          ],
+          "fact_ids": [
+            "DOC-COR-001-F006"
+          ]
+        }
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "DOC-COR-001-F001",
+      "document_id": "DOC-COR-001",
+      "concept": "government.effective_date",
+      "value": "1 July 2026",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "Effective from 1 July 2026",
+        "char_start": 79,
+        "char_end": 105
+      },
+      "confidence": 0.95,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "date",
+        "date": "2026-07-01",
+        "qualifier": "from"
+      }
+    },
+    {
+      "id": "DOC-COR-001-F002",
+      "document_id": "DOC-COR-001",
+      "concept": "government.reference_number",
+      "value": "HR/POL/07",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "Policy No. HR/POL/07",
+        "char_start": 58,
+        "char_end": 78
+      },
+      "confidence": 0.9,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-COR-001-F003",
+      "document_id": "DOC-COR-001",
+      "concept": "government.eligibility",
+      "value": "Completed probation; up to 2 days per week",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "Employees who have completed probation are eligible to work from home for up to two (2) days per week.",
+        "char_start": 196,
+        "char_end": 298,
+        "section": "Eligibility",
+        "clause_number": "2.1"
+      },
+      "confidence": 0.85,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-COR-001-F004",
+      "document_id": "DOC-COR-001",
+      "concept": "contract.obligation",
+      "value": "Reachable 11:00-16:00",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "Employees must be reachable during core hours of 11:00 to 16:00.",
+        "char_start": 323,
+        "char_end": 387,
+        "section": "Responsibilities",
+        "clause_number": "3.1"
+      },
+      "confidence": 0.85,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-COR-001-F005",
+      "document_id": "DOC-COR-001",
+      "concept": "contract.restriction",
+      "value": "No company data on personal devices",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "Company data must not be stored on personal devices.",
+        "char_start": 409,
+        "char_end": 461,
+        "section": "Data Security",
+        "clause_number": "4.1"
+      },
+      "confidence": 0.85,
+      "extraction_method": "rule"
+    },
+    {
+      "id": "DOC-COR-001-F006",
+      "document_id": "DOC-COR-001",
+      "concept": "contract.notice_period",
+      "value": "7 days",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "The Company may withdraw this facility by giving seven (7) days' notice.",
+        "char_start": 480,
+        "char_end": 552,
+        "section": "Withdrawal",
+        "clause_number": "5.1"
+      },
+      "confidence": 0.9,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "duration",
+        "number": 7,
+        "unit": "days"
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "E1",
+      "type": "organization",
+      "text": "Northwind Analytics Private Limited",
+      "mentions": [
+        {
+          "page_number": 1
+        }
+      ]
+    }
+  ],
+  "processing": {
+    "parser": "DOCXParser",
+    "parser_version": "planned",
+    "ocr_used": false,
+    "taxonomy_version": "1.0.0",
+    "processed_at": "2026-09-25T10:00:00Z",
+    "warnings": [
+      "Illustrative: DOCX parsing is designed but not implemented yet (see docs/AI_Pipeline.md)."
+    ]
+  }
+}

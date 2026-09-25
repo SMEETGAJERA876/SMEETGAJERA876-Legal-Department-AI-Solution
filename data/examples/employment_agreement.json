@@ -1,0 +1,373 @@
+{
+  "schema_version": "1.0",
+  "document": {
+    "id": "DOC-EMP-001",
+    "title": "Employment Agreement",
+    "original_filename": "employment_agreement.pdf",
+    "format": "pdf",
+    "mime_type": "application/pdf",
+    "language": "en",
+    "date": "2026-01-15",
+    "page_count": 10,
+    "is_scanned": false,
+    "classification": {
+      "category": "employment",
+      "document_type": "employment.employment_agreement",
+      "confidence": 0.94,
+      "confidence_level": "high",
+      "status": "confirmed",
+      "method": "rules",
+      "signals": [
+        "title contains \"Employment Agreement\"",
+        "parties described as Company and Employee",
+        "sections: Probation, Salary, Termination"
+      ],
+      "alternatives": [
+        {
+          "document_type": "employment.appointment_letter",
+          "confidence": 0.04
+        }
+      ]
+    }
+  },
+  "parties": [
+    {
+      "entity_id": "E1",
+      "name": "Northwind Analytics Private Limited",
+      "role": "employer",
+      "page_number": 1
+    },
+    {
+      "entity_id": "E2",
+      "name": "Priya Sharma",
+      "role": "employee",
+      "page_number": 1
+    }
+  ],
+  "pages": [
+    {
+      "page_number": 1,
+      "text": "EMPLOYMENT AGREEMENT\nThis Employment Agreement (the \"Agreement\") is made on January 15, 2026 between Northwind Analytics Private Limited (the \"Company\") and Priya Sharma (the \"Employee\").\n1. Definitions\n1.2 \"Effective Date\" means February 1, 2026."
+    },
+    {
+      "page_number": 2,
+      "text": "3. Term of Employment\n3.1 The term of this Agreement shall be two (2) years starting on the Effective Date.\n4. Probation\n4.1 During probation, either party may end the employment by giving fourteen (14) days written notice."
+    },
+    {
+      "page_number": 4,
+      "text": "6. Salary and Payment\n6.1 The Company shall pay the Employee a gross salary of INR 1,20,000 per month."
+    },
+    {
+      "page_number": 7,
+      "text": "12. Termination\n12.1 Either party may terminate this Agreement by providing ninety (90) days written notice to the other party."
+    }
+  ],
+  "sections": [
+    {
+      "id": "S1",
+      "number": "1",
+      "heading": "Definitions",
+      "role": "definitions",
+      "level": 1,
+      "page_start": 1,
+      "page_end": 1,
+      "clauses": [
+        {
+          "id": "C1.2",
+          "clause_number": "1.2",
+          "page_number": 1,
+          "text": "1.2 \"Effective Date\" means February 1, 2026.",
+          "char_start": 203,
+          "char_end": 247,
+          "concepts": [
+            "common.important_date"
+          ],
+          "fact_ids": [
+            "DOC-EMP-001-F002"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S3",
+      "number": "3",
+      "heading": "Term of Employment",
+      "role": "term",
+      "level": 1,
+      "page_start": 2,
+      "page_end": 2,
+      "clauses": [
+        {
+          "id": "C3.1",
+          "clause_number": "3.1",
+          "page_number": 2,
+          "text": "3.1 The term of this Agreement shall be two (2) years starting on the Effective Date.",
+          "char_start": 22,
+          "char_end": 107,
+          "concepts": [
+            "contract.term"
+          ],
+          "fact_ids": [
+            "DOC-EMP-001-F003"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "number": "4",
+      "heading": "Probation",
+      "role": "probation",
+      "level": 1,
+      "page_start": 2,
+      "page_end": 2,
+      "clauses": [
+        {
+          "id": "C4.1",
+          "clause_number": "4.1",
+          "page_number": 2,
+          "text": "4.1 During probation, either party may end the employment by giving fourteen (14) days written notice.",
+          "char_start": 121,
+          "char_end": 223,
+          "concepts": [
+            "contract.notice_period",
+            "employment.probation"
+          ],
+          "fact_ids": [
+            "DOC-EMP-001-F004"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S6",
+      "number": "6",
+      "heading": "Salary and Payment",
+      "role": "compensation",
+      "level": 1,
+      "page_start": 4,
+      "page_end": 4,
+      "clauses": [
+        {
+          "id": "C6.1",
+          "clause_number": "6.1",
+          "page_number": 4,
+          "text": "6.1 The Company shall pay the Employee a gross salary of INR 1,20,000 per month.",
+          "char_start": 22,
+          "char_end": 102,
+          "concepts": [
+            "employment.salary"
+          ],
+          "fact_ids": [
+            "DOC-EMP-001-F005"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "number": "12",
+      "heading": "Termination",
+      "role": "termination",
+      "level": 1,
+      "page_start": 7,
+      "page_end": 7,
+      "clauses": [
+        {
+          "id": "C12.1",
+          "clause_number": "12.1",
+          "page_number": 7,
+          "text": "12.1 Either party may terminate this Agreement by providing ninety (90) days written notice to the other party.",
+          "char_start": 16,
+          "char_end": 127,
+          "concepts": [
+            "contract.termination",
+            "contract.notice_period"
+          ],
+          "fact_ids": [
+            "DOC-EMP-001-F006",
+            "DOC-EMP-001-F007"
+          ]
+        }
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "DOC-EMP-001-F001",
+      "document_id": "DOC-EMP-001",
+      "concept": "common.important_date",
+      "value": "January 15, 2026",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "This Employment Agreement (the \"Agreement\") is made on January 15, 2026",
+        "char_start": 21,
+        "char_end": 92
+      },
+      "confidence": 0.95,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "date",
+        "date": "2026-01-15",
+        "qualifier": "on"
+      }
+    },
+    {
+      "id": "DOC-EMP-001-F002",
+      "document_id": "DOC-EMP-001",
+      "concept": "common.important_date",
+      "value": "February 1, 2026",
+      "evidence": {
+        "page_number": 1,
+        "source_text": "\"Effective Date\" means February 1, 2026.",
+        "char_start": 207,
+        "char_end": 247,
+        "section": "Definitions",
+        "clause_number": "1.2"
+      },
+      "confidence": 0.95,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "date",
+        "date": "2026-02-01"
+      }
+    },
+    {
+      "id": "DOC-EMP-001-F003",
+      "document_id": "DOC-EMP-001",
+      "concept": "contract.term",
+      "value": "2 years",
+      "evidence": {
+        "page_number": 2,
+        "source_text": "The term of this Agreement shall be two (2) years starting on the Effective Date.",
+        "char_start": 26,
+        "char_end": 107,
+        "section": "Term of Employment",
+        "clause_number": "3.1"
+      },
+      "confidence": 0.92,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "duration",
+        "number": 2,
+        "unit": "years"
+      }
+    },
+    {
+      "id": "DOC-EMP-001-F004",
+      "document_id": "DOC-EMP-001",
+      "concept": "contract.notice_period",
+      "value": "14 days",
+      "evidence": {
+        "page_number": 2,
+        "source_text": "During probation, either party may end the employment by giving fourteen (14) days written notice.",
+        "char_start": 125,
+        "char_end": 223,
+        "section": "Probation",
+        "clause_number": "4.1"
+      },
+      "confidence": 0.9,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "duration",
+        "number": 14,
+        "unit": "days"
+      }
+    },
+    {
+      "id": "DOC-EMP-001-F005",
+      "document_id": "DOC-EMP-001",
+      "concept": "employment.salary",
+      "value": "INR 1,20,000 per month",
+      "evidence": {
+        "page_number": 4,
+        "source_text": "The Company shall pay the Employee a gross salary of INR 1,20,000 per month.",
+        "char_start": 26,
+        "char_end": 102,
+        "section": "Salary and Payment",
+        "clause_number": "6.1"
+      },
+      "confidence": 0.93,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "money",
+        "amount": 120000,
+        "currency": "INR",
+        "period": "per_month"
+      }
+    },
+    {
+      "id": "DOC-EMP-001-F006",
+      "document_id": "DOC-EMP-001",
+      "concept": "contract.notice_period",
+      "value": "90 days",
+      "evidence": {
+        "page_number": 7,
+        "source_text": "Either party may terminate this Agreement by providing ninety (90) days written notice to the other party.",
+        "char_start": 21,
+        "char_end": 127,
+        "section": "Termination",
+        "clause_number": "12.1"
+      },
+      "confidence": 0.96,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "duration",
+        "number": 90,
+        "unit": "days"
+      }
+    },
+    {
+      "id": "DOC-EMP-001-F007",
+      "document_id": "DOC-EMP-001",
+      "concept": "contract.termination",
+      "value": "Either party may terminate with 90 days' written notice",
+      "evidence": {
+        "page_number": 7,
+        "source_text": "Either party may terminate this Agreement by providing ninety (90) days written notice to the other party.",
+        "char_start": 21,
+        "char_end": 127,
+        "section": "Termination",
+        "clause_number": "12.1"
+      },
+      "confidence": 0.85,
+      "extraction_method": "rule",
+      "normalized_value": {
+        "kind": "text",
+        "text": "mutual termination right"
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "E1",
+      "type": "organization",
+      "text": "Northwind Analytics Private Limited",
+      "mentions": [
+        {
+          "page_number": 1
+        }
+      ]
+    },
+    {
+      "id": "E2",
+      "type": "person",
+      "text": "Priya Sharma",
+      "mentions": [
+        {
+          "page_number": 1
+        }
+      ]
+    }
+  ],
+  "processing": {
+    "parser": "PDFParser",
+    "parser_version": "pymupdf-1.28",
+    "ocr_used": false,
+    "taxonomy_version": "1.0.0",
+    "processed_at": "2026-09-25T10:00:00Z",
+    "warnings": [
+      "Example shows 4 of 10 pages."
+    ]
+  }
+}

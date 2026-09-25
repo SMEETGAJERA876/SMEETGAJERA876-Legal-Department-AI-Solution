@@ -1,0 +1,92 @@
+# ClauseLens AI — Architecture
+
+## 1. Architecture Philosophy
+
+Build a modular monolithic application.
+
+Do NOT create unnecessary microservices.
+
+The initial architecture should be:
+
+Next.js
+    ↓
+FastAPI
+    ↓
+PostgreSQL
+    ↓
+pgvector
+
+AI services are accessed through the FastAPI backend.
+
+---
+
+# 2. Technology Stack
+
+## Frontend
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Lucide icons
+- TanStack Query
+- PDF.js / react-pdf or another reliable PDF viewer
+- Zod where appropriate
+
+## Backend
+
+- Python
+- FastAPI
+- Pydantic
+- SQLAlchemy
+- Alembic
+
+## Database
+
+- PostgreSQL
+- pgvector
+
+## AI
+
+Use a provider abstraction.
+
+Do not hardcode the application to one provider.
+
+Create an AI service interface so the LLM provider can be changed through environment variables.
+
+## File Processing
+
+PDF text extraction must preserve:
+
+document_id
+page_number
+text
+
+Later support OCR.
+
+---
+
+# 3. High-Level Architecture
+
+```text
+                 USER
+                   |
+                   v
+          +----------------+
+          |    Next.js     |
+          |    Frontend    |
+          +-------+--------+
+                  |
+                  | REST API
+                  v
+          +----------------+
+          |    FastAPI     |
+          |    Backend     |
+          +-------+--------+
+                  |
+       +----------+----------+
+       |          |          |
+       v          v          v
+ PostgreSQL   AI Service   File Storage
+ + pgvector

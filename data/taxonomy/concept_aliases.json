@@ -1,0 +1,558 @@
+{
+  "version": "1.0.0",
+  "aliases": {
+    "contract.parties": [
+      "parties",
+      "between",
+      "by and between",
+      "hereinafter referred to as"
+    ],
+    "contract.definitions": [
+      "definitions",
+      "means",
+      "shall mean",
+      "interpretation"
+    ],
+    "contract.scope": [
+      "scope",
+      "scope of work",
+      "services"
+    ],
+    "contract.term": [
+      "term",
+      "duration",
+      "period of",
+      "shall remain in force",
+      "validity",
+      "valid for"
+    ],
+    "contract.renewal": [
+      "renewal",
+      "renew",
+      "extension",
+      "automatically renew"
+    ],
+    "contract.termination": [
+      "termination",
+      "terminate",
+      "end this agreement",
+      "cancel the agreement",
+      "termination of employment",
+      "revocation"
+    ],
+    "contract.notice_period": [
+      "notice period",
+      "termination notice",
+      "notice requirement",
+      "prior notice",
+      "written notice",
+      "days' notice",
+      "advance notice",
+      "intimation"
+    ],
+    "contract.payment": [
+      "payment",
+      "pay",
+      "consideration",
+      "salary",
+      "fee",
+      "rent",
+      "remuneration",
+      "compensation"
+    ],
+    "contract.fee": [
+      "fee",
+      "fees",
+      "charges",
+      "application fee"
+    ],
+    "contract.penalty": [
+      "penalty",
+      "fine",
+      "liquidated damages",
+      "forfeit",
+      "late fee",
+      "punishable",
+      "consequences"
+    ],
+    "contract.obligation": [
+      "shall",
+      "must",
+      "is required to",
+      "responsible for",
+      "obligations",
+      "duties",
+      "undertakes to"
+    ],
+    "contract.right": [
+      "right to",
+      "entitled to",
+      "may request",
+      "may apply"
+    ],
+    "contract.restriction": [
+      "shall not",
+      "must not",
+      "prohibited",
+      "restricted"
+    ],
+    "contract.confidentiality": [
+      "confidentiality",
+      "confidential information",
+      "non-disclosure",
+      "trade secret"
+    ],
+    "contract.intellectual_property": [
+      "intellectual property",
+      "ip",
+      "copyright",
+      "work product",
+      "ownership"
+    ],
+    "contract.indemnification": [
+      "indemnify",
+      "indemnification",
+      "indemnity",
+      "hold harmless"
+    ],
+    "contract.liability": [
+      "liability",
+      "liable",
+      "limitation of liability",
+      "damages"
+    ],
+    "contract.warranty": [
+      "warranty",
+      "warrants",
+      "guarantee"
+    ],
+    "contract.representation": [
+      "represents",
+      "representations",
+      "declares"
+    ],
+    "contract.dispute_resolution": [
+      "dispute",
+      "dispute resolution",
+      "mediation",
+      "conciliation"
+    ],
+    "contract.arbitration": [
+      "arbitration",
+      "arbitrator",
+      "arbitral tribunal"
+    ],
+    "contract.governing_law": [
+      "governing law",
+      "governed by the laws of",
+      "applicable law"
+    ],
+    "contract.jurisdiction": [
+      "jurisdiction",
+      "courts of",
+      "exclusive jurisdiction"
+    ],
+    "contract.force_majeure": [
+      "force majeure",
+      "act of god",
+      "beyond reasonable control"
+    ],
+    "contract.amendment": [
+      "amendment",
+      "amended",
+      "modification",
+      "variation"
+    ],
+    "contract.assignment": [
+      "assignment",
+      "assign",
+      "transfer of rights"
+    ],
+    "contract.default": [
+      "default",
+      "event of default",
+      "fails to pay"
+    ],
+    "contract.breach": [
+      "breach",
+      "material breach",
+      "violation"
+    ],
+    "contract.cure_period": [
+      "cure period",
+      "remedy the breach",
+      "rectify within"
+    ],
+    "government.authority": [
+      "authority",
+      "department",
+      "ministry",
+      "officer",
+      "commissioner",
+      "issued by",
+      "by order"
+    ],
+    "government.reference_number": [
+      "no.",
+      "reference",
+      "ref.",
+      "file no",
+      "order no",
+      "notification no"
+    ],
+    "government.effective_date": [
+      "effective date",
+      "with effect from",
+      "w.e.f.",
+      "come into force"
+    ],
+    "government.eligibility": [
+      "eligibility",
+      "eligible",
+      "who can apply",
+      "criteria",
+      "qualification",
+      "age limit"
+    ],
+    "government.deadline": [
+      "deadline",
+      "last date",
+      "on or before",
+      "within",
+      "not later than",
+      "due date",
+      "time limit"
+    ],
+    "government.application_process": [
+      "how to apply",
+      "application process",
+      "procedure for applying",
+      "submit online"
+    ],
+    "government.required_documents": [
+      "documents required",
+      "attach",
+      "enclose",
+      "copy of",
+      "proof of",
+      "self-attested"
+    ],
+    "government.exemption": [
+      "exemption",
+      "exempted",
+      "shall not apply to"
+    ],
+    "government.procedure": [
+      "procedure",
+      "process",
+      "steps",
+      "manner"
+    ],
+    "government.responsibility": [
+      "responsible",
+      "responsibility",
+      "shall ensure",
+      "duty of"
+    ],
+    "government.compliance": [
+      "compliance",
+      "comply",
+      "adhere"
+    ],
+    "government.contact": [
+      "contact",
+      "helpline",
+      "email",
+      "phone",
+      "address for correspondence"
+    ],
+    "court.case_number": [
+      "case no",
+      "w.p.",
+      "civil appeal no",
+      "criminal appeal",
+      "o.s. no"
+    ],
+    "court.court": [
+      "in the court of",
+      "high court",
+      "supreme court",
+      "tribunal",
+      "district court"
+    ],
+    "court.judge": [
+      "coram",
+      "hon'ble",
+      "justice",
+      "bench",
+      "before"
+    ],
+    "court.issue": [
+      "issues",
+      "points for determination",
+      "question for consideration"
+    ],
+    "court.fact": [
+      "facts",
+      "brief facts",
+      "background"
+    ],
+    "court.argument": [
+      "argued",
+      "contended",
+      "submitted",
+      "learned counsel"
+    ],
+    "court.evidence": [
+      "exhibit",
+      "evidence",
+      "witness",
+      "deposition"
+    ],
+    "court.law": [
+      "section",
+      "article",
+      "under the act",
+      "provision"
+    ],
+    "court.statute": [
+      "act",
+      "rules",
+      "code"
+    ],
+    "court.precedent": [
+      "relied on",
+      "held in",
+      "v.",
+      "vs."
+    ],
+    "court.finding": [
+      "we find",
+      "it is held",
+      "held that",
+      "findings"
+    ],
+    "court.direction": [
+      "directed to",
+      "shall",
+      "directions"
+    ],
+    "court.final_order": [
+      "petition is allowed",
+      "dismissed",
+      "disposed of",
+      "ordered accordingly"
+    ],
+    "employment.employer": [
+      "employer",
+      "the company"
+    ],
+    "employment.employee": [
+      "employee",
+      "the candidate"
+    ],
+    "employment.job_title": [
+      "designation",
+      "position",
+      "appointed as",
+      "role"
+    ],
+    "employment.joining_date": [
+      "joining date",
+      "date of joining",
+      "commencement"
+    ],
+    "employment.salary": [
+      "salary",
+      "ctc",
+      "gross salary",
+      "basic pay",
+      "wages"
+    ],
+    "employment.compensation": [
+      "compensation",
+      "remuneration",
+      "bonus",
+      "incentive"
+    ],
+    "employment.probation": [
+      "probation",
+      "probationary period"
+    ],
+    "employment.working_hours": [
+      "working hours",
+      "hours per week",
+      "shift"
+    ],
+    "employment.leave": [
+      "leave",
+      "paid leave",
+      "sick leave",
+      "casual leave"
+    ],
+    "employment.benefits": [
+      "benefits",
+      "insurance",
+      "provident fund",
+      "gratuity",
+      "allowance"
+    ],
+    "employment.non_compete": [
+      "non-compete",
+      "shall not engage",
+      "competing business"
+    ],
+    "employment.non_solicitation": [
+      "non-solicitation",
+      "shall not solicit"
+    ],
+    "employment.work_location": [
+      "place of work",
+      "location",
+      "posted at"
+    ],
+    "employment.transfer": [
+      "transfer",
+      "relocate",
+      "posted to any"
+    ],
+    "financial.amount": [
+      "amount",
+      "sum of",
+      "rs.",
+      "inr",
+      "₹"
+    ],
+    "financial.currency": [
+      "inr",
+      "rupees",
+      "usd",
+      "currency"
+    ],
+    "financial.interest_rate": [
+      "interest rate",
+      "rate of interest",
+      "per annum",
+      "% p.a."
+    ],
+    "financial.payment_date": [
+      "payment date",
+      "paid on",
+      "payable on"
+    ],
+    "financial.due_date": [
+      "due date",
+      "due on",
+      "payable by"
+    ],
+    "financial.late_fee": [
+      "late fee",
+      "late payment charge",
+      "delayed payment"
+    ],
+    "financial.collateral": [
+      "collateral",
+      "pledge",
+      "hypothecation"
+    ],
+    "financial.security": [
+      "security",
+      "security deposit",
+      "guarantee"
+    ],
+    "property.property": [
+      "property",
+      "premises",
+      "flat",
+      "plot",
+      "schedule property"
+    ],
+    "property.owner": [
+      "owner",
+      "lessor",
+      "landlord",
+      "licensor"
+    ],
+    "property.buyer": [
+      "buyer",
+      "purchaser",
+      "vendee"
+    ],
+    "property.seller": [
+      "seller",
+      "vendor"
+    ],
+    "property.tenant": [
+      "tenant",
+      "lessee",
+      "licensee"
+    ],
+    "property.landlord": [
+      "landlord",
+      "lessor",
+      "licensor"
+    ],
+    "property.address": [
+      "address",
+      "situated at",
+      "located at"
+    ],
+    "property.area": [
+      "area",
+      "sq. ft",
+      "square feet",
+      "sq. m",
+      "acres"
+    ],
+    "property.rent": [
+      "rent",
+      "monthly rent",
+      "licence fee"
+    ],
+    "property.deposit": [
+      "deposit",
+      "security deposit",
+      "advance"
+    ],
+    "property.sale_price": [
+      "sale price",
+      "consideration",
+      "total price"
+    ],
+    "property.registration": [
+      "registration",
+      "registered",
+      "sub-registrar",
+      "stamp duty"
+    ],
+    "property.possession": [
+      "possession",
+      "handover",
+      "vacant possession"
+    ],
+    "common.important_date": [
+      "date",
+      "dated",
+      "on",
+      "with effect from"
+    ],
+    "common.important_note": [
+      "note",
+      "n.b.",
+      "please note",
+      "important",
+      "it is hereby notified",
+      "notice is hereby given",
+      "disclaimer"
+    ],
+    "common.appeal": [
+      "appeal",
+      "appellate authority",
+      "grievance",
+      "complaint",
+      "objection",
+      "representation",
+      "redress"
+    ]
+  }
+}

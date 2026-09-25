@@ -1,0 +1,2050 @@
+{
+  "version": "1.1.0",
+  "description": "ClauseLens legal concept taxonomy. engine_key links a concept to the key used by the current extraction engine (backend/app/services/concepts.py).",
+  "value_types": [
+    "text",
+    "duration",
+    "date",
+    "date_or_duration",
+    "money",
+    "percentage",
+    "party",
+    "party_list",
+    "person",
+    "organization",
+    "identifier",
+    "reference",
+    "address",
+    "area",
+    "contact",
+    "list",
+    "boolean"
+  ],
+  "groups": [
+    "contract",
+    "government",
+    "court",
+    "employment",
+    "financial",
+    "property",
+    "common"
+  ],
+  "concepts": [
+    {
+      "id": "contract.parties",
+      "name": "Parties",
+      "group": "contract",
+      "description": "The people or organisations bound by the document and their roles.",
+      "aliases": [
+        "parties",
+        "between",
+        "by and between",
+        "hereinafter referred to as"
+      ],
+      "value_type": "party_list",
+      "example": "Northwind Analytics Pvt. Ltd. (Employer) and Priya Sharma (Employee)",
+      "source_locations": [
+        "Title",
+        "Parties",
+        "Recitals"
+      ],
+      "applies_to": [
+        "legal",
+        "employment",
+        "property",
+        "financial",
+        "corporate"
+      ],
+      "engine_key": "parties"
+    },
+    {
+      "id": "contract.definitions",
+      "name": "Definitions",
+      "group": "contract",
+      "description": "Terms given a specific meaning in the document.",
+      "aliases": [
+        "definitions",
+        "means",
+        "shall mean",
+        "interpretation"
+      ],
+      "value_type": "text",
+      "example": "\"Effective Date\" means February 1, 2026",
+      "source_locations": [
+        "Definitions"
+      ],
+      "applies_to": [
+        "legal",
+        "policy"
+      ]
+    },
+    {
+      "id": "contract.scope",
+      "name": "Scope",
+      "group": "contract",
+      "description": "What the document or service covers.",
+      "aliases": [
+        "scope",
+        "scope of work",
+        "services"
+      ],
+      "value_type": "text",
+      "example": "Data analysis services for the Company",
+      "source_locations": [
+        "Scope",
+        "Statement of work"
+      ],
+      "applies_to": [
+        "legal",
+        "corporate",
+        "policy"
+      ]
+    },
+    {
+      "id": "contract.term",
+      "name": "Term",
+      "group": "contract",
+      "description": "How long the agreement lasts.",
+      "aliases": [
+        "term",
+        "duration",
+        "period of",
+        "shall remain in force",
+        "validity",
+        "valid for"
+      ],
+      "value_type": "duration",
+      "example": "2 years",
+      "source_locations": [
+        "Term",
+        "Commencement"
+      ],
+      "applies_to": [
+        "legal",
+        "employment",
+        "property",
+        "financial"
+      ],
+      "engine_key": "duration"
+    },
+    {
+      "id": "contract.renewal",
+      "name": "Renewal",
+      "group": "contract",
+      "description": "Whether and how the agreement continues after its term.",
+      "aliases": [
+        "renewal",
+        "renew",
+        "extension",
+        "automatically renew"
+      ],
+      "value_type": "text",
+      "example": "Renews automatically for 1 year unless 60 days' notice is given",
+      "source_locations": [
+        "Term",
+        "Renewal"
+      ],
+      "applies_to": [
+        "legal",
+        "property"
+      ],
+      "engine_key": "renewal"
+    },
+    {
+      "id": "contract.termination",
+      "name": "Termination",
+      "group": "contract",
+      "description": "How and when the agreement can be ended.",
+      "aliases": [
+        "termination",
+        "terminate",
+        "end this agreement",
+        "cancel the agreement",
+        "termination of employment",
+        "revocation"
+      ],
+      "value_type": "text",
+      "example": "Either party may terminate with 90 days' written notice",
+      "source_locations": [
+        "Termination"
+      ],
+      "applies_to": [
+        "legal",
+        "employment",
+        "property"
+      ],
+      "engine_key": "termination"
+    },
+    {
+      "id": "contract.notice_period",
+      "name": "Notice Period",
+      "group": "contract",
+      "description": "Time that must be given before ending the agreement or taking an action.",
+      "aliases": [
+        "notice period",
+        "termination notice",
+        "notice requirement",
+        "prior notice",
+        "written notice",
+        "days' notice",
+        "advance notice",
+        "intimation"
+      ],
+      "value_type": "duration",
+      "example": "90 days",
+      "source_locations": [
+        "Termination",
+        "Notice",
+        "Probation"
+      ],
+      "applies_to": [
+        "legal",
+        "employment",
+        "property",
+        "government"
+      ],
+      "engine_key": "notice_period"
+    },
+    {
+      "id": "contract.payment",
+      "name": "Payment",
+      "group": "contract",
+      "description": "Money one party must pay the other, and when.",
+      "aliases": [
+        "payment",
+        "pay",
+        "consideration",
+        "salary",
+        "fee",
+        "rent",
+        "remuneration",
+        "compensation"
+      ],
+      "value_type": "money",
+      "example": "INR 1,20,000 per month",
+      "source_locations": [
+        "Payment",
+        "Compensation",
+        "Fees"
+      ],
+      "applies_to": [
+        "legal",
+        "employment",
+        "property",
+        "financial",
+        "government",
+        "education"
+      ],
+      "engine_key": "payment"
+    },
+    {
+      "id": "contract.fee",
+      "name": "Fee",
+      "group": "contract",
+      "description": "A charge for a service, application or action.",
+      "aliases": [
+        "fee",
+        "fees",
+        "charges",
+        "application fee"
+      ],
+      "value_type": "money",
+      "example": "Rs. 250 application fee",
+      "source_locations": [
+        "Fees",
+        "Payment"
+      ],
+      "applies_to": [
+        "legal",
+        "government",
+        "public_notice",
+        "education"
+      ]
+    },
+    {
+      "id": "contract.penalty",
+      "name": "Penalty",
+      "group": "contract",
+      "description": "Money or consequence imposed when something is not done.",
+      "aliases": [
+        "penalty",
+        "fine",
+        "liquidated damages",
+        "forfeit",
+        "late fee",
+        "punishable",
+        "consequences"
+      ],
+      "value_type": "money",
+      "example": "Rs. 5,000 penalty",
+      "source_locations": [
+        "Penalty",
+        "Default",
+        "Termination"
+      ],
+      "applies_to": [
+        "legal",
+        "government",
+        "financial",
+        "employment"
+      ],
+      "engine_key": "penalty"
+    },
+    {
+      "id": "contract.obligation",
+      "name": "Obligation",
+      "group": "contract",
+      "description": "Something a party must do.",
+      "aliases": [
+        "shall",
+        "must",
+        "is required to",
+        "responsible for",
+        "obligations",
+        "duties",
+        "undertakes to"
+      ],
+      "value_type": "text",
+      "example": "The Employee shall maintain accurate records",
+      "source_locations": [
+        "Obligations",
+        "Duties",
+        "Responsibilities"
+      ],
+      "applies_to": [
+        "legal",
+        "employment",
+        "policy",
+        "government"
+      ],
+      "engine_key": "obligations"
+    },
+    {
+      "id": "contract.right",
+      "name": "Right",
+      "group": "contract",
+      "description": "Something a party is entitled to.",
+      "aliases": [
+        "right to",
+        "entitled to",
+        "may request",
+        "may apply"
+      ],
+      "value_type": "text",
+      "example": "The Employee is entitled to 24 days of paid leave",
+      "source_locations": [
+        "Rights",
+        "Benefits"
+      ],
+      "applies_to": [
+        "legal",
+        "employment",
+        "government",
+        "policy"
+      ],
+      "engine_key": "rights"
+    },
+    {
+      "id": "contract.restriction",
+      "name": "Restriction",
+      "group": "contract",
+      "description": "Something a party must not do.",
+      "aliases": [
+        "shall not",
+        "must not",
+        "prohibited",
+        "restricted"
+      ],
+      "value_type": "text",
+      "example": "The tenant shall not sublet the premises",
+      "source_locations": [
+        "Restrictions",
+        "Covenants"
+      ],
+      "applies_to": [
+        "legal",
+        "property",
+        "policy"
+      ]
+    },
+    {
+      "id": "contract.confidentiality",
+      "name": "Confidentiality",
+      "group": "contract",
+      "description": "Duty to keep information secret.",
+      "aliases": [
+        "confidentiality",
+        "confidential information",
+        "non-disclosure",
+        "trade secret"
+      ],
+      "value_type": "text",
+      "example": "Keep information confidential for 3 years after exit",
+      "source_locations": [
+        "Confidentiality"
+      ],
+      "applies_to": [
+        "legal",
+        "employment",
+        "corporate"
+      ],
+      "engine_key": "confidentiality"
+    },
+    {
+      "id": "contract.intellectual_property",
+      "name": "Intellectual Property",
+      "group": "contract",
+      "description": "Who owns work, inventions and content.",
+      "aliases": [
+        "intellectual property",
+        "ip",
+        "copyright",
+        "work product",
+        "ownership"
+      ],
+      "value_type": "text",
+      "example": "All work product belongs to the Company",
+      "source_locations": [
+        "Intellectual property"
+      ],
+      "applies_to": [
+        "legal",
+        "employment"
+      ],
+      "engine_key": "intellectual_property"
+    },
+    {
+      "id": "contract.indemnification",
+      "name": "Indemnification",
+      "group": "contract",
+      "description": "Promise to cover another party's losses.",
+      "aliases": [
+        "indemnify",
+        "indemnification",
+        "indemnity",
+        "hold harmless"
+      ],
+      "value_type": "text",
+      "example": "The Vendor shall indemnify the Customer against third-party claims",
+      "source_locations": [
+        "Indemnity"
+      ],
+      "applies_to": [
+        "legal",
+        "corporate"
+      ],
+      "engine_key": "indemnification"
+    },
+    {
+      "id": "contract.liability",
+      "name": "Liability",
+      "group": "contract",
+      "description": "Limits and extent of responsibility for losses.",
+      "aliases": [
+        "liability",
+        "liable",
+        "limitation of liability",
+        "damages"
+      ],
+      "value_type": "text",
+      "example": "No liability for indirect damages",
+      "source_locations": [
+        "Liability"
+      ],
+      "applies_to": [
+        "legal",
+        "financial"
+      ],
+      "engine_key": "liability"
+    },
+    {
+      "id": "contract.warranty",
+      "name": "Warranty",
+      "group": "contract",
+      "description": "Promises about quality or condition.",
+      "aliases": [
+        "warranty",
+        "warrants",
+        "guarantee"
+      ],
+      "value_type": "text",
+      "example": "Software will perform materially as described for 90 days",
+      "source_locations": [
+        "Warranty"
+      ],
+      "applies_to": [
+        "legal"
+      ]
+    },
+    {
+      "id": "contract.representation",
+      "name": "Representation",
+      "group": "contract",
+      "description": "Statements of fact a party confirms are true.",
+      "aliases": [
+        "represents",
+        "representations",
+        "declares"
+      ],
+      "value_type": "text",
+      "example": "The Seller represents that the property is free of encumbrances",
+      "source_locations": [
+        "Representations and warranties"
+      ],
+      "applies_to": [
+        "legal",
+        "property"
+      ]
+    },
+    {
+      "id": "contract.dispute_resolution",
+      "name": "Dispute Resolution",
+      "group": "contract",
+      "description": "How disagreements are resolved.",
+      "aliases": [
+        "dispute",
+        "dispute resolution",
+        "mediation",
+        "conciliation"
+      ],
+      "value_type": "text",
+      "example": "Mediation, then arbitration in Bengaluru",
+      "source_locations": [
+        "Dispute resolution"
+      ],
+      "applies_to": [
+        "legal",
+        "employment",
+        "property"
+      ],
+      "engine_key": "dispute_resolution"
+    },
+    {
+      "id": "contract.arbitration",
+      "name": "Arbitration",
+      "group": "contract",
+      "description": "Resolution of disputes by an arbitrator instead of a court.",
+      "aliases": [
+        "arbitration",
+        "arbitrator",
+        "arbitral tribunal"
+      ],
+      "value_type": "text",
+      "example": "Arbitration in Bengaluru under the Arbitration and Conciliation Act",
+      "source_locations": [
+        "Dispute resolution"
+      ],
+      "applies_to": [
+        "legal"
+      ],
+      "engine_key": "arbitration"
+    },
+    {
+      "id": "contract.governing_law",
+      "name": "Governing Law",
+      "group": "contract",
+      "description": "Which country's or state's law applies.",
+      "aliases": [
+        "governing law",
+        "governed by the laws of",
+        "applicable law"
+      ],
+      "value_type": "text",
+      "example": "Laws of India",
+      "source_locations": [
+        "Governing law"
+      ],
+      "applies_to": [
+        "legal",
+        "employment"
+      ],
+      "engine_key": "governing_law"
+    },
+    {
+      "id": "contract.jurisdiction",
+      "name": "Jurisdiction",
+      "group": "contract",
+      "description": "Which courts can hear disputes.",
+      "aliases": [
+        "jurisdiction",
+        "courts of",
+        "exclusive jurisdiction"
+      ],
+      "value_type": "text",
+      "example": "Courts at Bengaluru",
+      "source_locations": [
+        "Jurisdiction"
+      ],
+      "applies_to": [
+        "legal"
+      ],
+      "engine_key": "jurisdiction"
+    },
+    {
+      "id": "contract.force_majeure",
+      "name": "Force Majeure",
+      "group": "contract",
+      "description": "Events outside a party's control that excuse performance.",
+      "aliases": [
+        "force majeure",
+        "act of god",
+        "beyond reasonable control"
+      ],
+      "value_type": "text",
+      "example": "Floods, war, epidemics",
+      "source_locations": [
+        "Force majeure"
+      ],
+      "applies_to": [
+        "legal"
+      ],
+      "engine_key": "force_majeure"
+    },
+    {
+      "id": "contract.amendment",
+      "name": "Amendment",
+      "group": "contract",
+      "description": "How the document can be changed.",
+      "aliases": [
+        "amendment",
+        "amended",
+        "modification",
+        "variation"
+      ],
+      "value_type": "text",
+      "example": "Changes only in writing signed by both parties",
+      "source_locations": [
+        "Amendments"
+      ],
+      "applies_to": [
+        "legal",
+        "government",
+        "policy"
+      ]
+    },
+    {
+      "id": "contract.assignment",
+      "name": "Assignment",
+      "group": "contract",
+      "description": "Whether rights can be transferred to someone else.",
+      "aliases": [
+        "assignment",
+        "assign",
+        "transfer of rights"
+      ],
+      "value_type": "text",
+      "example": "No assignment without prior written consent",
+      "source_locations": [
+        "Assignment"
+      ],
+      "applies_to": [
+        "legal"
+      ],
+      "engine_key": "assignment"
+    },
+    {
+      "id": "contract.default",
+      "name": "Default",
+      "group": "contract",
+      "description": "What counts as failing to meet obligations.",
+      "aliases": [
+        "default",
+        "event of default",
+        "fails to pay"
+      ],
+      "value_type": "text",
+      "example": "Non-payment for 60 days is an event of default",
+      "source_locations": [
+        "Default"
+      ],
+      "applies_to": [
+        "legal",
+        "financial"
+      ]
+    },
+    {
+      "id": "contract.breach",
+      "name": "Breach",
+      "group": "contract",
+      "description": "Violation of the agreement and its consequences.",
+      "aliases": [
+        "breach",
+        "material breach",
+        "violation"
+      ],
+      "value_type": "text",
+      "example": "Material breach allows immediate termination",
+      "source_locations": [
+        "Termination",
+        "Default"
+      ],
+      "applies_to": [
+        "legal"
+      ]
+    },
+    {
+      "id": "contract.cure_period",
+      "name": "Cure Period",
+      "group": "contract",
+      "description": "Time allowed to fix a breach before consequences apply.",
+      "aliases": [
+        "cure period",
+        "remedy the breach",
+        "rectify within"
+      ],
+      "value_type": "duration",
+      "example": "30 days",
+      "source_locations": [
+        "Termination",
+        "Default"
+      ],
+      "applies_to": [
+        "legal",
+        "financial"
+      ],
+      "engine_key": "cure_period"
+    },
+    {
+      "id": "government.authority",
+      "name": "Authority",
+      "group": "government",
+      "description": "The body that issued the document or is responsible for it.",
+      "aliases": [
+        "authority",
+        "department",
+        "ministry",
+        "officer",
+        "commissioner",
+        "issued by",
+        "by order"
+      ],
+      "value_type": "organization",
+      "example": "Department of Revenue, Government of Example State",
+      "source_locations": [
+        "Letterhead",
+        "Signature / Authority"
+      ],
+      "applies_to": [
+        "government",
+        "public_notice",
+        "policy"
+      ],
+      "engine_key": "authority"
+    },
+    {
+      "id": "government.reference_number",
+      "name": "Reference Number",
+      "group": "government",
+      "description": "The official number of the document.",
+      "aliases": [
+        "no.",
+        "reference",
+        "ref.",
+        "file no",
+        "order no",
+        "notification no"
+      ],
+      "value_type": "identifier",
+      "example": "REV/2026/114",
+      "source_locations": [
+        "Letterhead"
+      ],
+      "applies_to": [
+        "government",
+        "public_notice",
+        "corporate",
+        "court"
+      ],
+      "engine_key": "reference_number"
+    },
+    {
+      "id": "government.effective_date",
+      "name": "Effective Date",
+      "group": "government",
+      "description": "When the document or rule takes effect.",
+      "aliases": [
+        "effective date",
+        "with effect from",
+        "w.e.f.",
+        "come into force"
+      ],
+      "value_type": "date",
+      "example": "2026-06-01",
+      "source_locations": [
+        "Effective date",
+        "Commencement"
+      ],
+      "applies_to": [
+        "government",
+        "policy",
+        "legal"
+      ],
+      "engine_key": "effective_date"
+    },
+    {
+      "id": "government.eligibility",
+      "name": "Eligibility",
+      "group": "government",
+      "description": "Who qualifies or can apply.",
+      "aliases": [
+        "eligibility",
+        "eligible",
+        "who can apply",
+        "criteria",
+        "qualification",
+        "age limit"
+      ],
+      "value_type": "text",
+      "example": "Owners of residential property",
+      "source_locations": [
+        "Eligibility"
+      ],
+      "applies_to": [
+        "government",
+        "public_notice",
+        "education",
+        "policy"
+      ],
+      "engine_key": "eligibility"
+    },
+    {
+      "id": "government.deadline",
+      "name": "Deadline",
+      "group": "government",
+      "description": "The last date or time allowed for an action.",
+      "aliases": [
+        "deadline",
+        "last date",
+        "on or before",
+        "within",
+        "not later than",
+        "due date",
+        "time limit"
+      ],
+      "value_type": "date_or_duration",
+      "example": "on or before 30 April 2026",
+      "source_locations": [
+        "Important dates",
+        "Procedure"
+      ],
+      "applies_to": [
+        "government",
+        "public_notice",
+        "education",
+        "legal",
+        "financial",
+        "court"
+      ],
+      "engine_key": "time_limits"
+    },
+    {
+      "id": "government.application_process",
+      "name": "Application Process",
+      "group": "government",
+      "description": "Steps to apply.",
+      "aliases": [
+        "how to apply",
+        "application process",
+        "procedure for applying",
+        "submit online"
+      ],
+      "value_type": "text",
+      "example": "Apply online with documents",
+      "source_locations": [
+        "Procedure"
+      ],
+      "applies_to": [
+        "government",
+        "public_notice",
+        "education"
+      ]
+    },
+    {
+      "id": "government.required_documents",
+      "name": "Required Documents",
+      "group": "government",
+      "description": "Documents that must be attached or produced.",
+      "aliases": [
+        "documents required",
+        "attach",
+        "enclose",
+        "copy of",
+        "proof of",
+        "self-attested"
+      ],
+      "value_type": "list",
+      "example": "Tax receipt; proof of ownership; ID",
+      "source_locations": [
+        "Documents required"
+      ],
+      "applies_to": [
+        "government",
+        "public_notice",
+        "education",
+        "financial"
+      ],
+      "engine_key": "documents_required"
+    },
+    {
+      "id": "government.exemption",
+      "name": "Exemption",
+      "group": "government",
+      "description": "Who or what is exempt from a rule.",
+      "aliases": [
+        "exemption",
+        "exempted",
+        "shall not apply to"
+      ],
+      "value_type": "text",
+      "example": "Senior citizens are exempt from the fee",
+      "source_locations": [
+        "Exemptions"
+      ],
+      "applies_to": [
+        "government",
+        "policy"
+      ]
+    },
+    {
+      "id": "government.procedure",
+      "name": "Procedure",
+      "group": "government",
+      "description": "The process to be followed.",
+      "aliases": [
+        "procedure",
+        "process",
+        "steps",
+        "manner"
+      ],
+      "value_type": "text",
+      "example": "Objections to be filed in Form B",
+      "source_locations": [
+        "Procedure"
+      ],
+      "applies_to": [
+        "government",
+        "policy",
+        "court"
+      ]
+    },
+    {
+      "id": "government.responsibility",
+      "name": "Responsibility",
+      "group": "government",
+      "description": "Duties assigned to an office or person.",
+      "aliases": [
+        "responsible",
+        "responsibility",
+        "shall ensure",
+        "duty of"
+      ],
+      "value_type": "text",
+      "example": "District Collector shall monitor implementation",
+      "source_locations": [
+        "Responsibilities"
+      ],
+      "applies_to": [
+        "government",
+        "policy",
+        "corporate"
+      ]
+    },
+    {
+      "id": "government.compliance",
+      "name": "Compliance",
+      "group": "government",
+      "description": "Requirements to comply and how compliance is checked.",
+      "aliases": [
+        "compliance",
+        "comply",
+        "adhere"
+      ],
+      "value_type": "text",
+      "example": "Compliance report within 30 days",
+      "source_locations": [
+        "Compliance"
+      ],
+      "applies_to": [
+        "government",
+        "policy",
+        "corporate"
+      ]
+    },
+    {
+      "id": "government.contact",
+      "name": "Contact",
+      "group": "government",
+      "description": "Where to get help or send communications.",
+      "aliases": [
+        "contact",
+        "helpline",
+        "email",
+        "phone",
+        "address for correspondence"
+      ],
+      "value_type": "contact",
+      "example": "Helpline 1800-000-0000",
+      "source_locations": [
+        "Contact"
+      ],
+      "applies_to": [
+        "government",
+        "public_notice",
+        "education",
+        "financial"
+      ],
+      "engine_key": "contact"
+    },
+    {
+      "id": "court.case_number",
+      "name": "Case Number",
+      "group": "court",
+      "description": "The court's case reference.",
+      "aliases": [
+        "case no",
+        "w.p.",
+        "civil appeal no",
+        "criminal appeal",
+        "o.s. no"
+      ],
+      "value_type": "identifier",
+      "example": "W.P. No. 1234 of 2026",
+      "source_locations": [
+        "Title"
+      ],
+      "applies_to": [
+        "court"
+      ],
+      "engine_key": "case_number"
+    },
+    {
+      "id": "court.court",
+      "name": "Court",
+      "group": "court",
+      "description": "The court or tribunal.",
+      "aliases": [
+        "in the court of",
+        "high court",
+        "supreme court",
+        "tribunal",
+        "district court"
+      ],
+      "value_type": "organization",
+      "example": "High Court of Example State",
+      "source_locations": [
+        "Title"
+      ],
+      "applies_to": [
+        "court"
+      ],
+      "engine_key": "court_name"
+    },
+    {
+      "id": "court.judge",
+      "name": "Judge",
+      "group": "court",
+      "description": "Judge(s) or bench deciding the case.",
+      "aliases": [
+        "coram",
+        "hon'ble",
+        "justice",
+        "bench",
+        "before"
+      ],
+      "value_type": "person",
+      "example": "Hon'ble Justice A. Rao",
+      "source_locations": [
+        "Coram"
+      ],
+      "applies_to": [
+        "court"
+      ]
+    },
+    {
+      "id": "court.issue",
+      "name": "Issue",
+      "group": "court",
+      "description": "Questions the court must decide.",
+      "aliases": [
+        "issues",
+        "points for determination",
+        "question for consideration"
+      ],
+      "value_type": "text",
+      "example": "Whether the termination was lawful",
+      "source_locations": [
+        "Issues"
+      ],
+      "applies_to": [
+        "court"
+      ]
+    },
+    {
+      "id": "court.fact",
+      "name": "Fact",
+      "group": "court",
+      "description": "Facts of the case as stated by the court or parties.",
+      "aliases": [
+        "facts",
+        "brief facts",
+        "background"
+      ],
+      "value_type": "text",
+      "example": "The petitioner was employed from 2019",
+      "source_locations": [
+        "Facts"
+      ],
+      "applies_to": [
+        "court"
+      ]
+    },
+    {
+      "id": "court.argument",
+      "name": "Argument",
+      "group": "court",
+      "description": "Submissions made by a party (not the court's view).",
+      "aliases": [
+        "argued",
+        "contended",
+        "submitted",
+        "learned counsel"
+      ],
+      "value_type": "text",
+      "example": "Counsel for the petitioner contended...",
+      "source_locations": [
+        "Arguments"
+      ],
+      "applies_to": [
+        "court"
+      ]
+    },
+    {
+      "id": "court.evidence",
+      "name": "Evidence",
+      "group": "court",
+      "description": "Evidence relied on.",
+      "aliases": [
+        "exhibit",
+        "evidence",
+        "witness",
+        "deposition"
+      ],
+      "value_type": "text",
+      "example": "Exhibit P-3 (appointment letter)",
+      "source_locations": [
+        "Evidence"
+      ],
+      "applies_to": [
+        "court"
+      ]
+    },
+    {
+      "id": "court.law",
+      "name": "Law",
+      "group": "court",
+      "description": "Legal provisions discussed.",
+      "aliases": [
+        "section",
+        "article",
+        "under the act",
+        "provision"
+      ],
+      "value_type": "text",
+      "example": "Section 25F of the Industrial Disputes Act",
+      "source_locations": [
+        "Applicable law"
+      ],
+      "applies_to": [
+        "court"
+      ]
+    },
+    {
+      "id": "court.statute",
+      "name": "Statute",
+      "group": "court",
+      "description": "Acts and rules cited.",
+      "aliases": [
+        "act",
+        "rules",
+        "code"
+      ],
+      "value_type": "reference",
+      "example": "Industrial Disputes Act, 1947",
+      "source_locations": [
+        "Applicable law"
+      ],
+      "applies_to": [
+        "court"
+      ]
+    },
+    {
+      "id": "court.precedent",
+      "name": "Precedent",
+      "group": "court",
+      "description": "Earlier judgments relied on.",
+      "aliases": [
+        "relied on",
+        "held in",
+        "v.",
+        "vs."
+      ],
+      "value_type": "reference",
+      "example": "ABC v. State (2019)",
+      "source_locations": [
+        "Law / Precedents"
+      ],
+      "applies_to": [
+        "court"
+      ]
+    },
+    {
+      "id": "court.finding",
+      "name": "Finding",
+      "group": "court",
+      "description": "What the court concluded on an issue.",
+      "aliases": [
+        "we find",
+        "it is held",
+        "held that",
+        "findings"
+      ],
+      "value_type": "text",
+      "example": "The termination did not follow the notice requirement",
+      "source_locations": [
+        "Findings"
+      ],
+      "applies_to": [
+        "court"
+      ]
+    },
+    {
+      "id": "court.direction",
+      "name": "Direction",
+      "group": "court",
+      "description": "Instructions the court gives to parties or authorities.",
+      "aliases": [
+        "directed to",
+        "shall",
+        "directions"
+      ],
+      "value_type": "text",
+      "example": "Respondent directed to reinstate within 4 weeks",
+      "source_locations": [
+        "Order / Directions"
+      ],
+      "applies_to": [
+        "court"
+      ]
+    },
+    {
+      "id": "court.final_order",
+      "name": "Final Order",
+      "group": "court",
+      "description": "The operative decision.",
+      "aliases": [
+        "petition is allowed",
+        "dismissed",
+        "disposed of",
+        "ordered accordingly"
+      ],
+      "value_type": "text",
+      "example": "Writ petition allowed; no costs",
+      "source_locations": [
+        "Final order"
+      ],
+      "applies_to": [
+        "court"
+      ]
+    },
+    {
+      "id": "employment.employer",
+      "name": "Employer",
+      "group": "employment",
+      "description": "The organisation that employs.",
+      "aliases": [
+        "employer",
+        "the company"
+      ],
+      "value_type": "organization",
+      "example": "Northwind Analytics Pvt. Ltd.",
+      "source_locations": [
+        "Parties"
+      ],
+      "applies_to": [
+        "employment"
+      ]
+    },
+    {
+      "id": "employment.employee",
+      "name": "Employee",
+      "group": "employment",
+      "description": "The person employed.",
+      "aliases": [
+        "employee",
+        "the candidate"
+      ],
+      "value_type": "person",
+      "example": "Priya Sharma",
+      "source_locations": [
+        "Parties"
+      ],
+      "applies_to": [
+        "employment"
+      ]
+    },
+    {
+      "id": "employment.job_title",
+      "name": "Job Title",
+      "group": "employment",
+      "description": "Position or designation.",
+      "aliases": [
+        "designation",
+        "position",
+        "appointed as",
+        "role"
+      ],
+      "value_type": "text",
+      "example": "Senior Data Analyst",
+      "source_locations": [
+        "Appointment"
+      ],
+      "applies_to": [
+        "employment"
+      ],
+      "engine_key": "job_title"
+    },
+    {
+      "id": "employment.joining_date",
+      "name": "Joining Date",
+      "group": "employment",
+      "description": "Date employment starts.",
+      "aliases": [
+        "joining date",
+        "date of joining",
+        "commencement"
+      ],
+      "value_type": "date",
+      "example": "2026-02-01",
+      "source_locations": [
+        "Commencement"
+      ],
+      "applies_to": [
+        "employment"
+      ]
+    },
+    {
+      "id": "employment.salary",
+      "name": "Salary",
+      "group": "employment",
+      "description": "Fixed pay.",
+      "aliases": [
+        "salary",
+        "ctc",
+        "gross salary",
+        "basic pay",
+        "wages"
+      ],
+      "value_type": "money",
+      "example": "INR 1,20,000 per month",
+      "source_locations": [
+        "Compensation"
+      ],
+      "applies_to": [
+        "employment"
+      ],
+      "engine_key": "salary"
+    },
+    {
+      "id": "employment.compensation",
+      "name": "Compensation",
+      "group": "employment",
+      "description": "All pay and payable benefits.",
+      "aliases": [
+        "compensation",
+        "remuneration",
+        "bonus",
+        "incentive"
+      ],
+      "value_type": "money",
+      "example": "Annual bonus up to INR 2,00,000",
+      "source_locations": [
+        "Compensation"
+      ],
+      "applies_to": [
+        "employment"
+      ]
+    },
+    {
+      "id": "employment.probation",
+      "name": "Probation",
+      "group": "employment",
+      "description": "Initial trial period of employment.",
+      "aliases": [
+        "probation",
+        "probationary period"
+      ],
+      "value_type": "duration",
+      "example": "6 months",
+      "source_locations": [
+        "Probation"
+      ],
+      "applies_to": [
+        "employment"
+      ],
+      "engine_key": "probation"
+    },
+    {
+      "id": "employment.working_hours",
+      "name": "Working Hours",
+      "group": "employment",
+      "description": "Hours of work.",
+      "aliases": [
+        "working hours",
+        "hours per week",
+        "shift"
+      ],
+      "value_type": "text",
+      "example": "40 hours per week",
+      "source_locations": [
+        "Working hours"
+      ],
+      "applies_to": [
+        "employment"
+      ],
+      "engine_key": "working_hours"
+    },
+    {
+      "id": "employment.leave",
+      "name": "Leave",
+      "group": "employment",
+      "description": "Leave entitlement.",
+      "aliases": [
+        "leave",
+        "paid leave",
+        "sick leave",
+        "casual leave"
+      ],
+      "value_type": "text",
+      "example": "24 days paid leave per year",
+      "source_locations": [
+        "Leave"
+      ],
+      "applies_to": [
+        "employment"
+      ],
+      "engine_key": "leave"
+    },
+    {
+      "id": "employment.benefits",
+      "name": "Benefits",
+      "group": "employment",
+      "description": "Non-salary benefits.",
+      "aliases": [
+        "benefits",
+        "insurance",
+        "provident fund",
+        "gratuity",
+        "allowance"
+      ],
+      "value_type": "text",
+      "example": "Group health insurance",
+      "source_locations": [
+        "Benefits"
+      ],
+      "applies_to": [
+        "employment"
+      ]
+    },
+    {
+      "id": "employment.non_compete",
+      "name": "Non-Compete",
+      "group": "employment",
+      "description": "Restriction on working for competitors.",
+      "aliases": [
+        "non-compete",
+        "shall not engage",
+        "competing business"
+      ],
+      "value_type": "text",
+      "example": "No competing work for 12 months",
+      "source_locations": [
+        "Restrictive covenants"
+      ],
+      "applies_to": [
+        "employment",
+        "legal"
+      ],
+      "engine_key": "non_compete"
+    },
+    {
+      "id": "employment.non_solicitation",
+      "name": "Non-Solicitation",
+      "group": "employment",
+      "description": "Restriction on approaching clients or staff.",
+      "aliases": [
+        "non-solicitation",
+        "shall not solicit"
+      ],
+      "value_type": "text",
+      "example": "No soliciting clients for 12 months",
+      "source_locations": [
+        "Restrictive covenants"
+      ],
+      "applies_to": [
+        "employment",
+        "legal"
+      ],
+      "engine_key": "non_solicitation"
+    },
+    {
+      "id": "employment.work_location",
+      "name": "Work Location",
+      "group": "employment",
+      "description": "Where the work is done.",
+      "aliases": [
+        "place of work",
+        "location",
+        "posted at"
+      ],
+      "value_type": "address",
+      "example": "Bengaluru office",
+      "source_locations": [
+        "Appointment"
+      ],
+      "applies_to": [
+        "employment"
+      ]
+    },
+    {
+      "id": "employment.transfer",
+      "name": "Transfer",
+      "group": "employment",
+      "description": "Whether the employee can be moved.",
+      "aliases": [
+        "transfer",
+        "relocate",
+        "posted to any"
+      ],
+      "value_type": "text",
+      "example": "May be transferred to any office in India",
+      "source_locations": [
+        "Transfer"
+      ],
+      "applies_to": [
+        "employment"
+      ]
+    },
+    {
+      "id": "financial.amount",
+      "name": "Amount",
+      "group": "financial",
+      "description": "A sum of money.",
+      "aliases": [
+        "amount",
+        "sum of",
+        "rs.",
+        "inr",
+        "₹"
+      ],
+      "value_type": "money",
+      "example": "Rs. 5,00,000",
+      "source_locations": [
+        "Payment",
+        "Schedule"
+      ],
+      "applies_to": [
+        "financial",
+        "legal",
+        "government"
+      ]
+    },
+    {
+      "id": "financial.currency",
+      "name": "Currency",
+      "group": "financial",
+      "description": "Currency of amounts.",
+      "aliases": [
+        "inr",
+        "rupees",
+        "usd",
+        "currency"
+      ],
+      "value_type": "text",
+      "example": "INR",
+      "source_locations": [
+        "Payment"
+      ],
+      "applies_to": [
+        "financial"
+      ]
+    },
+    {
+      "id": "financial.interest_rate",
+      "name": "Interest Rate",
+      "group": "financial",
+      "description": "Interest charged or earned.",
+      "aliases": [
+        "interest rate",
+        "rate of interest",
+        "per annum",
+        "% p.a."
+      ],
+      "value_type": "percentage",
+      "example": "10.5% per annum",
+      "source_locations": [
+        "Interest"
+      ],
+      "applies_to": [
+        "financial"
+      ],
+      "engine_key": "interest_rate"
+    },
+    {
+      "id": "financial.payment_date",
+      "name": "Payment Date",
+      "group": "financial",
+      "description": "When a payment is made.",
+      "aliases": [
+        "payment date",
+        "paid on",
+        "payable on"
+      ],
+      "value_type": "date",
+      "example": "Last working day of each month",
+      "source_locations": [
+        "Payment"
+      ],
+      "applies_to": [
+        "financial",
+        "employment"
+      ]
+    },
+    {
+      "id": "financial.due_date",
+      "name": "Due Date",
+      "group": "financial",
+      "description": "When a payment is due.",
+      "aliases": [
+        "due date",
+        "due on",
+        "payable by"
+      ],
+      "value_type": "date",
+      "example": "2026-04-30",
+      "source_locations": [
+        "Payment schedule"
+      ],
+      "applies_to": [
+        "financial",
+        "government"
+      ]
+    },
+    {
+      "id": "financial.late_fee",
+      "name": "Late Fee",
+      "group": "financial",
+      "description": "Charge for paying late.",
+      "aliases": [
+        "late fee",
+        "late payment charge",
+        "delayed payment"
+      ],
+      "value_type": "money",
+      "example": "Rs. 100 per month",
+      "source_locations": [
+        "Late payment"
+      ],
+      "applies_to": [
+        "financial",
+        "education"
+      ],
+      "engine_key": "late_fee"
+    },
+    {
+      "id": "financial.collateral",
+      "name": "Collateral",
+      "group": "financial",
+      "description": "Assets pledged to secure a loan.",
+      "aliases": [
+        "collateral",
+        "pledge",
+        "hypothecation"
+      ],
+      "value_type": "text",
+      "example": "Hypothecation of the vehicle",
+      "source_locations": [
+        "Security"
+      ],
+      "applies_to": [
+        "financial"
+      ]
+    },
+    {
+      "id": "financial.security",
+      "name": "Security",
+      "group": "financial",
+      "description": "Security deposit or security interest.",
+      "aliases": [
+        "security",
+        "security deposit",
+        "guarantee"
+      ],
+      "value_type": "text",
+      "example": "Two months' rent as security deposit",
+      "source_locations": [
+        "Security"
+      ],
+      "applies_to": [
+        "financial",
+        "property"
+      ]
+    },
+    {
+      "id": "property.property",
+      "name": "Property",
+      "group": "property",
+      "description": "Description of the property.",
+      "aliases": [
+        "property",
+        "premises",
+        "flat",
+        "plot",
+        "schedule property"
+      ],
+      "value_type": "text",
+      "example": "Flat No. 12, Example Towers",
+      "source_locations": [
+        "Property description",
+        "Schedule"
+      ],
+      "applies_to": [
+        "property"
+      ]
+    },
+    {
+      "id": "property.owner",
+      "name": "Owner",
+      "group": "property",
+      "description": "Owner of the property.",
+      "aliases": [
+        "owner",
+        "lessor",
+        "landlord",
+        "licensor"
+      ],
+      "value_type": "party",
+      "example": "Ravi Kumar",
+      "source_locations": [
+        "Parties"
+      ],
+      "applies_to": [
+        "property"
+      ]
+    },
+    {
+      "id": "property.buyer",
+      "name": "Buyer",
+      "group": "property",
+      "description": "Purchaser.",
+      "aliases": [
+        "buyer",
+        "purchaser",
+        "vendee"
+      ],
+      "value_type": "party",
+      "example": "A. Singh",
+      "source_locations": [
+        "Parties"
+      ],
+      "applies_to": [
+        "property"
+      ]
+    },
+    {
+      "id": "property.seller",
+      "name": "Seller",
+      "group": "property",
+      "description": "Seller / vendor.",
+      "aliases": [
+        "seller",
+        "vendor"
+      ],
+      "value_type": "party",
+      "example": "B. Mehta",
+      "source_locations": [
+        "Parties"
+      ],
+      "applies_to": [
+        "property"
+      ]
+    },
+    {
+      "id": "property.tenant",
+      "name": "Tenant",
+      "group": "property",
+      "description": "Person renting the property.",
+      "aliases": [
+        "tenant",
+        "lessee",
+        "licensee"
+      ],
+      "value_type": "party",
+      "example": "Meera Nair",
+      "source_locations": [
+        "Parties"
+      ],
+      "applies_to": [
+        "property"
+      ]
+    },
+    {
+      "id": "property.landlord",
+      "name": "Landlord",
+      "group": "property",
+      "description": "Person letting the property.",
+      "aliases": [
+        "landlord",
+        "lessor",
+        "licensor"
+      ],
+      "value_type": "party",
+      "example": "Ravi Kumar",
+      "source_locations": [
+        "Parties"
+      ],
+      "applies_to": [
+        "property"
+      ]
+    },
+    {
+      "id": "property.address",
+      "name": "Address",
+      "group": "property",
+      "description": "Address of the property.",
+      "aliases": [
+        "address",
+        "situated at",
+        "located at"
+      ],
+      "value_type": "address",
+      "example": "12 Lake Road, Example City",
+      "source_locations": [
+        "Property description"
+      ],
+      "applies_to": [
+        "property"
+      ]
+    },
+    {
+      "id": "property.area",
+      "name": "Area",
+      "group": "property",
+      "description": "Size of the property.",
+      "aliases": [
+        "area",
+        "sq. ft",
+        "square feet",
+        "sq. m",
+        "acres"
+      ],
+      "value_type": "area",
+      "example": "1,200 sq. ft",
+      "source_locations": [
+        "Property description"
+      ],
+      "applies_to": [
+        "property"
+      ],
+      "engine_key": "area"
+    },
+    {
+      "id": "property.rent",
+      "name": "Rent",
+      "group": "property",
+      "description": "Periodic rent.",
+      "aliases": [
+        "rent",
+        "monthly rent",
+        "licence fee"
+      ],
+      "value_type": "money",
+      "example": "Rs. 18,000 per month",
+      "source_locations": [
+        "Rent"
+      ],
+      "applies_to": [
+        "property"
+      ],
+      "engine_key": "rent"
+    },
+    {
+      "id": "property.deposit",
+      "name": "Deposit",
+      "group": "property",
+      "description": "Security deposit.",
+      "aliases": [
+        "deposit",
+        "security deposit",
+        "advance"
+      ],
+      "value_type": "money",
+      "example": "Rs. 36,000",
+      "source_locations": [
+        "Deposit"
+      ],
+      "applies_to": [
+        "property"
+      ],
+      "engine_key": "deposit"
+    },
+    {
+      "id": "property.sale_price",
+      "name": "Sale Price",
+      "group": "property",
+      "description": "Price / consideration for a sale.",
+      "aliases": [
+        "sale price",
+        "consideration",
+        "total price"
+      ],
+      "value_type": "money",
+      "example": "Rs. 75,00,000",
+      "source_locations": [
+        "Consideration"
+      ],
+      "applies_to": [
+        "property"
+      ]
+    },
+    {
+      "id": "property.registration",
+      "name": "Registration",
+      "group": "property",
+      "description": "Registration details and obligations.",
+      "aliases": [
+        "registration",
+        "registered",
+        "sub-registrar",
+        "stamp duty"
+      ],
+      "value_type": "text",
+      "example": "Registered at Sub-Registrar Office, Example City",
+      "source_locations": [
+        "Registration"
+      ],
+      "applies_to": [
+        "property"
+      ]
+    },
+    {
+      "id": "property.possession",
+      "name": "Possession",
+      "group": "property",
+      "description": "When and how possession is handed over.",
+      "aliases": [
+        "possession",
+        "handover",
+        "vacant possession"
+      ],
+      "value_type": "text",
+      "example": "Possession on payment of full consideration",
+      "source_locations": [
+        "Possession"
+      ],
+      "applies_to": [
+        "property"
+      ]
+    },
+    {
+      "id": "common.important_date",
+      "name": "Important Date",
+      "group": "common",
+      "description": "Any date that matters in the document (issue, effective, signature, event).",
+      "aliases": [
+        "date",
+        "dated",
+        "on",
+        "with effect from"
+      ],
+      "value_type": "date",
+      "example": "10 March 2026",
+      "source_locations": [
+        "Letterhead",
+        "Important dates",
+        "Signatures"
+      ],
+      "applies_to": [
+        "government",
+        "legal",
+        "employment",
+        "court",
+        "corporate",
+        "public_notice",
+        "financial",
+        "property",
+        "education",
+        "policy",
+        "other"
+      ],
+      "engine_key": "important_dates"
+    },
+    {
+      "id": "common.important_note",
+      "name": "Important Note",
+      "group": "common",
+      "description": "Notes, warnings and formal notices written in the document.",
+      "aliases": [
+        "note",
+        "n.b.",
+        "please note",
+        "important",
+        "it is hereby notified",
+        "notice is hereby given",
+        "disclaimer"
+      ],
+      "value_type": "text",
+      "example": "Incomplete applications shall be rejected",
+      "source_locations": [
+        "Notes",
+        "Footnotes"
+      ],
+      "applies_to": [
+        "government",
+        "public_notice",
+        "education",
+        "policy",
+        "legal"
+      ],
+      "engine_key": "notes"
+    },
+    {
+      "id": "common.appeal",
+      "name": "Appeal",
+      "group": "common",
+      "description": "How to appeal, object or complain, and to whom.",
+      "aliases": [
+        "appeal",
+        "appellate authority",
+        "grievance",
+        "complaint",
+        "objection",
+        "representation",
+        "redress"
+      ],
+      "value_type": "text",
+      "example": "Appeal to the Deputy Commissioner within 30 days",
+      "source_locations": [
+        "Appeal",
+        "Grievance redressal"
+      ],
+      "applies_to": [
+        "government",
+        "public_notice",
+        "court",
+        "education",
+        "policy"
+      ],
+      "engine_key": "appeal"
+    }
+  ]
+}

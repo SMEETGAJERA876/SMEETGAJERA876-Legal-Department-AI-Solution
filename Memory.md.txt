@@ -1,0 +1,1510 @@
+# ClauseLens AI — Project Memory
+
+> **Purpose:** This file is the persistent working memory for AI coding agents working on ClauseLens AI.
+>
+> **IMPORTANT:** Update this file after every significant implementation, architecture change, bug fix, completed phase, or important project decision.
+>
+> This file should help a new AI agent continue development without re-reading the entire codebase.
+
+---
+
+# 1. PROJECT IDENTITY
+
+## Project Name
+
+**ClauseLens AI**
+
+## Product Type
+
+Universal Legal & Official Document Intelligence Platform.
+
+## Core Purpose
+
+ClauseLens AI helps ordinary people understand, search, navigate, compare, and extract information from:
+
+* Government documents
+* Legal documents
+* Contracts
+* Employment documents
+* Court documents
+* Company documents
+* Public notices
+* Financial documents
+* Property documents
+* Education documents
+* Policy and regulatory documents
+* Other official documents
+
+## Core Principle
+
+```text
+Document
+    ↓
+Understand
+    ↓
+Search
+    ↓
+Extract
+    ↓
+Verify
+    ↓
+Explain
+    ↓
+Source
+    ↓
+Navigate
+```
+
+The most important product principle is:
+
+> **Evidence → Source → Explanation → User Understanding**
+
+ClauseLens AI is an information and document-understanding system, not a replacement for a qualified legal professional.
+
+---
+
+# 2. CURRENT PROJECT STATUS
+
+## Current Phase
+
+```text
+Phase: [UPDATE THIS]
+Status: [NOT STARTED / IN PROGRESS / COMPLETED / BLOCKED]
+```
+
+## Current Development Focus
+
+```text
+[UPDATE THIS AFTER EACH MAJOR SESSION]
+```
+
+## Overall Progress
+
+```text
+Phase 0  — Planning                    [ ]
+Phase 1  — Project Initialization      [ ]
+Phase 2  — Database                    [ ]
+Phase 3  — Document Upload              [ ]
+Phase 4  — PDF Processing               [ ]
+Phase 5  — Exact Search                 [ ]
+Phase 6  — PDF Viewer                   [ ]
+Phase 7  — Semantic Search              [ ]
+Phase 8  — Legal Concept Extraction     [ ]
+Phase 9  — Document Q&A                 [ ]
+Phase 10 — Source Navigation             [ ]
+Phase 11 — Related Clauses              [ ]
+Phase 12 — Question Generator           [ ]
+Phase 13 — Contract Comparison          [ ]
+Phase 14 — Dashboard                    [ ]
+Phase 15 — Safety                       [ ]
+Phase 16 — Testing                      [ ]
+Phase 17 — Performance                  [ ]
+Phase 18 — Final Demo                   [ ]
+Phase 19 — Deployment                   [ ]
+```
+
+Legend:
+
+```text
+[ ] Not started
+[~] In progress
+[x] Completed
+[!] Blocked
+```
+
+---
+
+# 3. TECHNOLOGY STACK
+
+## Frontend
+
+```text
+Next.js
+React
+TypeScript
+Tailwind CSS
+shadcn/ui
+Lucide Icons
+TanStack Query
+PDF.js / react-pdf
+Zod
+```
+
+## Backend
+
+```text
+Python
+FastAPI
+Pydantic
+SQLAlchemy
+Alembic
+```
+
+## Database
+
+```text
+PostgreSQL
+pgvector
+```
+
+## AI
+
+```text
+LLM provider abstraction
+Embeddings
+RAG
+Hybrid Search
+Legal Concept Extraction
+Document Classification
+```
+
+## Storage
+
+```text
+Local development storage initially
+Production storage can be added later
+```
+
+---
+
+# 4. ARCHITECTURE
+
+Current architecture:
+
+```text
+                    USER
+                      │
+                      ▼
+              NEXT.JS FRONTEND
+                      │
+                      ▼
+                FASTAPI API
+                      │
+          ┌───────────┼────────────┐
+          │           │            │
+          ▼           ▼            ▼
+     PostgreSQL    AI Services   File Storage
+       + pgvector
+          │
+          ▼
+   Document Intelligence
+          │
+    ┌─────┼─────────────┐
+    │     │             │
+    ▼     ▼             ▼
+ Parser  Search       Extraction
+    │     │             │
+    └─────┼─────────────┘
+          ▼
+    Evidence / Citation
+          │
+          ▼
+      PDF Source
+       Navigation
+```
+
+Use a **modular monolith** unless the project genuinely requires another architecture.
+
+Do not introduce unnecessary microservices.
+
+---
+
+# 5. DOCUMENT PIPELINE
+
+The intended document pipeline is:
+
+```text
+UPLOAD
+   ↓
+FILE VALIDATION
+   ↓
+FORMAT DETECTION
+   ↓
+DOCUMENT TYPE CLASSIFICATION
+   ↓
+OCR IF REQUIRED
+   ↓
+PAGE-AWARE TEXT EXTRACTION
+   ↓
+SECTION DETECTION
+   ↓
+CLAUSE DETECTION
+   ↓
+LEGAL CONCEPT EXTRACTION
+   ↓
+FACT EXTRACTION
+   ↓
+CHUNKING
+   ↓
+EMBEDDINGS
+   ↓
+KEYWORD INDEX
+   ↓
+VECTOR INDEX
+   ↓
+READY
+```
+
+---
+
+# 6. SUPPORTED FILE FORMATS
+
+## MVP
+
+```text
+PDF
+DOCX
+JPG
+JPEG
+PNG
+```
+
+## Planned
+
+```text
+DOC
+TXT
+TIFF
+XLSX
+XLS
+CSV
+PPTX
+HTML
+HTM
+XML
+EML
+MSG
+```
+
+Do not implement all formats simultaneously.
+
+Add parsers incrementally.
+
+---
+
+# 7. DOCUMENT TAXONOMY
+
+Current top-level categories:
+
+```text
+Government
+Legal / Contracts
+Employment
+Court / Judicial
+Corporate / Company
+Public Notices
+Financial
+Property
+Education
+Policy / Regulatory
+Other Official Documents
+```
+
+Important distinction:
+
+```text
+File Format ≠ Document Type
+```
+
+Example:
+
+```text
+employment_agreement.pdf
+
+Format:
+PDF
+
+Category:
+Employment
+
+Document Type:
+Employment Agreement
+```
+
+---
+
+# 8. NORMALIZED DOCUMENT MODEL
+
+All document parsers should eventually produce the same normalized structure:
+
+```text
+NormalizedDocument
+    │
+    ├── Metadata
+    │
+    ├── Pages
+    │
+    ├── Sections
+    │
+    ├── Clauses
+    │
+    ├── Entities
+    │
+    ├── Concepts
+    │
+    └── Facts
+```
+
+Core relationship:
+
+```text
+Document
+   ↓
+Page
+   ↓
+Section
+   ↓
+Clause
+   ↓
+Concept
+   ↓
+Fact
+   ↓
+Source Evidence
+```
+
+Never lose page-level source information.
+
+---
+
+# 9. SOURCE EVIDENCE MODEL
+
+Every important extracted fact should preserve:
+
+```text
+document_id
+page_id
+page_number
+section_id
+section_name
+clause_id
+clause_number
+source_text
+character_start
+character_end
+confidence
+```
+
+Example:
+
+```text
+Concept:
+notice_period
+
+Value:
+90 days
+
+Page:
+7
+
+Clause:
+12
+
+Source:
+"Either party may terminate this agreement by providing
+ninety (90) days written notice."
+```
+
+The user must be able to navigate from:
+
+```text
+AI Answer
+    ↓
+Source
+    ↓
+Page
+    ↓
+Clause
+    ↓
+Exact Text
+    ↓
+PDF Highlight
+```
+
+---
+
+# 10. CORE LEGAL CONCEPTS
+
+Current concept groups include:
+
+## Contract
+
+```text
+PARTIES
+DEFINITIONS
+SCOPE
+TERM
+RENEWAL
+TERMINATION
+NOTICE_PERIOD
+PAYMENT
+FEE
+PENALTY
+OBLIGATION
+RIGHT
+RESTRICTION
+CONFIDENTIALITY
+INTELLECTUAL_PROPERTY
+INDEMNIFICATION
+LIABILITY
+WARRANTY
+REPRESENTATION
+DISPUTE_RESOLUTION
+ARBITRATION
+GOVERNING_LAW
+JURISDICTION
+FORCE_MAJEURE
+AMENDMENT
+ASSIGNMENT
+DEFAULT
+BREACH
+CURE_PERIOD
+```
+
+## Employment
+
+```text
+EMPLOYER
+EMPLOYEE
+JOB_TITLE
+SALARY
+COMPENSATION
+PROBATION
+NOTICE_PERIOD
+WORKING_HOURS
+LEAVE
+BENEFITS
+TERMINATION
+CONFIDENTIALITY
+NON_COMPETE
+NON_SOLICITATION
+INTELLECTUAL_PROPERTY
+WORK_LOCATION
+TRANSFER
+```
+
+## Government
+
+```text
+AUTHORITY
+REFERENCE_NUMBER
+EFFECTIVE_DATE
+ELIGIBILITY
+DEADLINE
+APPLICATION_PROCESS
+REQUIRED_DOCUMENTS
+FEE
+EXEMPTION
+PROCEDURE
+RESPONSIBILITY
+PENALTY
+COMPLIANCE
+CONTACT
+```
+
+## Court
+
+```text
+CASE_NUMBER
+COURT
+JUDGE
+PARTIES
+ISSUE
+FACT
+ARGUMENT
+EVIDENCE
+LAW
+STATUTE
+PRECEDENT
+FINDING
+DIRECTION
+FINAL_ORDER
+```
+
+## Financial
+
+```text
+AMOUNT
+CURRENCY
+INTEREST_RATE
+PAYMENT_DATE
+DUE_DATE
+LATE_FEE
+PENALTY
+DEFAULT
+COLLATERAL
+SECURITY
+```
+
+## Property
+
+```text
+PROPERTY
+OWNER
+BUYER
+SELLER
+TENANT
+LANDLORD
+ADDRESS
+AREA
+RENT
+DEPOSIT
+SALE_PRICE
+TERM
+REGISTRATION
+POSSESSION
+```
+
+---
+
+# 11. SEARCH SYSTEM
+
+The project uses three search approaches:
+
+## Exact Search
+
+For exact terms:
+
+```text
+notice period
+90 days
+termination
+salary
+Section 12
+```
+
+## Semantic Search
+
+For natural-language questions:
+
+```text
+What happens if I leave the company?
+
+Can this agreement be cancelled?
+
+When do I have to inform the other party?
+```
+
+## Hybrid Search
+
+Preferred approach:
+
+```text
+Keyword Search
++
+Semantic Search
++
+Legal Concept Search
++
+Document Structure
+```
+
+---
+
+# 12. AI / RAG RULE
+
+AI answers must be grounded in retrieved document evidence.
+
+The AI must NOT answer based on unsupported assumptions.
+
+If the document does not contain the requested information:
+
+```text
+I couldn't find this information in the uploaded document.
+```
+
+Never invent:
+
+* clauses
+* dates
+* amounts
+* obligations
+* rights
+* penalties
+* deadlines
+* legal conclusions
+
+---
+
+# 13. AI RESPONSE FORMAT
+
+Preferred response structure:
+
+```text
+DOCUMENT SAYS
+
+[Fact supported by document]
+
+AI EXPLAINS
+
+[Simple-language explanation]
+
+SOURCE
+
+Page X · Clause Y
+
+[View source]
+```
+
+The interface should visually separate:
+
+```text
+DOCUMENT SAYS
+AI EXPLAINS
+SOURCE
+```
+
+---
+
+# 14. LEGAL SAFETY
+
+ClauseLens AI provides:
+
+```text
+Legal information
+Document understanding
+Document navigation
+Document comparison
+Information extraction
+Question preparation
+```
+
+It does NOT provide:
+
+```text
+Professional legal representation
+Guaranteed legal outcomes
+Court outcome prediction
+Legal strategy guarantees
+Definitive professional legal advice
+```
+
+Avoid statements such as:
+
+```text
+"This is definitely illegal."
+"You will win this case."
+"You should definitely sue."
+```
+
+Use evidence-based wording such as:
+
+```text
+"According to the uploaded document..."
+"The document states..."
+"I couldn't find..."
+```
+
+---
+
+# 15. DATABASE STATUS
+
+## Implemented Tables
+
+```text
+[UPDATE THIS]
+```
+
+## Planned Tables
+
+```text
+users
+documents
+document_pages
+document_sections
+document_chunks
+clauses
+legal_facts
+document_entities
+document_concepts
+document_classifications
+conversations
+messages
+citations
+```
+
+## Important Database Decisions
+
+```text
+[UPDATE THIS]
+```
+
+---
+
+# 16. BACKEND STATUS
+
+## Implemented
+
+```text
+[UPDATE THIS]
+```
+
+## API Endpoints Implemented
+
+```text
+[UPDATE THIS]
+```
+
+## Services Implemented
+
+```text
+[UPDATE THIS]
+```
+
+## Known Backend Issues
+
+```text
+[UPDATE THIS]
+```
+
+---
+
+# 17. FRONTEND STATUS
+
+## Implemented Pages
+
+```text
+[UPDATE THIS]
+```
+
+Expected pages:
+
+```text
+/
+dashboard
+documents/[id]
+compare
+settings
+```
+
+## Implemented Components
+
+```text
+[UPDATE THIS]
+```
+
+## Known Frontend Issues
+
+```text
+[UPDATE THIS]
+```
+
+---
+
+# 18. DOCUMENT PROCESSING STATUS
+
+## PDF
+
+```text
+Status: [UPDATE]
+```
+
+## DOCX
+
+```text
+Status: [UPDATE]
+```
+
+## Images / OCR
+
+```text
+Status: [UPDATE]
+```
+
+## Page Preservation
+
+```text
+Status: [UPDATE]
+```
+
+## Clause Detection
+
+```text
+Status: [UPDATE]
+```
+
+## Concept Extraction
+
+```text
+Status: [UPDATE]
+```
+
+---
+
+# 19. AI STATUS
+
+## Document Classification
+
+```text
+Status: [UPDATE]
+Model/provider: [UPDATE]
+```
+
+## Embeddings
+
+```text
+Status: [UPDATE]
+Model/provider: [UPDATE]
+```
+
+## Semantic Search
+
+```text
+Status: [UPDATE]
+```
+
+## RAG
+
+```text
+Status: [UPDATE]
+```
+
+## Citation Validation
+
+```text
+Status: [UPDATE]
+```
+
+## Legal Concept Extraction
+
+```text
+Status: [UPDATE]
+```
+
+---
+
+# 20. CURRENT DEMO FLOW
+
+The target MVP demonstration is:
+
+```text
+1. Open ClauseLens AI
+
+2. Upload Employment Agreement
+
+3. System processes document
+
+4. System detects:
+   Employment Agreement
+
+5. User asks:
+   "What is my notice period?"
+
+6. System finds:
+   90 days
+
+7. System displays:
+   Page 7
+   Clause 12
+
+8. User clicks:
+   View Source
+
+9. PDF opens at Page 7
+
+10. Relevant sentence is highlighted
+
+11. User asks:
+    "What happens if I leave early?"
+
+12. System retrieves related clauses
+
+13. System explains them in simple English
+
+14. System shows sources
+
+15. System can generate:
+    "Questions to ask a legal professional"
+```
+
+---
+
+# 21. CURRENT DEMO DOCUMENTS
+
+Use safe synthetic/demo documents for development.
+
+Do NOT commit private real legal documents to the repository.
+
+Current demo documents:
+
+```text
+[UPDATE THIS]
+```
+
+---
+
+# 22. TRAINING DATA STATUS
+
+## Dataset Categories
+
+```text
+government
+contracts
+employment
+court
+company
+public
+property
+financial
+education
+policy
+```
+
+## Dataset Location
+
+```text
+[UPDATE THIS]
+```
+
+## Number of Documents
+
+```text
+Total:
+[UPDATE]
+
+Government:
+[UPDATE]
+
+Contracts:
+[UPDATE]
+
+Employment:
+[UPDATE]
+
+Court:
+[UPDATE]
+
+Company:
+[UPDATE]
+
+Other:
+[UPDATE]
+```
+
+## Data Sources
+
+```text
+[UPDATE THIS]
+```
+
+## Licensing / Permission Status
+
+```text
+[UPDATE THIS]
+```
+
+---
+
+# 23. TRAINING POLICY
+
+IMPORTANT:
+
+User-uploaded documents must NOT automatically become training data.
+
+Keep these logically separate:
+
+```text
+User Documents
+Training Dataset
+Evaluation Dataset
+Retrieval Knowledge Base
+```
+
+Training data must have appropriate:
+
+```text
+License
+Permission
+Privacy status
+Source
+Collection method
+```
+
+---
+
+# 24. EVALUATION STATUS
+
+## Classification
+
+```text
+Accuracy:
+[UPDATE]
+
+Known errors:
+[UPDATE]
+```
+
+## Concept Extraction
+
+```text
+Precision:
+[UPDATE]
+
+Recall:
+[UPDATE]
+```
+
+## Retrieval
+
+```text
+Recall@K:
+[UPDATE]
+
+MRR:
+[UPDATE]
+```
+
+## Q&A
+
+```text
+Groundedness:
+[UPDATE]
+
+Citation correctness:
+[UPDATE]
+```
+
+---
+
+# 25. CURRENT FILE STRUCTURE
+
+Update this section whenever the project structure materially changes.
+
+```text
+ClauseLens/
+│
+├── CLAUDE.md
+├── PRD.md
+├── Architecture.md
+├── Rules.md
+├── Phases.md
+├── Design.md
+├── Memory.md
+├── README.md
+│
+├── docs/
+│   ├── Document_Taxonomy.md
+│   ├── Training_Dataset_Schema.md
+│   ├── Legal_Concepts.md
+│   ├── Document_Classification.md
+│   ├── Document_Normalization.md
+│   ├── AI_Pipeline.md
+│   └── Data_Governance.md
+│
+├── data/
+│   ├── schemas/
+│   ├── taxonomy/
+│   └── examples/
+│
+├── frontend/
+│
+└── backend/
+```
+
+---
+
+# 26. IMPORTANT PROJECT DECISIONS
+
+Record important decisions here.
+
+Format:
+
+```text
+DATE:
+DECISION:
+REASON:
+IMPACT:
+```
+
+Example:
+
+```text
+2026-09-25
+
+DECISION:
+Use a modular monolith instead of microservices.
+
+REASON:
+The project is an MVP/hackathon product and does not need
+distributed infrastructure.
+
+IMPACT:
+Simpler development, testing and deployment.
+```
+
+Current decisions:
+
+```text
+[UPDATE THIS]
+```
+
+---
+
+# 27. KNOWN PROBLEMS
+
+Keep a running list.
+
+```text
+ID | Problem | Severity | Status | Notes
+---|---------|----------|--------|------
+1  |         |          |        |
+2  |         |          |        |
+3  |         |          |        |
+```
+
+Do not remove resolved problems immediately.
+
+Mark them:
+
+```text
+RESOLVED
+```
+
+This preserves development history.
+
+---
+
+# 28. CURRENT BLOCKERS
+
+```text
+[UPDATE THIS]
+```
+
+If there are no blockers:
+
+```text
+None
+```
+
+---
+
+# 29. LAST COMPLETED WORK
+
+Every AI coding session should update this section.
+
+```text
+Date:
+AI Tool:
+Phase:
+Work completed:
+Files changed:
+Tests performed:
+Result:
+```
+
+Example:
+
+```text
+Date:
+2026-09-25
+
+AI Tool:
+Claude Code
+
+Phase:
+Phase 1
+
+Work completed:
+Created Next.js frontend and FastAPI backend.
+
+Files changed:
+frontend/*
+backend/*
+
+Tests performed:
+Frontend build
+Backend health check
+
+Result:
+Passed
+```
+
+---
+
+# 30. CURRENT TASK
+
+The next AI agent should continue from here.
+
+```text
+Current task:
+[UPDATE THIS]
+
+Expected result:
+[UPDATE THIS]
+
+Files likely involved:
+[UPDATE THIS]
+
+Do not start:
+[UPDATE THIS]
+```
+
+---
+
+# 31. NEXT TASKS
+
+Prioritize tasks.
+
+## Priority 1
+
+```text
+[UPDATE THIS]
+```
+
+## Priority 2
+
+```text
+[UPDATE THIS]
+```
+
+## Priority 3
+
+```text
+[UPDATE THIS]
+```
+
+---
+
+# 32. DO NOT REPEAT WORK
+
+Before implementing anything:
+
+1. Read this file.
+2. Check the current phase.
+3. Check the last completed work.
+4. Inspect the relevant files.
+5. Check existing implementation.
+6. Reuse existing components/services.
+7. Do not recreate functionality that already exists.
+
+If something appears incomplete, verify the code before assuming it is missing.
+
+---
+
+# 33. AI CODING AGENT RULES
+
+When starting a new chat:
+
+```text
+1. Read CLAUDE.md
+2. Read Memory.md
+3. Read the relevant project documentation
+4. Inspect current implementation
+5. Identify the current phase
+6. Continue from the CURRENT TASK
+```
+
+Do not unnecessarily reread the entire repository.
+
+Do not rewrite working code without a reason.
+
+Do not change architecture casually.
+
+Do not introduce new libraries without justification.
+
+Do not start the next phase automatically unless requested.
+
+---
+
+# 34. AFTER EVERY SIGNIFICANT IMPLEMENTATION
+
+The AI agent MUST update:
+
+```text
+Current Phase
+Overall Progress
+Last Completed Work
+Current Task
+Next Tasks
+Files Changed
+Known Problems
+Testing Status
+Important Decisions
+```
+
+If architecture changes, also update:
+
+```text
+Architecture.md
+```
+
+If product requirements change, update:
+
+```text
+PRD.md
+```
+
+If development rules change, update:
+
+```text
+Rules.md
+```
+
+If the phase sequence changes, update:
+
+```text
+Phases.md
+```
+
+---
+
+# 35. MEMORY UPDATE FORMAT
+
+Use this format for significant updates:
+
+```text
+## Memory Update — YYYY-MM-DD
+
+### Completed
+- ...
+
+### Changed Files
+- ...
+
+### New Functionality
+- ...
+
+### Tests
+- ...
+
+### Problems Found
+- ...
+
+### Problems Fixed
+- ...
+
+### Decisions
+- ...
+
+### Current Status
+- ...
+
+### Next Step
+- ...
+```
+
+Keep updates concise.
+
+Do not dump entire source files into Memory.md.
+
+Memory.md records **state**, not implementation details.
+
+---
+
+# 36. GOLDEN RULE
+
+The AI agent should always know:
+
+```text
+WHERE WE ARE
+     ↓
+WHAT IS ALREADY DONE
+     ↓
+WHAT IS CURRENTLY WORKING
+     ↓
+WHAT IS BROKEN
+     ↓
+WHAT WE ARE BUILDING NOW
+     ↓
+WHAT COMES NEXT
+```
+
+If a new AI agent can answer all six questions by reading this file, the Memory.md file is doing its job.
+
+---
+
+# 37. CURRENT MEMORY
+
+## Last Updated
+
+```text
+2026-09-25
+```
+
+## Current Phase
+
+```text
+Documentation / Architecture Preparation
+```
+
+## Current State
+
+```text
+ClauseLens AI product concept established.
+
+Core product direction:
+Universal Legal & Official Document Intelligence Platform.
+
+Initial document taxonomy established.
+
+Initial legal concept taxonomy established.
+
+Initial normalized document architecture established.
+
+Initial training dataset architecture established.
+
+Initial AI/RAG pipeline established.
+
+Memory.md created as persistent AI development context.
+```
+
+## Current Next Step
+
+```text
+Begin implementation of the project foundation.
+
+Recommended order:
+
+1. Project initialization
+2. Frontend setup
+3. Backend setup
+4. PostgreSQL setup
+5. Database models
+6. File upload
+7. PDF processing
+8. Page-aware extraction
+9. Exact search
+10. PDF viewer
+11. Semantic search
+12. Legal concept extraction
+13. RAG
+14. Citation system
+15. Source navigation
+```
+
+---
+
+# 38. FINAL INSTRUCTION TO AI AGENTS
+
+This file is the project's persistent development memory.
+
+Before coding:
+
+**READ IT.**
+
+After significant coding:
+
+**UPDATE IT.**
+
+Do not replace it with a generic summary.
+
+Do not delete useful project history.
+
+Do not allow it to become a copy of the entire codebase.
+
+Keep it:
+
+**short, factual, current, structured, and actionable.**
+
+The objective is to make switching between:
+
+```text
+Claude Code
+Claude Code / Antigravity
+New Chat
+New AI Coding Agent
+```
+
+safe and efficient without losing project context.
+
+**ClauseLens AI must always continue from the actual current state of the project.**

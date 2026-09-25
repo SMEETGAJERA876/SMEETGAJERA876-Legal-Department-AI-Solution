@@ -1,0 +1,28 @@
+# Secrets
+.env
+.env.local
+.env.production
+!.env.example
+!.env.production.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+backend/storage/
+
+# Node
+node_modules/
+.next/
+*.tsbuildinfo
+next-env.d.ts
+
+# Local dev database (scripts/dev_db.py)
+backend/.pgdata/
+backend/.pgdata.log
+
+# Copied from pdfjs-dist on install
+frontend/public/pdf.worker.min.mjs
