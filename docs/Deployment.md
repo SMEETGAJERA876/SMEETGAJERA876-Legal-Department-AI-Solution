@@ -46,6 +46,34 @@ Any container platform works (Google Cloud Run, Render, Railway, Fly.io, a VM):
 4. **Firebase:** add the website's domain under Authentication → Settings → Authorized domains.
 5. **HTTPS:** the platform's load balancer terminates TLS; HSTS is sent in production.
 
+## Vercel (website only)
+
+Vercel hosts the **website** (`frontend/`). It cannot host the API: the API runs local AI models
+(~1.5 GB RAM), background processing and a PostgreSQL database, which exceed Vercel's serverless
+functions. Host the API as a container (Render, Railway, Google Cloud Run, Hugging Face Spaces)
+with a managed PostgreSQL + pgvector (Neon, Supabase), then point the website at it.
+
+1. Vercel → **Add New → Project** → import the GitHub repository.
+2. **Root Directory: `frontend`** (Edit next to "Root Directory"). The repository root has no
+   website; without this the build fails right after "Running vercel build".
+3. Framework preset: **Next.js** (detected once the root directory is `frontend`).
+4. **Environment Variables** (all environments), then **Deploy**:
+
+   | Name | Value |
+   |---|---|
+   | `NEXT_PUBLIC_API_URL` | the API's public `https://` address |
+   | `NEXT_PUBLIC_AUTH_MODE` | `firebase` |
+   | `NEXT_PUBLIC_FIREBASE_API_KEY` | from Firebase → Project settings → Your apps |
+   | `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | `legal-department-f5b74.firebaseapp.com` |
+   | `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | `legal-department-f5b74` |
+   | `NEXT_PUBLIC_FIREBASE_APP_ID` | from Firebase → Project settings → Your apps |
+
+   `NEXT_PUBLIC_*` values are compiled into the site, so **redeploy after changing them**. A
+   missing or invalid value stops the build with "Website configuration is missing or invalid".
+5. Firebase → Authentication → Settings → **Authorized domains** → add the `*.vercel.app` domain
+   (and your own domain).
+6. On the API, set `CORS_ORIGINS=["https://<your-site>.vercel.app"]` so the browser may call it.
+
 ## Backups
 
 - Database: the platform's automated backups (point-in-time recovery if available).

@@ -16,7 +16,7 @@ const envSchema = z.object({
 });
 
 // NEXT_PUBLIC_* values are inlined at build time, so each must be referenced by its full name.
-export const env = envSchema.parse({
+const parsed = envSchema.safeParse({
   NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   NEXT_PUBLIC_AUTH_MODE: process.env.NEXT_PUBLIC_AUTH_MODE || undefined,
   NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -24,3 +24,15 @@ export const env = envSchema.parse({
   NEXT_PUBLIC_FIREBASE_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 });
+
+if (!parsed.success) {
+  const problems = parsed.error.issues.map((issue) => `${issue.path.join(".")}: ${issue.message}`);
+  throw new Error(
+    `Website configuration is missing or invalid — ${problems.join("; ")}. ` +
+      "Set these environment variables (locally in frontend/.env.local; on Vercel under " +
+      "Project → Settings → Environment Variables, then redeploy). NEXT_PUBLIC_API_URL is the " +
+      "public https:// address of the ClauseLens API. See frontend/.env.example.",
+  );
+}
+
+export const env = parsed.data;
