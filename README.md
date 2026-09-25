@@ -1,0 +1,1 @@
+# SMEETGAJERA876-Legal-Department-AI-Solution
