@@ -22,7 +22,13 @@ MIN_RELEVANCE = -7.0
 STRONG_RELEVANCE = 3.0
 MIN_SUBJECT_COVERAGE = 0.5
 MIN_WORD_LENGTH = 3
-MIN_STEM_LENGTH = 4
+# A subject word is matched against the document by its stem, so that "children" finds
+# "child" and "register" finds "registration". Trimming to four characters was too much:
+# "factory" became "fact" and "workers" became "work", both of which occur in almost any
+# statute, so the Transfer of Property Act looked like it covered factory wages. At five,
+# every one of the 105 answerable evaluation questions keeps its coverage and two more
+# unanswerable ones are correctly seen as uncovered.
+MIN_STEM_LENGTH = 5
 STEM_TRIM = 3
 
 # Words that say nothing about *what* the question is about.
@@ -94,10 +100,18 @@ def subject_coverage(question: str, vocabulary: set[str]) -> Coverage:
 
 
 def answerable(question: str, vocabulary: set[str], best_relevance: float | None) -> bool:
+    coverage = subject_coverage(question, vocabulary)
     # A passage the cross-encoder is confident about answers the question even when the
-    # question words differ from the document's ("cancel a gift" vs "transfer … void").
+    # question words differ from the document's ("cancel a gift" vs "transfer … void") — but
+    # only when the document mentions some part of the subject. Confidence can bridge different
+    # wording for the same thing; it cannot supply a subject that is not in the document at
+    # all. The cross-encoder scores similarity and has no way to notice it is reading a
+    # different statute, so on "the minimum wage for factory workers" asked of the Transfer of
+    # Property Act it is the subject check, not the score, that has to say no.
     if best_relevance is not None and best_relevance >= STRONG_RELEVANCE:
-        return True
-    if not subject_coverage(question, vocabulary).sufficient:
+        if coverage.covered or not coverage.subject_words:
+            return True
+        return False
+    if not coverage.sufficient:
         return False
     return best_relevance is None or best_relevance >= MIN_RELEVANCE

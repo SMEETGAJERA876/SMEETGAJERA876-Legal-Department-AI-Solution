@@ -323,18 +323,33 @@ def _section_key(chunk: DocumentChunk) -> str:
 
 
 def _one_per_section_first(
-    ranked: list[tuple[float, int, DocumentChunk]],
+    ranked: list[tuple[float, int, DocumentChunk]], limit: int
 ) -> list[tuple[float, int, DocumentChunk]]:
     """Best passage of each section first, then the remaining passages: five results from
-    five different sections beat five passages of one."""
+    five different sections beat five passages of one.
+
+    Diversity may reorder the results; it must never drop one. A second passage of a section
+    that relevance alone would have returned stays inside the first `limit`, because the clause
+    carrying the number ("ninety (90) days written notice") is often the sibling of the one that
+    names the topic ("salary in lieu of the notice period") — and without it the answer is
+    drawn from a different section entirely.
+    """
     seen: set[str] = set()
     first: list[tuple[float, int, DocumentChunk]] = []
-    rest: list[tuple[float, int, DocumentChunk]] = []
+    siblings: list[tuple[float, int, DocumentChunk]] = []
     for item in ranked:
         key = _section_key(item[2])
-        (rest if key in seen else first).append(item)
+        (siblings if key in seen else first).append(item)
         seen.add(key)
-    return first + rest
+    diversified = first + siblings
+
+    by_relevance = {item[2].id for item in ranked[:limit]}
+    if by_relevance <= {item[2].id for item in diversified[:limit]}:
+        return diversified
+    # Put the evicted passages back in the window, keeping the diversified order among them.
+    kept = [item for item in diversified if item[2].id in by_relevance]
+    rest = [item for item in diversified if item[2].id not in by_relevance]
+    return kept + rest
 
 
 def hybrid_search(
@@ -427,7 +442,7 @@ def hybrid_search(
         pool.sort(
             key=lambda item: (item[2].id in structural_ids, relevance[item[2].id]), reverse=True
         )
-        scored = _one_per_section_first(pool)
+        scored = _one_per_section_first(pool, limit)
 
     top = scored[:limit]
     sentences = best_sentences([chunk.text for _, _, chunk in top], query_vector, query)

@@ -22,6 +22,9 @@ from app.services.text_utils import normalize_whitespace
 
 TITLE_AREA_CHARS = 400
 CLASSIFY_PAGES = 2
+# How far in to look for the few markings that are reliable wherever they appear
+# (WIDE_STRUCTURE_RULES): long enough to clear an Act's arrangement of sections.
+FRONT_MATTER_PAGES = 12
 TITLE_LINE_WEIGHT = 4.5  # keyword in a heading-style line at the top ("CIRCULAR", "LEASE DEED")
 TITLE_WEIGHT = 3.0
 TITLE_LINES = 10
@@ -75,6 +78,21 @@ class Classification:
             "alternatives": self.alternatives,
         }
 
+
+# Rules worth looking for beyond the opening pages. A consolidated Act (India Code) often
+# prints its arrangement of sections first, so on the Registration Act 1908 the title page —
+# and with it "ACT NO. 16 OF 1908" — does not arrive until page 4. Only statutes carry a
+# legislature's Act number, so it outweighs title words like "Data Protection" that also
+# name company policies. Printed with or without brackets, in Arabic or Roman numerals.
+# (pattern, type id, bonus, signal shown to the user)
+WIDE_STRUCTURE_RULES: list[tuple[str, str, float, str]] = [
+    (
+        r"(?m)^\s*\(?\s*act\s*no\.?\s*[\divxlc]+\s+of\s+\d{4}",
+        "policy.act",
+        12.0,
+        'Act number ("Act No. … of …")',
+    ),
+]
 
 # (pattern, type id, bonus, signal shown to the user)
 STRUCTURE_RULES: list[tuple[str, str, float, str]] = [
@@ -191,6 +209,10 @@ def _level(confidence: float) -> Level:
 
 def classify(pages: list[str], headings: list[str] | None = None) -> Classification:
     first_pages = normalize_whitespace(" ".join(pages[:CLASSIFY_PAGES])).lower()
+    # Line breaks are kept here: the Act number counts only on a line of its own, so a
+    # cross-reference inside a sentence ("on or after the date on which, Act No. XVI of
+    # 1864, or ...") does not make every document quoting an Act look like one.
+    front_matter = "\n".join(pages[:FRONT_MATTER_PAGES]).lower()
     title_area = normalize_whitespace(pages[0] if pages else "").lower()[:TITLE_AREA_CHARS]
     first_page = normalize_whitespace(pages[0] if pages else "").lower()
     title_lines = _title_lines(pages[0] if pages else "")
@@ -218,6 +240,11 @@ def classify(pages: list[str], headings: list[str] | None = None) -> Classificat
 
     for rule, type_id, bonus, signal in STRUCTURE_RULES:
         if re.search(rule, first_pages):
+            scores[type_id] = scores.get(type_id, 0) + bonus
+            reasons.setdefault(type_id, []).append(signal)
+
+    for rule, type_id, bonus, signal in WIDE_STRUCTURE_RULES:
+        if re.search(rule, front_matter):
             scores[type_id] = scores.get(type_id, 0) + bonus
             reasons.setdefault(type_id, []).append(signal)
 

@@ -225,7 +225,7 @@ uv run python -m scripts.evaluate      # prints PASS/FAIL per question; currentl
 
 ## Checks
 
-- Backend: `uv run pytest` (202 tests; integration tests use the `clauselens_test` database created by `dev_db.py`), `uv run ruff check app tests scripts`, `uv run mypy app scripts`
+- Backend: `uv run pytest` (280 tests; integration tests use the `clauselens_test` database created by `dev_db.py`), `uv run ruff check app tests scripts`, `uv run mypy app scripts`
 - Frontend: `npm run typecheck`, `npm run lint`, `npm run build`
 
 ## Progress

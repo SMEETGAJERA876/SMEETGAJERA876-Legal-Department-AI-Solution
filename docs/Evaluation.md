@@ -58,6 +58,17 @@ first run was Recall@1 0.82, Recall@3 1.00, MRR 0.902, answer 1.00.
 Models compared on dev: `BAAI/bge-reranker-base` reached Recall@1 0.64 at ~3 s/question;
 `ms-marco-MiniLM-L-12` 0.77 at ~1 s; **`ms-marco-MiniLM-L-6` 0.77 at ~0.4 s (chosen)**.
 
+### Three faults this evaluation found, and what they were
+
+Each was a real defect in the system, found by the suite rather than by reading the code, and
+each was fixed at the cause rather than by relaxing the test.
+
+| Symptom | Cause |
+|---|---|
+| "What is my notice period?" answered **14 days** (probation) instead of **90 days** (termination) | The one-passage-per-section diversity pass demoted *every* sibling of a top hit regardless of relevance. The clause carrying "ninety (90) days" had the 2nd-best score and 4th-best re-ranker relevance in the document and was pushed to rank 11 — outside the retrieval window. Diversity may now reorder results but never evict one. |
+| The Registration Act 1908 recognised as an Act with only **medium** confidence | Its Act number sits on page 4, behind a multi-page arrangement of sections, outside the 2-page classification window — and is printed `ACT NO. 16 OF 1908` without the brackets the pattern required. The number is now looked for across the front matter, anchored to a line start so a cross-reference inside a sentence does not make every document quoting a statute look like one. |
+| "What is the minimum wage for factory workers?" **answered** by the Transfer of Property Act | Subject words are matched by stem so that "children" finds "child". Trimming to four characters was too much: "factory" became "fact" and "workers" became "work", both of which occur in almost any statute, so an Act about land scored 2/3 coverage on factory wages. The stem floor is now five characters — every one of the 105 answerable evaluation questions keeps its coverage, and two more unanswerable ones are correctly seen as uncovered. Separately, a strong cross-encoder score no longer bypasses the subject check when *nothing* in the subject appears in the document: confidence can bridge different wording for the same thing, it cannot supply a subject that is absent. |
+
 ### Remaining misses (all shown by the test with `-s`)
 
 - dev: "What can I do if I don't get a reply to my RTI?" — the appeal section (19) ranks 3rd and
@@ -78,6 +89,10 @@ rental agreement with deliberate mistakes.
 | `test_classification.py` | 34 documents across categories | all correct; low-confidence never names a type |
 | `test_document_check.py` | mistakes found with page + suggestion; auto-repair verified in the new PDF | pass |
 | `test_ocr.py` | image-only (scanned) copy of the agreement: text read, answers cite the right page | pass |
+| `test_simplify.py` | plain-language rewriting keeps every amount, date, party and negation | pass |
+| `test_formats.py` | comparison against the official format, on complete and incomplete documents | pass |
+| `test_authenticity.py` | forged / AI-drafted documents caught; **all 25 real documents pass with zero rejections** | pass |
+| `test_demo.py` | the public demo is readable by anyone and writable by nobody | pass |
 
 These were written by the developers and are easier than real documents — which is why §1 exists.
 
@@ -88,7 +103,7 @@ tokens refused), `test_security.py` (files encrypted on disk and byte-identical 
 tampering detected; headers; rate limits with `429`; insecure production settings refused; audit
 log; delete-all; retention; interrupted processing resumed), `test_answerability.py`.
 
-**Total: 202 automated tests, all passing.** Lint (ruff), type checks (mypy strict, `tsc`), ESLint
+**Total: 280 automated tests, all passing.** Lint (ruff), type checks (mypy strict, `tsc`), ESLint
 and the production build are clean.
 
 ## Performance
