@@ -54,7 +54,14 @@ def apply_retention(now: datetime | None = None) -> int:
         return 0
     cutoff = (now or datetime.now(UTC)) - timedelta(days=days)
     with SessionLocal() as db:
-        expired = list(db.scalars(select(Document).where(Document.created_at < cutoff)))
+        # Demo documents are part of the deployment, not somebody's upload: retention skips them.
+        expired = list(
+            db.scalars(
+                select(Document).where(
+                    Document.created_at < cutoff, Document.is_demo.is_(False)
+                )
+            )
+        )
         deleted = delete_documents(db, expired, audit.RETENTION_DELETE)
     if deleted:
         logger.info("Retention: deleted %d document(s) older than %d days", deleted, days)
@@ -76,10 +83,13 @@ class PeriodicJobs:
         self._stop.set()
 
     def _run(self) -> None:
-        try:
-            resume_unfinished()
-        except Exception:
-            logger.exception("Resuming unfinished documents failed")
+        # In queue mode the workers pick up waiting documents and requeue interrupted ones
+        # themselves (services/jobs.py); inline mode has no workers, so resume here.
+        if get_settings().processing_mode == "inline":
+            try:
+                resume_unfinished()
+            except Exception:
+                logger.exception("Resuming unfinished documents failed")
         interval = get_settings().retention_check_hours * 3600
         while not self._stop.is_set():
             try:

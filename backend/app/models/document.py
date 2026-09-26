@@ -5,6 +5,7 @@ from typing import Any
 
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
+    Boolean,
     Computed,
     DateTime,
     Enum,
@@ -62,11 +63,19 @@ class Document(IdMixin, CreatedAtMixin, Base):
     classification: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
     parties: Mapped[list[str]] = mapped_column(JSONB, default=list)
     processed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Processing queue (services/jobs.py): last sign of life of the worker, and attempts so far.
+    processing_heartbeat_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    processing_attempts: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     # Set on a corrected copy: the document it was made from, and every change applied.
     source_document_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("documents.id", ondelete="SET NULL")
     )
     changes: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list, server_default="[]")
+    # Part of the public read-only demo (app/core/auth.py, scripts/seed_demo.py): anyone may
+    # read it without signing in. Never set on a document a real person uploaded.
+    is_demo: Mapped[bool] = mapped_column(
+        Boolean, default=False, server_default="false", index=True
+    )
 
     pages: Mapped[list["DocumentPage"]] = relationship(
         back_populates="document",

@@ -27,10 +27,9 @@ from app.schemas.documents import (
     SearchResultOut,
     SourceRef,
 )
-from app.services import audit, concepts, qa, questions, search, storage, taxonomy
+from app.services import audit, concepts, jobs, qa, questions, search, storage, taxonomy
 from app.services.classification import user_verified
 from app.services.normalize import build_normalized_document
-from app.services.processing import process_document
 
 router = APIRouter(
     prefix="/documents", tags=["documents"], dependencies=[Depends(require_document_access)]
@@ -105,7 +104,7 @@ async def upload_document(
     audit.record(db, audit.UPLOAD, user_id=document.user_id, document_id=document.id,
                  request=request, detail={"file_size": size})  # fmt: skip
     db.commit()
-    background_tasks.add_task(process_document, document.id)
+    jobs.enqueue(background_tasks, document.id)
     return document
 
 

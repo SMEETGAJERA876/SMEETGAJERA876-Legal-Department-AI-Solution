@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Everyday words people use → the words Indian statutes, contracts and notices use for the same thing. Used to expand search queries and to check whether a document covers a topic at all. Each entry: 'plain' words/phrases (what people type) and 'legal' words/phrases (what documents say).",
   "terms": [
     {"plain": ["builder", "developer", "real estate company"], "legal": ["promoter"]},
@@ -21,7 +21,7 @@
     {"plain": ["breaking a protection order", "disobeying a protection order"], "legal": ["breach of protection order"]},
     {"plain": ["fine", "penalty amount"], "legal": ["penalty", "fine", "liable to a penalty"]},
     {"plain": ["punishment", "jail", "prison", "sent to jail"], "legal": ["imprisonment", "punishable", "punishment"]},
-    {"plain": ["time limit", "deadline", "last date", "how long do i have"], "legal": ["limitation", "within a period of", "period of limitation"]},
+    {"plain": ["time limit", "deadline", "last date", "how long do i have"], "legal": ["limitation", "within a period of", "period of limitation", "prescribed period"]},
     {"plain": ["reply", "answer my request", "respond"], "legal": ["disposal of request", "provide the information", "within thirty days of the receipt of the request"]},
     {"plain": ["ask for information", "get information", "rti application"], "legal": ["request for obtaining information", "request"]},
     {"plain": ["government office", "government department"], "legal": ["public authority"]},
@@ -43,12 +43,15 @@
     {"plain": ["consumer court", "consumer forum"], "legal": ["district commission", "state commission", "national commission"]},
     {"plain": ["value of goods", "claim amount", "how much money"], "legal": ["value of the goods or services paid as consideration", "pecuniary jurisdiction"]},
     {"plain": ["does not obey", "not follow the order", "ignore the order"], "legal": ["fails to comply with any order", "non-compliance"]},
-    {"plain": ["complain", "file a complaint", "lodge a complaint"], "legal": ["complaint", "file a complaint"]},
+    {"plain": ["complain", "file a complaint", "lodge a complaint"], "legal": ["complaint", "file a complaint", "grievance", "grievance redressal"]},
     {"plain": ["tenant"], "legal": ["tenant", "lessee", "licensee"]},
     {"plain": ["landlord"], "legal": ["landlord", "lessor", "licensor"]},
     {"plain": ["resign", "quit", "leave the job"], "legal": ["resignation", "terminate", "termination"]},
     {"plain": ["fired", "sacked", "dismissed"], "legal": ["termination", "dismissal", "discharge"]},
     {"plain": ["maternity leave", "pregnancy leave"], "legal": ["maternity benefit"]},
-    {"plain": ["bonus"], "legal": ["bonus"]}
+    {"plain": ["bonus"], "legal": ["bonus"]},
+    {"plain": ["challenge the award", "challenge an award", "challenge the order", "challenge a decision", "overturn"], "legal": ["set aside", "setting aside", "recourse against"]},
+    {"plain": ["file a case", "go to court", "sue"], "legal": ["institute a suit", "suit"]},
+    {"plain": ["minor", "under 18", "child"], "legal": ["minor", "legal disability"]}
   ]
 }

@@ -9,7 +9,7 @@ from sqlalchemy import func, literal_column, or_, select, text
 from sqlalchemy.orm import Session
 
 from app.models import DocumentChunk, LegalFact
-from app.services import concepts, embeddings, glossary, reranker
+from app.services import answerability, concepts, embeddings, glossary, reranker
 from app.services.text_utils import normalize_whitespace, snippet_around, split_sentences
 
 MAX_EXACT_RESULTS = 50
@@ -27,6 +27,7 @@ STRUCTURE_BOOST = 0.3  # the question names this clause ("Clause 13", "Rule 7")
 MAX_ALIAS_CONCEPTS = 1  # only the concept the question names first
 RERANK_POOL = 12  # candidates the cross-encoder re-orders
 GLOSSARY_BOOST = 0.05  # the chunk uses the legal wording of the question's everyday words
+HEADING_MATCH_WEIGHT = 3.0  # cross-encoder points for a heading fully covered by the question
 MIN_LITERAL_CHARS = 4
 _CLAUSE_REFERENCE = re.compile(
     r"\b(?P<kw>clause|section|rule|article|para(?:graph)?|chapter)\s+"
@@ -295,6 +296,47 @@ def _structure_filter(query: str) -> list[Any]:
     return conditions
 
 
+_SECTION_NUMBER = re.compile(r"^(?:[A-Za-z]+\s+)?(\d+[A-Z]*|[IVXLC]+)")
+_STEM_WORD = re.compile(r"[a-z]{3,}")
+MIN_HEADING_STEM = 4
+
+
+def _stem(word: str) -> str:
+    return word[: max(MIN_HEADING_STEM, len(word) - 3)]
+
+
+def _content_stems(text: str) -> set[str]:
+    return {_stem(w) for w in _STEM_WORD.findall(text.lower()) if w not in answerability.GENERIC}
+
+
+def _heading_overlap(subject: set[str], heading: str | None) -> float:
+    """Share of the heading's content words that the question (or its legal wording) uses."""
+    if not heading or not subject:
+        return 0.0
+    words = _content_stems(heading)
+    return len(words & subject) / len(words) if words else 0.0
+
+
+def _section_key(chunk: DocumentChunk) -> str:
+    match = _SECTION_NUMBER.match(chunk.clause_ref or "")
+    return match.group(1) if match else str(chunk.id)
+
+
+def _one_per_section_first(
+    ranked: list[tuple[float, int, DocumentChunk]],
+) -> list[tuple[float, int, DocumentChunk]]:
+    """Best passage of each section first, then the remaining passages: five results from
+    five different sections beat five passages of one."""
+    seen: set[str] = set()
+    first: list[tuple[float, int, DocumentChunk]] = []
+    rest: list[tuple[float, int, DocumentChunk]] = []
+    for item in ranked:
+        key = _section_key(item[2])
+        (rest if key in seen else first).append(item)
+        seen.add(key)
+    return first + rest
+
+
 def hybrid_search(
     db: Session, document_id: uuid.UUID, query: str, limit: int = 8
 ) -> tuple[list[SearchHit], list[float]]:
@@ -377,10 +419,15 @@ def hybrid_search(
         relevance = dict(
             zip((c.id for _, _, c in pool), reranker.scores(rerank_query, passages), strict=True)
         )
+        # Section headings in statutes and contracts are precise summaries ("Punishment for
+        # identity theft"): a question that uses the heading's words gets a lift.
+        subject = _content_stems(f"{query} {' '.join(legal_terms)}")
+        for _, _, chunk in pool:
+            relevance[chunk.id] += HEADING_MATCH_WEIGHT * _heading_overlap(subject, chunk.heading)
         pool.sort(
             key=lambda item: (item[2].id in structural_ids, relevance[item[2].id]), reverse=True
         )
-        scored = pool
+        scored = _one_per_section_first(pool)
 
     top = scored[:limit]
     sentences = best_sentences([chunk.text for _, _, chunk in top], query_vector, query)

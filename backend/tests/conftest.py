@@ -8,6 +8,7 @@ import os
 import tempfile
 from collections.abc import Iterator
 from pathlib import Path
+from typing import Any
 
 TEST_DATABASE_URL = os.environ.get(
     "TEST_DATABASE_URL",
@@ -21,6 +22,8 @@ os.environ["AUTH_MODE"] = "disabled"
 # Every test runs with encryption at rest on; rate limits are tested separately.
 os.environ["FILE_ENCRYPTION_KEY"] = "zGH0yQ7l3nq7qYfJ0mO9b4bWm7mK1g6yH2u0cQy9V4E"
 os.environ["RATE_LIMIT_ENABLED"] = "false"
+# Uploads are processed right after the request; the queue has its own tests.
+os.environ["PROCESSING_MODE"] = "inline"
 
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
@@ -69,3 +72,59 @@ def processed_document_id(database: None, client: TestClient, sample_pdf: bytes)
     status = client.get(f"/documents/{document_id}").json()
     assert status["status"] == "ready", status
     return document_id
+
+
+# ---------------------------------------------------------------------------
+# Google sign-in. Real Firebase tokens can't be minted in tests, so the signature check is
+# replaced by a fake that maps a token string to claims; everything after it (claim checks,
+# users, ownership, the public demo) is real. Used by test_auth.py and test_demo.py.
+# ---------------------------------------------------------------------------
+
+PROJECT = "clauselens-test"
+
+
+def google_claims(uid: str, email: str, **overrides: Any) -> dict[str, Any]:
+    claims: dict[str, Any] = {
+        "iss": f"https://securetoken.google.com/{PROJECT}",
+        "aud": PROJECT,
+        "sub": uid,
+        "email": email,
+        "email_verified": True,
+        "name": uid.title(),
+        "firebase": {"sign_in_provider": "google.com"},
+    }
+    claims.update(overrides)
+    return claims
+
+
+TOKENS = {
+    "token-alice": google_claims("alice", "alice@example.com"),
+    "token-bob": google_claims("bob", "bob@example.com"),
+    "token-password": google_claims(
+        "carol", "carol@example.com", firebase={"sign_in_provider": "password"}
+    ),
+}
+
+
+def bearer(token: str) -> dict[str, str]:
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def firebase_mode(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
+    from app.core import auth
+    from app.core.config import get_settings
+
+    settings = get_settings().model_copy(
+        update={"auth_mode": "firebase", "firebase_project_id": PROJECT}
+    )
+    monkeypatch.setattr(auth, "get_settings", lambda: settings)
+
+    def fake_verify(token: str, request: Any, audience: str, **_: Any) -> dict[str, Any]:
+        assert audience == PROJECT
+        if token not in TOKENS:
+            raise ValueError("Could not verify token signature.")
+        return TOKENS[token]
+
+    monkeypatch.setattr(auth.id_token, "verify_firebase_token", fake_verify)
+    yield

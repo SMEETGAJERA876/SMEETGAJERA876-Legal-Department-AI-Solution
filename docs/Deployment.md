@@ -74,6 +74,19 @@ with a managed PostgreSQL + pgvector (Neon, Supabase), then point the website at
    (and your own domain).
 6. On the API, set `CORS_ORIGINS=["https://<your-site>.vercel.app"]` so the browser may call it.
 
+## The public demo
+
+`/demo` lets anyone use ClauseLens on a seeded document without signing in — see
+[Demo.md](Demo.md). After the API is deployed and migrated, seed it once on the API host:
+
+```
+uv run python -m scripts.seed_demo
+```
+
+On a host with no shell, set **`DEMO_AUTO_SEED=true`** instead and the API loads them in a
+background thread at start-up — which also repairs them after a restart that lost the uploads
+directory. `DEMO_MODE_ENABLED=false` turns the demo off.
+
 ## Backups
 
 - Database: the platform's automated backups (point-in-time recovery if available).

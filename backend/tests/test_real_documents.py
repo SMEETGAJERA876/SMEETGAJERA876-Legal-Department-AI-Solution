@@ -89,7 +89,9 @@ def acts(database: None, client: TestClient) -> Iterator[dict[str, dict[str, obj
 
 @pytest.fixture(scope="module")
 def metrics(client: TestClient, acts: dict[str, dict[str, object]]) -> dict[Split, SplitMetrics]:
-    results: dict[Split, SplitMetrics] = {"dev": SplitMetrics(), "test": SplitMetrics()}
+    results: dict[Split, SplitMetrics] = {
+        s: SplitMetrics() for s in ("dev", "test", "test2", "test3")
+    }
     search_ms: list[float] = []
     ask_ms: list[float] = []
     for q in QUESTIONS:
@@ -159,17 +161,17 @@ def test_every_act_is_recognised_as_an_act(acts: dict[str, dict[str, object]]) -
 
 
 def test_retrieval_on_real_acts(metrics: dict[Split, SplitMetrics]) -> None:
-    for split in ("dev", "test"):
+    for split in ("dev", "test", "test2", "test3"):
         m = metrics[split]
         assert m.recall_at_3 >= 0.85, (split, m.summary())
         assert m.mrr >= 0.75, (split, m.summary())
 
 
 def test_answers_cite_the_right_section(metrics: dict[Split, SplitMetrics]) -> None:
-    for split in ("dev", "test"):
+    for split in ("dev", "test", "test2", "test3"):
         assert metrics[split].answer_accuracy >= 0.8, (split, metrics[split].summary())
 
 
 def test_does_not_answer_what_the_act_does_not_say(metrics: dict[Split, SplitMetrics]) -> None:
-    for split in ("dev", "test"):
+    for split in ("dev", "test", "test2", "test3"):
         assert metrics[split].refusal_rate == 1.0, (split, metrics[split].summary())

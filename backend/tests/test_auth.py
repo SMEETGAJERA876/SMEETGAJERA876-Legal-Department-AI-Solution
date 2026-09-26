@@ -1,63 +1,15 @@
 """Google sign-in (Firebase) and per-user document privacy.
 
-Real Firebase tokens can't be minted in tests, so the signature check is replaced by a fake that
-maps a token string to claims; everything after it (claim checks, users, ownership) is real.
+The fake token verifier, the sample claims and the `firebase_mode` fixture live in conftest.py
+so the public demo tests (test_demo.py) can sign people in the same way.
 """
-
-from collections.abc import Iterator
-from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
 
 from app.core import auth
 from app.core.config import get_settings
-
-PROJECT = "clauselens-test"
-
-
-def google_claims(uid: str, email: str, **overrides: Any) -> dict[str, Any]:
-    claims: dict[str, Any] = {
-        "iss": f"https://securetoken.google.com/{PROJECT}",
-        "aud": PROJECT,
-        "sub": uid,
-        "email": email,
-        "email_verified": True,
-        "name": uid.title(),
-        "firebase": {"sign_in_provider": "google.com"},
-    }
-    claims.update(overrides)
-    return claims
-
-
-TOKENS = {
-    "token-alice": google_claims("alice", "alice@example.com"),
-    "token-bob": google_claims("bob", "bob@example.com"),
-    "token-password": google_claims(
-        "carol", "carol@example.com", firebase={"sign_in_provider": "password"}
-    ),
-}
-
-
-def bearer(token: str) -> dict[str, str]:
-    return {"Authorization": f"Bearer {token}"}
-
-
-@pytest.fixture
-def firebase_mode(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
-    settings = get_settings().model_copy(
-        update={"auth_mode": "firebase", "firebase_project_id": PROJECT}
-    )
-    monkeypatch.setattr(auth, "get_settings", lambda: settings)
-
-    def fake_verify(token: str, request: Any, audience: str, **_: Any) -> dict[str, Any]:
-        assert audience == PROJECT
-        if token not in TOKENS:
-            raise ValueError("Could not verify token signature.")
-        return TOKENS[token]
-
-    monkeypatch.setattr(auth.id_token, "verify_firebase_token", fake_verify)
-    yield
+from tests.conftest import PROJECT, TOKENS, bearer, google_claims
 
 
 def test_check_claims_rejects_other_projects_and_providers() -> None:
@@ -82,12 +34,14 @@ def test_check_claims_rejects_other_projects_and_providers() -> None:
 
 
 def test_sign_in_required(database: None, client: TestClient, firebase_mode: None) -> None:
-    for path in ("/documents", "/documents/types", "/documents/concepts"):
-        response = client.get(path)
-        assert response.status_code == 401, path
-        assert response.json()["error"] == "not_signed_in"
+    response = client.get("/documents")
+    assert response.status_code == 401
+    assert response.json()["error"] == "not_signed_in"
     assert client.get("/documents", headers={"Authorization": "Basic abc"}).status_code == 401
     assert client.get("/health").status_code == 200
+    # Taxonomy reference data has nothing personal in it and the public demo renders with it.
+    for path in ("/documents/types", "/documents/concepts", "/demo"):
+        assert client.get(path).status_code == 200, path
 
 
 def test_invalid_and_non_google_tokens_rejected(

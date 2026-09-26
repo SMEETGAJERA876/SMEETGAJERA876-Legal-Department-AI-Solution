@@ -56,11 +56,15 @@ _VERBS = {
 MAX_SENTENCE_CASE_TITLE_WORDS = 8
 # Statute style: "12. Constitution of Central Information Commission.—(1) The Central ..."
 # (also "22. Powers of Lok Adalat or Permanent Lok Adalat.]—", after an amendment bracket)
-_DASH_HEADING = re.compile(r"^(?P<title>[A-Z][^—–]{2,250}?)\.\]?\s?(?:—|–|-{1,2})\s*(?P<body>.*)$")
+# and definition sections: 4. “Promissory note.”—A “Promissory note” is …
+_DASH_HEADING = re.compile(
+    r"^(?P<title>[A-Z“\"][^—–]{2,250}?)\.[”\"]?\]?\s?(?:—|–|-{1,2})\s*(?P<body>.*)$"
+)
 MAX_DASH_TITLE_WORDS = 32
 # A table of contents ("ARRANGEMENT OF SECTIONS") lists headings; its lines are not clauses.
 _CONTENTS_TITLE = re.compile(
-    r"^\s*(?:arrangement\s+of\s+(?:sections|clauses|rules|regulations|paragraphs|articles)"
+    # "arr\w*": official PDFs misspell it too ("ARRENGMENT OF SECTIONS")
+    r"^\s*(?:arr\w*\s+of\s+(?:sections|clauses|rules|regulations|paragraphs|articles)"
     r"|table\s+of\s+contents|contents|index)\s*:?\s*$",
     re.IGNORECASE,
 )
@@ -77,12 +81,20 @@ _FOOTNOTE = re.compile(
     re.IGNORECASE,
 )
 # "2[3. Constitution of ..." — the "2[" opens an amendment; it hides the section number.
-_AMENDMENT_MARK = re.compile(r"^(\s*)\d{1,2}\[")
+# ... and "43. 6[Penalty and compensation] for damage ..." (right after the number)
+_AMENDMENT_MARK = re.compile(r"^(\s*)\d{1,2}\[|^(\s*\d{1,3}[A-Z]{0,2}\.\s*)\d{1,2}\[")
+_HEADING_MARKS = re.compile(r"\s?\d{1,2}\[|\]")
 # Material after the operative text whose numbered lists are not sections of the document.
+# A heading on a line of its own ("THE FIRST SCHEDULE", "Schedule [See section 3]"), not a
+# sentence that happens to wrap at "the Schedule to the Constitution ...".
 _APPENDIX_TITLE = re.compile(
-    r"^\s*(?:the\s+)?(?:(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth)\s+)?"
-    r"schedule\b|^\s*statement\s+of\s+objects\s+and\s+reasons\b",
-    re.IGNORECASE,
+    r"^\s*(?:THE\s+)?(?:(?:FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH|TENTH)\s+)?"
+    r"SCHEDULE\s*[.:]?\s*(?:[\[(]\s*[Ss]ee\b.*)?$"
+    r"|^\s*STATEMENT\s+OF\s+OBJECTS\s+AND\s+REASONS\s*[.:]?\s*$"
+)  # capitals: "…in the third column of the\nSchedule." is a wrapped sentence, not a heading
+# "…the Constitution.   6. Consent.––(1) The consent…": a section that starts mid-line.
+_INLINE_SECTION = re.compile(
+    r"(?<=[.;:])\s{2,}(?=\d{1,3}[A-Z]{0,2}\.\s+[A-Z][^.\n]{2,150}\.\]?\s?(?:—|–|-{1,2}))"
 )
 MAX_CONTENTS_PAGES = 10
 MIN_CONTENTS_ENTRIES = 3
@@ -179,7 +191,9 @@ def detect_clause_start(line: str) -> ClauseStart | None:
         return None
     rest = match.group("rest").strip().rstrip(":")
     if kind == "top" and (dash := _DASH_HEADING.match(rest)):
-        title = dash.group("title").strip()
+        title = _HEADING_MARKS.sub(" ", dash.group("title")).replace("“", "").replace("”", "")
+        title = title.strip().strip('"')
+        title = normalize_whitespace(title)
         if len(title.split()) <= MAX_DASH_TITLE_WORDS:
             return ClauseStart(ref=ref, heading=title, kind=kind, has_body=True)
     heading = rest if kind == "top" and _looks_like_title(rest) else None
@@ -336,7 +350,7 @@ class _Chunker:
         return True
 
     def add_line(self, page_number: int, line: str) -> None:
-        line = _AMENDMENT_MARK.sub(r"\1", line)
+        line = _AMENDMENT_MARK.sub(lambda m: m.group(1) or m.group(2) or "", line)
         # A footnote may wrap onto following lines; a blank line or a new clause ends it.
         if is_footnote(line) or (
             self.in_footnote and line.strip() and not detect_clause_start(line)
@@ -401,7 +415,7 @@ def chunk_pages(pages: list[str]) -> tuple[list[Chunk], list[ClauseRecord]]:
     """
     chunker = _Chunker()
     for page_number, page_text in enumerate(pages, start=1):
-        for line in page_text.splitlines():
+        for line in _INLINE_SECTION.sub("\n", page_text).splitlines():
             if not _PAGE_FOOTER.match(line):
                 chunker.add_line(page_number, line)
         chunker.flush(page_number)

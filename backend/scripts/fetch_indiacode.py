@@ -39,6 +39,20 @@ ACTS = [
     "The Legal Services Authorities Act, 1987",
     "The Indian Contract Act, 1872",
     "The Code on Wages, 2019",
+    # Second held-out set (tests/real_document_cases.py, split "test2")
+    "The Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+    "The Digital Personal Data Protection Act, 2023",
+    "The Information Technology Act, 2000",
+    "The Negotiable Instruments Act, 1881",
+    "The Limitation Act, 1963",
+    "The Arbitration and Conciliation Act, 1996",
+    # Third held-out set (split "test3")
+    "The Right of Children to Free and Compulsory Education Act, 2009",
+    "The Dowry Prohibition Act, 1961",
+    "The Transfer of Property Act, 1882",
+    "The Specific Relief Act, 1963",
+    "The Registration Act, 1908",
+    "The Prevention of Corruption Act, 1988",
 ]
 
 
@@ -76,7 +90,8 @@ def find_central_act(client: httpx.Client, title: str) -> dict[str, Any] | None:
         f"{API}/discover/search/objects",
         query=comparable(title),
         dsoType="ITEM",
-        size="40",
+        size="100",
+        **{"f.identifier_collection": "ACT,equals"},  # whole Acts, not their sections
     )
     for result in data["_embedded"]["searchResult"]["_embedded"]["objects"]:
         item = result["_embedded"]["indexableObject"]

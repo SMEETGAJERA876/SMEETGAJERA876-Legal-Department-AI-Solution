@@ -2,9 +2,18 @@
 
 Understand what your legal document says — upload a PDF, ask questions in plain language, and jump straight to the supporting page and clause.
 
+## Try it without signing in
+
+**[/demo](docs/Demo.md)** opens a real 42-page Act of Parliament (Consumer Protection Act 2019,
+from India Code), a sample employment contract and a rental agreement with deliberate mistakes —
+no Google account, no upload. Search them, ask questions, click any answer to jump to the page and
+see the exact wording highlighted, and ask something the Act *doesn't* cover to watch it say
+**"not found"** instead of guessing. Uploading your own document still needs Google sign-in, and
+those documents stay private to your account. Details: [docs/Demo.md](docs/Demo.md).
+
 Specs: [Problem statement](ProblemStatement.md.txt) · [PRD](PRD.md.txt) · [Architecture](Architecture.md.txt) · [Design](Design.md.txt) · [Phases](Phases.md.txt) · [Rules](Rules.md.txt)
 
-**Docs:** [Architecture](docs/Architecture.md) · [AI pipeline](docs/AI_Pipeline.md) · [Evaluation](docs/Evaluation.md) · [API](docs/API.md) · [Database](docs/Database.md) · [Security](docs/Security.md) · [Deployment](docs/Deployment.md) · [Demo script](docs/Demo_Script.md)
+**Docs:** [Public demo](docs/Demo.md) · [Architecture](docs/Architecture.md) · [AI pipeline](docs/AI_Pipeline.md) · [Evaluation](docs/Evaluation.md) · [API](docs/API.md) · [Database](docs/Database.md) · [Security](docs/Security.md) · [Deployment](docs/Deployment.md) · [Demo script](docs/Demo_Script.md)
 
 ## Why it matters
 
@@ -81,6 +90,7 @@ Private to the uploading Google account (others get "not found") · files **encr
 | [docs/Evaluation.md](docs/Evaluation.md) | Every evaluation set, method, before/after results, held-out split, latency |
 | [docs/Architecture.md](docs/Architecture.md) · [docs/API.md](docs/API.md) · [docs/Database.md](docs/Database.md) | System design, endpoints, schema |
 | [docs/Security.md](docs/Security.md) · [docs/Deployment.md](docs/Deployment.md) | Threats and controls; Docker / cloud deployment, backups, scaling |
+| [docs/Demo.md](docs/Demo.md) | The public read-only demo: what a visitor may do, how the access rule works, how to seed it |
 
 Machine-readable: `data/schemas/` (JSON Schema 2020-12), `data/taxonomy/`, `data/examples/`, `dataset/`. `backend/tests/test_taxonomy_data.py` keeps them consistent with each other, with the docs, and with the extraction engine.
 
@@ -88,7 +98,8 @@ Machine-readable: `data/schemas/` (JSON Schema 2020-12), `data/taxonomy/`, `data
 
 ```
 frontend/   Next.js + TypeScript + Tailwind + shadcn/ui + TanStack Query + react-pdf
-  src/app/                     home (upload + documents) and /documents/[id] workspace
+  src/app/                     home (upload + documents), /documents/[id] workspace,
+                               /demo (public, no sign-in)
   src/components/workspace/    PDF viewer, search, overview, ask panels
   src/lib/                     API client (zod-validated), highlight matching
 backend/    FastAPI + SQLAlchemy + Alembic + pgvector (Python, managed with uv)
@@ -142,6 +153,12 @@ docker-compose.prod.yml  full stack: database + API + website (see docs/Deployme
    npm run dev
    ```
    Open http://localhost:3000 and upload `samples/employment_agreement.pdf` to try it.
+4. **Public demo** (optional) — load the three documents that http://localhost:3000/demo shows
+   without sign-in:
+   ```
+   cd backend
+   uv run python -m scripts.seed_demo
+   ```
 
 ## Evaluation
 
@@ -187,5 +204,6 @@ uv run python -m scripts.evaluate      # prints PASS/FAIL per question; currentl
 - [x] Intelligence system Phase 5: document classification (taxonomy type + confidence + reasons; "We're not sure — choose the type" flow; user-verified types)
 - [x] Intelligence system Phase 3: `DocumentParser` interface + `PDFParser`, content-based format detection (DOCX/images recognised and refused with a clear message), `GET /documents/{id}/normalized`
 - [x] Intelligence system Phase 1–2: document taxonomy, legal concepts, normalized document schema, dataset layout, design docs (see docs/AI_Pipeline.md §6 for the next phases)
+- [x] Public read-only demo: three seeded documents anyone can use without signing in, writes refused for everyone ([docs/Demo.md](docs/Demo.md))
 - [ ] Phase 13 — Contract comparison
 - [ ] Live deployment (needs a hosting account) and a recorded demo video

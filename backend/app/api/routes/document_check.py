@@ -19,9 +19,8 @@ from app.schemas.documents import (
     RepairIn,
     RepairOut,
 )
-from app.services import audit, storage
+from app.services import audit, jobs, storage
 from app.services.document_check import ClauseInfo, Issue, check_document
-from app.services.processing import process_document
 from app.services.repair import repair_pdf
 
 router = APIRouter(
@@ -143,7 +142,7 @@ def repair_document(
         detail={"corrected_copy": str(corrected.id), "fixes": len(result.applied)},
     )
     db.commit()
-    background_tasks.add_task(process_document, corrected.id)
+    jobs.enqueue(background_tasks, corrected.id)
     return RepairOut(
         document=DocumentOut.model_validate(corrected),
         applied=[_issue_out(i) for i in result.applied],

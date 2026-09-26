@@ -10,5 +10,8 @@
 **/.ruff_cache
 backend/storage
 backend/.pgdata
+# The evaluation corpus is 10 MB and the image doesn't need it — except the one Act the
+# public demo offers (docs/Demo.md), which the Dockerfile copies in.
 dataset
+!dataset/indiacode/consumer_protection_act_2019.pdf
 .git

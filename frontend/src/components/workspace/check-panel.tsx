@@ -33,9 +33,14 @@ import {
 } from "@/lib/api";
 import type { ShowSource } from "./source-quote";
 
-type Props = { documentId: string; onShowSource: ShowSource };
+type Props = {
+  documentId: string;
+  onShowSource: ShowSource;
+  /** Demo documents are shared: the mistakes are listed, but nothing may be changed. */
+  readOnly?: boolean;
+};
 
-export function CheckPanel({ documentId, onShowSource }: Props) {
+export function CheckPanel({ documentId, onShowSource, readOnly = false }: Props) {
   const queryClient = useQueryClient();
   const { data, error, isPending } = useQuery({
     queryKey: ["issues", documentId],
@@ -112,25 +117,34 @@ export function CheckPanel({ documentId, onShowSource }: Props) {
           <ul className="space-y-2">
             {fixable.map((issue) => (
               <li key={issue.id} className="flex gap-2.5 rounded-lg border bg-card p-3">
-                <input
-                  type="checkbox"
-                  className="mt-1 size-4 accent-[var(--primary)]"
-                  checked={!excluded.has(issue.id)}
-                  onChange={() => toggle(issue.id)}
-                  aria-label={`Fix “${issue.original}” on page ${issue.page_number}`}
-                />
+                {!readOnly && (
+                  <input
+                    type="checkbox"
+                    className="mt-1 size-4 accent-[var(--primary)]"
+                    checked={!excluded.has(issue.id)}
+                    onChange={() => toggle(issue.id)}
+                    aria-label={`Fix “${issue.original}” on page ${issue.page_number}`}
+                  />
+                )}
                 <IssueBody issue={issue} onShow={() => show(issue)} />
               </li>
             ))}
           </ul>
-          <Button
-            className="w-full"
-            disabled={selected.length === 0}
-            onClick={() => setConfirming(true)}
-          >
-            <Wand2 aria-hidden />
-            Auto-repair {selected.length} {selected.length === 1 ? "mistake" : "mistakes"}
-          </Button>
+          {readOnly ? (
+            <p className="rounded-lg border border-dashed bg-muted/40 p-3 text-xs text-muted-foreground">
+              On your own document you could tick these and click <strong>Auto-repair</strong> to
+              download a corrected PDF. The demo document is shared, so it is never changed.
+            </p>
+          ) : (
+            <Button
+              className="w-full"
+              disabled={selected.length === 0}
+              onClick={() => setConfirming(true)}
+            >
+              <Wand2 aria-hidden />
+              Auto-repair {selected.length} {selected.length === 1 ? "mistake" : "mistakes"}
+            </Button>
+          )}
         </div>
       )}
 

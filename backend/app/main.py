@@ -1,4 +1,5 @@
 import logging
+import threading
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -7,10 +8,12 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.routes import account, document_check, documents, health, summary
+from app.api.routes import account, demo, document_check, documents, health, summary
 from app.core.config import get_settings
 from app.core.errors import AppError
 from app.core.security import check_production_settings, security_middleware
+from app.services.demo import auto_seed
+from app.services.jobs import queue
 from app.services.lifecycle import PeriodicJobs
 
 logger = logging.getLogger("clauselens")
@@ -18,11 +21,18 @@ logger = logging.getLogger("clauselens")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    # Resume documents interrupted by a restart, then apply retention periodically.
+    # Processing workers (queue mode), and retention checks in the background.
+    settings = get_settings()
+    if settings.processing_mode == "queue":
+        queue.start(settings.processing_workers)
     jobs = PeriodicJobs()
     jobs.start()
+    # The demo documents take a minute to process, so they load behind the first requests
+    # rather than delaying the port opening (and a failure here never stops the API).
+    threading.Thread(target=auto_seed, name="demo-seed", daemon=True).start()
     yield
     jobs.stop()
+    queue.stop()
 
 
 def create_app() -> FastAPI:
@@ -77,6 +87,7 @@ def create_app() -> FastAPI:
     app.include_router(document_check.router)
     app.include_router(summary.router)
     app.include_router(account.router)
+    app.include_router(demo.router)
     return app
 
 

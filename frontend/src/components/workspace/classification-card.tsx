@@ -27,13 +27,15 @@ export function ClassificationCard({ document }: Props) {
     },
   });
 
+  // Demo documents are shared, so nobody may re-label them (the API refuses it too).
+  const readOnly = document.is_demo;
   const classification = document.classification;
   const status = classification?.status ?? "unknown";
   const level = classification?.confidence_level ?? "low";
   const nameOf = (id: string) => types?.find((t) => t.id === id)?.name ?? id;
   const suggestions = (classification?.alternatives ?? []).map((a) => a.document_type);
 
-  const picker = picking && types && (
+  const picker = picking && types && !readOnly && (
     <TypePicker
       types={types}
       initial={document.document_type_id ?? suggestions[0] ?? ""}
@@ -57,19 +59,21 @@ export function ClassificationCard({ document }: Props) {
           <p className="text-sm">
             Looks like: <span className="font-semibold">{document.document_type}</span>
           </p>
-          <div className="flex gap-2">
-            <Button
-              size="xs"
-              variant="outline"
-              disabled={save.isPending || !document.document_type_id}
-              onClick={() => document.document_type_id && save.mutate(document.document_type_id)}
-            >
-              Yes, that&apos;s right
-            </Button>
-            <Button size="xs" variant="ghost" onClick={() => setPicking(true)}>
-              Change
-            </Button>
-          </div>
+          {!readOnly && (
+            <div className="flex gap-2">
+              <Button
+                size="xs"
+                variant="outline"
+                disabled={save.isPending || !document.document_type_id}
+                onClick={() => document.document_type_id && save.mutate(document.document_type_id)}
+              >
+                Yes, that&apos;s right
+              </Button>
+              <Button size="xs" variant="ghost" onClick={() => setPicking(true)}>
+                Change
+              </Button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="space-y-2 rounded-lg border border-warning/30 bg-amber-50 p-3" role="status">
@@ -80,7 +84,7 @@ export function ClassificationCard({ document }: Props) {
               Choosing the type helps ClauseLens look for the right information.
             </span>
           </p>
-          {suggestions.length > 0 && (
+          {suggestions.length > 0 && !readOnly && (
             <div className="flex flex-wrap gap-1.5">
               {suggestions.map((id) => (
                 <Button
@@ -96,7 +100,7 @@ export function ClassificationCard({ document }: Props) {
               ))}
             </div>
           )}
-          {!picking && (
+          {!picking && !readOnly && (
             <Button size="xs" variant="ghost" onClick={() => setPicking(true)}>
               Choose the type…
             </Button>
@@ -104,7 +108,7 @@ export function ClassificationCard({ document }: Props) {
         </div>
       )}
 
-      {(level === "high" || status === "user_verified") && !picking && (
+      {(level === "high" || status === "user_verified") && !picking && !readOnly && (
         <button
           type="button"
           onClick={() => setPicking(true)}

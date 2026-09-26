@@ -92,6 +92,7 @@ export const documentSchema = z.object({
   created_at: z.string(),
   processed_at: z.string().nullable(),
   source_document_id: z.string().nullable().optional(),
+  is_demo: z.boolean().optional().default(false),
   changes: z
     .array(
       z.object({
@@ -207,9 +208,27 @@ export const repairSchema = z.object({
 });
 export type RepairResult = z.infer<typeof repairSchema>;
 
+/** The public read-only demo: documents anyone may open without signing in. */
+export const demoSchema = z.object({
+  enabled: z.boolean(),
+  documents: z.array(
+    z.object({
+      id: z.string(),
+      original_filename: z.string(),
+      document_type: z.string().nullable(),
+      page_count: z.number().nullable(),
+      description: z.string(),
+      questions: z.array(z.string()),
+    }),
+  ),
+});
+export type Demo = z.infer<typeof demoSchema>;
+export type DemoDocument = Demo["documents"][number];
+
 // ---------------------------------------------------------------- endpoints
 
 export const fetchHealth = () => request("/health", healthSchema);
+export const fetchDemo = () => request("/demo", demoSchema);
 export const fetchDocuments = () => request("/documents", z.array(documentSchema));
 export const fetchDocument = (id: string) => request(`/documents/${id}`, documentSchema);
 export const fetchOverview = (id: string) => request(`/documents/${id}/overview`, overviewSchema);

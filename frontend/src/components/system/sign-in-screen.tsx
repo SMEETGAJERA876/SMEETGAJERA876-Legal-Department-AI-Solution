@@ -14,6 +14,7 @@ import {
   ListChecks,
   LoaderCircle,
   LockKeyhole,
+  PlayCircle,
   MessageSquareText,
   Search,
   ShieldCheck,
@@ -21,6 +22,7 @@ import {
   UploadCloud,
   type LucideIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { useAuth } from "@/components/providers/auth-provider";
 import { Disclaimer } from "@/components/system/disclaimer";
 import { SignInDemo } from "@/components/system/sign-in-demo";
@@ -124,6 +126,30 @@ function SignInButton({ size = "lg", className }: { size?: "lg" | "default"; cla
   );
 }
 
+/** Lets anyone — a judge, a colleague, someone deciding whether to trust it — try it first. */
+function DemoButton({
+  variant = "outline",
+  size = "lg",
+  className,
+}: {
+  variant?: "outline" | "ghost";
+  size?: "lg" | "default";
+  className?: string;
+}) {
+  return (
+    <Button
+      size={size}
+      variant={variant}
+      nativeButton={false}
+      render={<Link href="/demo" />}
+      className={cn("gap-2", className)}
+    >
+      <PlayCircle aria-hidden />
+      Try the live demo
+    </Button>
+  );
+}
+
 function SignInError() {
   const { error } = useAuth();
   if (!error) return null;
@@ -199,6 +225,7 @@ export function SignInScreen({ notConfigured = false }: { notConfigured?: boolea
             <a href="#faq" className="hidden text-sm text-muted-foreground hover:text-foreground sm:inline">
               FAQ
             </a>
+            <DemoButton size="default" variant="ghost" />
             <SignInButton size="default" />
           </nav>
         </div>
@@ -221,7 +248,14 @@ export function SignInScreen({ notConfigured = false }: { notConfigured?: boolea
               and get answers that point to the exact page and clause.
             </p>
             <div className="flex flex-col items-start gap-3">
-              <SignInButton />
+              <div className="flex flex-wrap items-center gap-3">
+                <SignInButton />
+                <DemoButton />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                The demo opens a real Act of Parliament and a sample contract — no sign-in, no
+                upload needed.
+              </p>
               <SignInError />
               <ul className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
                 {["No password to create", "Never used to train AI", "Delete any time"].map((item) => (
@@ -344,7 +378,10 @@ export function SignInScreen({ notConfigured = false }: { notConfigured?: boolea
             <p className="max-w-xl text-white/80">
               Sign in with Google and upload your first document.
             </p>
-            <SignInButton className="bg-white text-ink hover:bg-white/90" />
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <SignInButton className="bg-white text-ink hover:bg-white/90" />
+              <DemoButton className="border-white/40 bg-transparent text-white hover:bg-white/10" />
+            </div>
             <SignInError />
           </div>
         </section>

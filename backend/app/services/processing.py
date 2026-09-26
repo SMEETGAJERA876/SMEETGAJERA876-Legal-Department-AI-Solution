@@ -24,11 +24,14 @@ from app.services.parsing import DocumentParseError, parse_file
 logger = logging.getLogger("clauselens.processing")
 
 PARTY_DETECTION_PAGES = 2
+MAX_ATTEMPTS = 3  # queue mode: unexpected failures are retried this many times in total
+RETRY_DETAIL = "Waiting to be processed (retry)"
 
 
 def _set_status(db: Session, document: Document, status: DocumentStatus, detail: str) -> None:
     document.status = status
     document.status_detail = detail
+    document.processing_heartbeat_at = datetime.now(UTC)  # the queue's sign of life
     db.commit()
 
 
@@ -52,6 +55,10 @@ def process_document(document_id: uuid.UUID) -> None:
         except Exception:
             logger.exception("Processing failed for document %s", document_id)
             db.rollback()
+            if 0 < (document.processing_attempts or 0) < MAX_ATTEMPTS:
+                # Claimed from the queue: put it back for another try (services/jobs.py).
+                _set_status(db, document, DocumentStatus.UPLOADED, RETRY_DETAIL)
+                return
             document.error_message = (
                 "Something unexpected happened while processing this document. "
                 "Try uploading it again. If it keeps failing, the PDF may use an unusual format."

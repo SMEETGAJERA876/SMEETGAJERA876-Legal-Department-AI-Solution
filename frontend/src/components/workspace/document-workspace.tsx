@@ -9,8 +9,10 @@ import {
   FileSearch,
   FileText,
   LoaderCircle,
+  LogIn,
   MessageSquareText,
   Search,
+  Sparkles,
   SpellCheck,
 } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -60,7 +62,14 @@ const MOBILE_TABS: { value: MobileTab; label: string; icon: typeof FileText }[] 
   { value: "ask", label: "Ask", icon: MessageSquareText },
 ];
 
-export function DocumentWorkspace({ documentId }: { documentId: string }) {
+export function DocumentWorkspace({
+  documentId,
+  demo = false,
+}: {
+  documentId: string;
+  /** Opened from /demo: shared, read-only, and usable without signing in. */
+  demo?: boolean;
+}) {
   const { data: document, error } = useQuery({
     queryKey: ["document", documentId],
     queryFn: () => fetchDocument(documentId),
@@ -70,6 +79,8 @@ export function DocumentWorkspace({ documentId }: { documentId: string }) {
     },
   });
 
+  const home = demo ? "/demo" : "/";
+
   return (
     <div className="flex h-dvh flex-col">
       <header className="flex items-center gap-3 border-b bg-card px-4 py-2.5">
@@ -77,11 +88,11 @@ export function DocumentWorkspace({ documentId }: { documentId: string }) {
           variant="ghost"
           size="icon-sm"
           nativeButton={false}
-          render={<Link href="/" aria-label="All documents" />}
+          render={<Link href={home} aria-label={demo ? "All demo documents" : "All documents"} />}
         >
           <ArrowLeft />
         </Button>
-        <Link href="/" className="flex items-center gap-1.5 text-sm font-semibold text-primary">
+        <Link href={home} className="flex items-center gap-1.5 text-sm font-semibold text-primary">
           <FileSearch className="size-4" aria-hidden />
           <span className="hidden sm:inline">ClauseLens AI</span>
         </Link>
@@ -123,7 +134,15 @@ export function DocumentWorkspace({ documentId }: { documentId: string }) {
           </DownloadButton>
         )}
         <div className={document?.status === "ready" ? "shrink-0" : "ml-auto shrink-0"}>
-          <UserMenu compact />
+          {demo ? (
+            <Button size="sm" nativeButton={false} render={<Link href="/" />}>
+              <LogIn aria-hidden />
+              <span className="hidden sm:inline">Sign in to use your own</span>
+              <span className="sm:hidden">Sign in</span>
+            </Button>
+          ) : (
+            <UserMenu compact />
+          )}
         </div>
       </header>
 
@@ -141,13 +160,32 @@ export function DocumentWorkspace({ documentId }: { documentId: string }) {
       ) : document.status !== "ready" ? (
         <ProcessingView document={document} />
       ) : (
-        <ReadyWorkspace documentId={documentId} />
+        <>
+          {demo && <DemoBanner />}
+          <ReadyWorkspace documentId={documentId} demo={demo} />
+        </>
       )}
     </div>
   );
 }
 
-function ReadyWorkspace({ documentId }: { documentId: string }) {
+/** Says plainly what this document is, so nobody mistakes a shared sample for their own file. */
+function DemoBanner() {
+  return (
+    <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 border-b border-primary/20 bg-accent px-4 py-1.5 text-center text-xs text-foreground">
+      <Sparkles className="size-3.5 shrink-0 text-primary" aria-hidden />
+      <span>
+        <strong className="font-semibold">Live demo.</strong> This document is shared and
+        read-only — search it, ask it anything, and click a source to see the page.
+      </span>
+      <Link href="/" className="font-medium text-primary underline underline-offset-2">
+        Sign in to upload your own
+      </Link>
+    </p>
+  );
+}
+
+function ReadyWorkspace({ documentId, demo }: { documentId: string; demo: boolean }) {
   const [target, setTarget] = useState<ViewerTarget | null>(null);
   const [mobileTab, setMobileTab] = useState<MobileTab>("document");
   const [sideTab, setSideTab] = useState<SideTab>("search");
@@ -209,7 +247,7 @@ function ReadyWorkspace({ documentId }: { documentId: string }) {
               <OverviewPanel documentId={documentId} onShowSource={showSource} />
             </>
           ) : (
-            <CheckPanel documentId={documentId} onShowSource={showSource} />
+            <CheckPanel documentId={documentId} onShowSource={showSource} readOnly={demo} />
           )}
         </aside>
 

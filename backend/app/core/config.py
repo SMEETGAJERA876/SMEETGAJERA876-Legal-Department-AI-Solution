@@ -1,7 +1,7 @@
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -15,6 +15,15 @@ class Settings(BaseSettings):
 
     database_url: str = "postgresql+psycopg://clauselens:clauselens@localhost:5433/clauselens"
 
+    @field_validator("database_url")
+    @classmethod
+    def _use_psycopg_driver(cls, url: str) -> str:
+        """Accept the plain URLs hosting providers give (postgres://, postgresql://)."""
+        for prefix in ("postgres://", "postgresql://"):
+            if url.startswith(prefix):
+                return "postgresql+psycopg://" + url.removeprefix(prefix)
+        return url
+
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])
 
     # Google sign-in via Firebase Authentication (app/core/auth.py). "disabled" runs everything
@@ -22,10 +31,23 @@ class Settings(BaseSettings):
     auth_mode: Literal["firebase", "disabled"] = "firebase"
     firebase_project_id: str = ""
 
+    # Public read-only demo (docs/Demo.md). Documents seeded by `scripts.seed_demo` may be
+    # opened, searched and asked about without signing in; uploading, changing the document
+    # type, auto-repair and deletion always need Google. Set false to close the demo entirely.
+    demo_mode_enabled: bool = True
+    # Load the demo documents in the background at start-up, for hosts with no shell to run
+    # `scripts.seed_demo` and hosts that lose their uploads directory on restart.
+    demo_auto_seed: bool = False
+
     # HTTP hardening (app/core/security.py).
     rate_limit_enabled: bool = True
     # Behind a reverse proxy/load balancer, rate-limit by X-Forwarded-For instead of the peer.
     trust_proxy_headers: bool = False
+
+    # Document processing (services/jobs.py): "queue" = worker threads claim uploads from the
+    # database (safe across processes and machines); "inline" = right after the upload response.
+    processing_mode: Literal["queue", "inline"] = "queue"
+    processing_workers: int = 2
 
     # Delete documents automatically this many days after upload (0 = never; users delete).
     retention_days: int = 0

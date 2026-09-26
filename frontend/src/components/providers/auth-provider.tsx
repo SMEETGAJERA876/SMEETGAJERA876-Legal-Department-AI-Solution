@@ -2,6 +2,7 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { FirebaseError } from "firebase/app";
+import { usePathname } from "next/navigation";
 import {
   GoogleAuthProvider,
   onAuthStateChanged,
@@ -36,6 +37,9 @@ export type AuthState = {
 
 const AuthContext = createContext<AuthState | null>(null);
 
+/** The public read-only demo (docs/Demo.md) is shown to anyone; the API enforces the same rule. */
+const PUBLIC_PATH = /^\/demo(\/|$)/;
+
 const SIGN_IN_ERRORS: Record<string, string | null> = {
   "auth/popup-closed-by-user": null,
   "auth/cancelled-popup-request": null,
@@ -56,6 +60,8 @@ function signInErrorMessage(error: unknown): string | null {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
+  const pathname = usePathname();
+  const publicPage = PUBLIC_PATH.test(pathname ?? "");
   const active = authEnabled && firebaseConfigured;
   const [user, setUser] = useState<User | null>(null);
   const [status, setStatus] = useState<AuthStatus>(active ? "loading" : "signed-out");
@@ -98,8 +104,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [status, user, signingIn, error, signIn, signOut],
   );
 
+  // The demo pages render for everyone; signing in there is optional and just adds your own
+  // documents. Every other page waits for Google, as before.
   let content = children;
-  if (authEnabled && !firebaseConfigured) {
+  if (publicPage) {
+    content = children;
+  } else if (authEnabled && !firebaseConfigured) {
     content = <SignInScreen notConfigured />;
   } else if (authEnabled && status !== "signed-in") {
     content = <SignInScreen />;

@@ -1,11 +1,12 @@
 # Security & privacy
 
 Legal and official documents are personal. Every control below is implemented and covered by
-automated tests (`backend/tests/test_auth.py`, `test_security.py`).
+automated tests (`backend/tests/test_auth.py`, `test_security.py`, `test_demo.py`).
 
 | Threat | Control | Where |
 |---|---|---|
 | Someone else opens my document | Google sign-in verified server-side (signature, issuer, audience, expiry, Google provider, verified email); ownership check on every `/documents/{id}` route; others get **404** | `core/auth.py` |
+| The public demo weakening all of the above | Only documents flagged `is_demo` — seeded by `scripts.seed_demo`, owned by a user with no Firebase uid — are readable without a token, and only for reads plus `…/ask`; every write answers **403**. A token that is *sent* but invalid still fails, so demo access cannot mask a broken sign-in. `DEMO_MODE_ENABLED=false` closes it | `core/auth.py`, [Demo.md](Demo.md) |
 | A stolen disk, backup or uploads folder | Files encrypted with **AES-256-GCM** (authenticated: tampering is detected); the key is outside the database | `services/storage.py` |
 | Brute force / flooding / abuse of the AI | Per-client rate limits (uploads 20/10 min, questions 30/min, other 300/min) with friendly `429` + `Retry-After` | `core/security.py` |
 | Clickjacking, MIME sniffing, leaking URLs | `X-Frame-Options: DENY`, CSP `default-src 'none'; frame-ancestors 'none'`, `nosniff`, `Referrer-Policy: no-referrer`, HSTS in production, `Cache-Control: no-store` | `core/security.py` |

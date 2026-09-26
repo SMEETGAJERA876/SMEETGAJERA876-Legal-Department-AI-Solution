@@ -27,6 +27,8 @@ class DocumentOut(BaseModel):
     processed_at: datetime | None
     source_document_id: uuid.UUID | None = None
     changes: list[dict[str, Any]] = []
+    # Part of the public read-only demo: the website hides anything that would change it.
+    is_demo: bool = False
 
 
 class SourceRef(BaseModel):
@@ -154,3 +156,19 @@ class DocumentTypeOut(BaseModel):
 
 class ClassificationIn(BaseModel):
     document_type_id: str = Field(min_length=3, max_length=80)
+
+
+class DemoDocumentOut(BaseModel):
+    """A document on the public demo picker (app/api/routes/demo.py)."""
+
+    id: uuid.UUID
+    original_filename: str
+    document_type: str | None
+    page_count: int | None
+    description: str
+    questions: list[str]
+
+
+class DemoOut(BaseModel):
+    enabled: bool
+    documents: list[DemoDocumentOut]

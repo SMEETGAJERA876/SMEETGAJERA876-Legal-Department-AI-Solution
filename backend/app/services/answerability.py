@@ -17,13 +17,16 @@ from app.services import glossary
 # Below this cross-encoder score the best passage does not answer the question. Calibrated on
 # the dev split of tests/real_document_cases.py (MiniLM-L-6 scores range roughly -11 … +10).
 MIN_RELEVANCE = -7.0
+# At or above this the best passage is trusted without the subject-word check. Unanswerable
+# questions in the evaluation sets peaked at about -3.2.
+STRONG_RELEVANCE = 3.0
 MIN_SUBJECT_COVERAGE = 0.5
 MIN_WORD_LENGTH = 3
 MIN_STEM_LENGTH = 4
 STEM_TRIM = 3
 
 # Words that say nothing about *what* the question is about.
-_GENERIC = frozenset(
+GENERIC = frozenset(
     """
 what which who whom whose when where why how many much long does do did done can could should
 would will shall may might must is are was were be been being the a an of to for in on at by
@@ -74,7 +77,7 @@ def subject_coverage(question: str, vocabulary: set[str]) -> Coverage:
     # their legal wording ("salary" in a job offer, "wages" in the Code on Wages).
     for phrase in dict.fromkeys(glossary.plain_phrases(text)):
         text = text.replace(phrase, " ")
-        if all(w in _GENERIC for w in re.findall(r"[a-z']+", phrase)):
+        if all(w in GENERIC for w in re.findall(r"[a-z']+", phrase)):
             continue  # "punishment", "fine", "time limit" say nothing about the subject
         subject.append(phrase)
         wordings = [phrase, *glossary.legal_terms(phrase)]
@@ -82,7 +85,7 @@ def subject_coverage(question: str, vocabulary: set[str]) -> Coverage:
                for t in wordings):  # fmt: skip
             covered.append(phrase)
     for word in dict.fromkeys(re.findall(r"[a-z][a-z'-]+", text)):
-        if len(word) < MIN_WORD_LENGTH or word in _GENERIC:
+        if len(word) < MIN_WORD_LENGTH or word in GENERIC:
             continue
         subject.append(word)
         if _in_vocabulary(word, vocabulary):
@@ -91,6 +94,10 @@ def subject_coverage(question: str, vocabulary: set[str]) -> Coverage:
 
 
 def answerable(question: str, vocabulary: set[str], best_relevance: float | None) -> bool:
+    # A passage the cross-encoder is confident about answers the question even when the
+    # question words differ from the document's ("cancel a gift" vs "transfer … void").
+    if best_relevance is not None and best_relevance >= STRONG_RELEVANCE:
+        return True
     if not subject_coverage(question, vocabulary).sufficient:
         return False
     return best_relevance is None or best_relevance >= MIN_RELEVANCE

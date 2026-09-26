@@ -5,10 +5,17 @@ Interactive documentation (OpenAPI) is served by the running API at
 
 ## Authentication
 
-Every endpoint except `/health` needs `Authorization: Bearer <Firebase ID token>` from a Google
-sign-in. Without it: `401 not_signed_in`; invalid or expired: `401 session_expired`; another
-sign-in method: `401 google_required`. A document that belongs to someone else answers
-`404 not_found` on every route.
+Every endpoint except `/health`, `/demo` and the taxonomy lists needs
+`Authorization: Bearer <Firebase ID token>` from a Google sign-in. Without it:
+`401 not_signed_in`; invalid or expired: `401 session_expired`; another sign-in method:
+`401 google_required`. A document that belongs to someone else answers `404 not_found` on every
+route.
+
+**The public demo** ([Demo.md](Demo.md)): documents flagged `is_demo` may be read and asked
+questions with no token at all — GET/HEAD on any `/documents/{id}/…` route, plus
+`POST /documents/{id}/ask`. Anything that would change one answers `403 demo_read_only`, for
+signed-in users too. Sending a token that is present but invalid still fails, so demo access can
+never mask a broken sign-in.
 
 ## Errors
 
@@ -18,6 +25,7 @@ Always `{"error": "<code>", "message": "<plain-language sentence>"}` — never a
 |---|---|
 | 400 | `unknown_document_type`, `empty_file`, `nothing_to_fix`, `issues_changed` |
 | 401 | `not_signed_in`, `session_expired`, `google_required`, `email_required`, `invalid_token` |
+| 403 | `demo_read_only` |
 | 404 | `not_found` |
 | 409 | `document_not_ready` |
 | 413 / 415 | `file_too_large`, `unsupported_file_type` |
@@ -35,10 +43,11 @@ Uploads and corrected copies: 20 per 10 minutes · questions: 30 per minute · e
 | Method | Path | Purpose |
 |---|---|---|
 | GET | `/health` | Liveness and database reachability (public) |
+| GET | `/demo` | Documents anyone may open without signing in, with suggested questions (public) |
 | POST | `/documents` | Upload a PDF (multipart `file`); processing starts in the background |
 | GET | `/documents` | The signed-in user's documents, newest first |
-| GET | `/documents/types` | Document types for the type picker |
-| GET | `/documents/concepts` | Legal concepts and their labels |
+| GET | `/documents/types` | Document types for the type picker (public) |
+| GET | `/documents/concepts` | Legal concepts and their labels (public) |
 | GET | `/documents/{id}` | Status, type, classification, parties |
 | DELETE | `/documents/{id}` | Delete the document, its file and all extracted data |
 | PUT | `/documents/{id}/classification` | The user confirms or corrects the document type |

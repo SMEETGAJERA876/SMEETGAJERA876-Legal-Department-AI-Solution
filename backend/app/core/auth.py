@@ -10,6 +10,11 @@ The browser signs in with Google (Firebase JS SDK) and sends the Firebase ID tok
 Documents are private to their owner: any /documents/{document_id} route for a document the
 user doesn't own answers 404, so it doesn't even reveal that the document exists.
 
+The one exception is the public read-only demo (DEMO_MODE_ENABLED, docs/Demo.md): documents
+flagged `is_demo` — seeded by `scripts.seed_demo`, never uploaded by a person — may be read,
+searched and asked about without signing in. Anything that writes (upload, delete, change the
+document type, auto-repair) still requires Google, on demo documents too.
+
 AUTH_MODE=disabled runs everything as one local user — for local development only.
 """
 
@@ -35,6 +40,9 @@ from app.services import audit
 
 LOCAL_USER_UID = "local-dev"
 LOCAL_USER_EMAIL = "local-dev@localhost"
+# Owner of the seeded demo documents. Has no Firebase uid, so nobody can ever sign in as it.
+DEMO_USER_EMAIL = "demo@clauselens.local"
+DEMO_USER_NAME = "ClauseLens demo"
 GOOGLE_PROVIDER = "google.com"
 CERT_CACHE_SECONDS = 3600
 CLOCK_SKEW_SECONDS = 10
@@ -135,39 +143,96 @@ def _user_for(db: Session, identity: Identity) -> User:
     return user
 
 
-def get_current_user(
+def get_demo_user(db: Session) -> User:
+    """Owner of the seeded demo documents. No Firebase uid, so nobody can sign in as it."""
+    user = db.scalar(select(User).where(User.email == DEMO_USER_EMAIL))
+    if user is None:
+        user = User(firebase_uid=None, email=DEMO_USER_EMAIL, display_name=DEMO_USER_NAME)
+        db.add(user)
+        db.commit()
+    return user
+
+
+def get_optional_user(
     request: Request,
     db: Annotated[Session, Depends(get_db)],
     authorization: Annotated[str | None, Header()] = None,
-) -> User:
+) -> User | None:
+    """The signed-in user, or None when the request carried no credentials at all.
+
+    A token that *was* sent but is invalid or expired still fails — only a missing
+    Authorization header gives None, so the public demo can never mask a broken sign-in.
+    """
     if get_settings().auth_mode == "disabled":
         identity = Identity(LOCAL_USER_UID, LOCAL_USER_EMAIL, "Local user")
     else:
         scheme, _, token = (authorization or "").partition(" ")
         if scheme.lower() != "bearer" or not token.strip():
-            raise _unauthorized("not_signed_in", "Please sign in with Google to use ClauseLens.")
+            return None
         identity = verify_firebase_token(token.strip())
     user = _user_for(db, identity)
     request.state.user = user
     return user
 
 
+OptionalUser = Annotated[User | None, Depends(get_optional_user)]
+
+
+def get_current_user(user: OptionalUser) -> User:
+    if user is None:
+        raise _unauthorized("not_signed_in", "Please sign in with Google to use ClauseLens.")
+    return user
+
+
 CurrentUser = Annotated[User, Depends(get_current_user)]
+
+# Reference data with nothing user-specific in it, needed to render the public demo.
+PUBLIC_COLLECTION_PATHS = frozenset({"/documents/concepts", "/documents/types"})
+# The only non-GET thing an anonymous visitor may do with a demo document: ask it a question.
+# (It writes a conversation row, but one keyed to a conversation id the visitor already holds.)
+DEMO_PUBLIC_WRITES = frozenset({"ask"})
+
+
+def _demo_allows(request: Request) -> bool:
+    if request.method in ("GET", "HEAD"):
+        return True
+    return request.method == "POST" and request.url.path.rsplit("/", 1)[-1] in DEMO_PUBLIC_WRITES
 
 
 def require_document_access(
-    request: Request, db: Annotated[Session, Depends(get_db)], user: CurrentUser
+    request: Request, db: Annotated[Session, Depends(get_db)], user: OptionalUser
 ) -> None:
-    """Router-level guard: a {document_id} that belongs to someone else is 'not found'."""
+    """Router-level guard: a {document_id} that belongs to someone else is 'not found'.
+
+    Demo documents are readable by anyone (DEMO_MODE_ENABLED); changing one still needs Google.
+    """
     raw = request.path_params.get("document_id")
     if raw is None:
+        # Collection routes: listing and uploading are per-person, taxonomy data is not.
+        if user is None and request.url.path not in PUBLIC_COLLECTION_PATHS:
+            raise _unauthorized("not_signed_in", "Please sign in with Google to use ClauseLens.")
         return
     try:
         document_id = uuid.UUID(str(raw))
     except ValueError:
         return  # the route's own validation answers 422
-    row = db.execute(select(Document.user_id).where(Document.id == document_id)).first()
-    if row is not None and row[0] != user.id:
+    row = db.execute(
+        select(Document.user_id, Document.is_demo).where(Document.id == document_id)
+    ).first()
+    if row is not None and row.is_demo and get_settings().demo_mode_enabled:
+        if not _demo_allows(request):
+            # Read-only for everyone, signed in or not — it is shared by every visitor.
+            raise AppError(
+                403,
+                "demo_read_only",
+                "The demo document is read-only. Upload your own document to change it.",
+            )
+        if user is None:
+            request.state.user = get_demo_user(db)
+        return
+    if user is None:
+        raise _unauthorized("not_signed_in", "Please sign in with Google to use ClauseLens.")
+    if row is not None and row.user_id != user.id:
         raise NotFoundError("This document doesn't exist or has been deleted.")
 
 

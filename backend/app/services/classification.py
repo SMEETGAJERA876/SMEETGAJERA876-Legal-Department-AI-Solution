@@ -82,8 +82,10 @@ STRUCTURE_RULES: list[tuple[str, str, float, str]] = [
     (r"\bthese regulations may be called\b", "policy.regulations", 3.0, '"these regulations may be called"'),
     (r"\bbe it enacted\b", "policy.act", 3.0, '"be it enacted"'),
     # Consolidated statutes (India Code): "(ACT NO. 22 OF 2005)" under the title.
-    (r"\(\s*act\s*no\.?\s*\d+\s+of\s+\d{4}\s*\)", "policy.act", 6.0, 'Act number ("Act No. … of …")'),
-    (r"\barrangement of sections\b", "policy.act", 3.0, '"Arrangement of sections"'),
+    # Only statutes carry a legislature's Act number, so it outweighs title words such as
+    # "Data Protection" that also name company policies.
+    (r"\(\s*act\s*no\.?\s*\d+\s+of\s+\d{4}\s*\)", "policy.act", 12.0, 'Act number ("Act No. … of …")'),
+    (r"\barr\w*\s+of\s+sections\b", "policy.act", 3.0, '"Arrangement of sections"'),
     (r"\bnotice is hereby given\b", "public_notice.public_notice", 2.0, '"notice is hereby given"'),
     (r"\bit is hereby notified\b", "government.notification", 2.0, '"it is hereby notified"'),
     (r"\bapplications are invited\b", "government.recruitment_notification", 2.0, '"applications are invited"'),
