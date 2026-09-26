@@ -1,0 +1,59 @@
+# Render Blueprint for the ClauseLens API.
+#
+# Deploy: Render dashboard -> New -> Blueprint -> pick this GitHub repo -> Apply.
+# Render finds this file automatically. After the first deploy, set the two
+# `sync: false` secrets below in the service's Environment tab, then redeploy.
+#
+# Free-tier note: the API loads local embedding, re-ranking and OCR models into
+# memory. Render's free web service plan (512 MB RAM) is usually too small for
+# this app; "starter" (512 MB is still tight, "standard" is safer) is set below.
+# Free Postgres on Render expires after 30 days unless upgraded.
+
+databases:
+  - name: clauselens-db
+    databaseName: clauselens
+    user: clauselens
+    plan: free
+    postgresMajorVersion: "16"
+
+services:
+  - type: web
+    name: clauselens-api
+    runtime: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: clauselens-db
+          property: connectionString
+      # Comma-free JSON list of allowed frontend origins. Update if the Vercel URL changes.
+      - key: CORS_ORIGINS
+        value: '["https://smeetgajera-876-legal-department-ai.vercel.app"]'
+      - key: AUTH_MODE
+        value: firebase
+      - key: FIREBASE_PROJECT_ID
+        value: legal-department-f5b74
+      # Set in the Render dashboard (Environment tab) -- do not put real secrets in this file.
+      - key: FILE_ENCRYPTION_KEY
+        sync: false
+      - key: RATE_LIMIT_ENABLED
+        value: "true"
+      - key: TRUST_PROXY_HEADERS
+        value: "true"
+      - key: RETENTION_DAYS
+        value: "0"
+      - key: AI_PROVIDER
+        value: none
+      - key: AI_API_KEY
+        sync: false
+      - key: WEB_WORKERS
+        value: "1"
+    disk:
+      name: uploads
+      mountPath: /data/uploads
+      sizeGB: 1
