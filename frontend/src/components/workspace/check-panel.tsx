@@ -12,7 +12,7 @@ import {
   Wand2,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { DownloadButton } from "@/components/system/download-button";
 import { Button } from "@/components/ui/button";
@@ -77,6 +77,7 @@ export function CheckPanel({ documentId, onShowSource, readOnly = false }: Props
   const fixable = data.issues.filter((issue) => issue.fixable);
   const review = data.issues.filter((issue) => !issue.fixable);
   const selected = fixable.filter((issue) => !excluded.has(issue.id));
+  const allSelected = fixable.length > 0 && selected.length === fixable.length;
   const show = (issue: Issue) => onShowSource(issue.page_number, issue.context, issue.original);
   const toggle = (id: string) =>
     setExcluded((previous) => {
@@ -85,6 +86,8 @@ export function CheckPanel({ documentId, onShowSource, readOnly = false }: Props
       else next.add(id);
       return next;
     });
+  // Excluding every fixable id is "none selected"; excluding none is "all selected".
+  const setAll = (on: boolean) => setExcluded(on ? new Set() : new Set(fixable.map((i) => i.id)));
 
   if (repair.data) return <RepairDone result={repair.data} onShowSource={onShowSource} />;
 
@@ -114,6 +117,21 @@ export function CheckPanel({ documentId, onShowSource, readOnly = false }: Props
           <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Can be fixed automatically
           </h3>
+          {!readOnly && fixable.length > 1 && (
+            <div className="flex items-center gap-2.5 rounded-lg border border-dashed bg-muted/40 px-3 py-2">
+              <SelectAllBox
+                allSelected={allSelected}
+                someSelected={selected.length > 0}
+                onChange={setAll}
+              />
+              <span className="text-xs text-muted-foreground">
+                <span className="font-medium text-foreground">
+                  {selected.length} of {fixable.length}
+                </span>{" "}
+                selected for repair
+              </span>
+            </div>
+          )}
           <ul className="space-y-2">
             {fixable.map((issue) => (
               <li key={issue.id} className="flex gap-2.5 rounded-lg border bg-card p-3">
@@ -177,6 +195,39 @@ export function CheckPanel({ documentId, onShowSource, readOnly = false }: Props
         onConfirm={() => repair.mutate(selected.map((issue) => issue.id))}
       />
     </section>
+  );
+}
+
+/**
+ * One control for the whole list: tick it to select every fix, untick it to select none.
+ * Half-ticked when the reader has chosen some of them, so the box always reflects the list
+ * rather than overriding a choice silently.
+ */
+function SelectAllBox({
+  allSelected,
+  someSelected,
+  onChange,
+}: {
+  allSelected: boolean;
+  someSelected: boolean;
+  onChange: (on: boolean) => void;
+}) {
+  const box = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (box.current) box.current.indeterminate = someSelected && !allSelected;
+  }, [allSelected, someSelected]);
+
+  return (
+    <label className="flex cursor-pointer items-center gap-2 text-xs font-medium">
+      <input
+        ref={box}
+        type="checkbox"
+        className="size-4 accent-[var(--primary)]"
+        checked={allSelected}
+        onChange={(event) => onChange(event.target.checked)}
+      />
+      {allSelected ? "Deselect all" : "Select all"}
+    </label>
   );
 }
 
