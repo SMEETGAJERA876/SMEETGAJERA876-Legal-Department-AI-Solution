@@ -26,3 +26,15 @@ backend/.pgdata.log
 
 # Copied from pdfjs-dist on install
 frontend/public/pdf.worker.min.mjs
+
+# India Code dataset: track only the 8 baseline Acts to stay strictly under the 10 MB repository limit.
+# Extended evaluation Acts can be fetched on demand: uv run python -m scripts.fetch_indiacode
+dataset/indiacode/*.pdf
+!dataset/indiacode/code_on_wages_2019.pdf
+!dataset/indiacode/consumer_protection_act_2019.pdf
+!dataset/indiacode/indian_contract_act_1872.pdf
+!dataset/indiacode/legal_services_authorities_act_1987.pdf
+!dataset/indiacode/protection_of_women_from_domestic_violence_act_2005.pdf
+!dataset/indiacode/real_estate_regulation_and_development_act_2016.pdf
+!dataset/indiacode/right_to_information_act_2005.pdf
+!dataset/indiacode/sexual_harassment_of_women_at_workplace_prevention_prohibiti.pdf

@@ -70,10 +70,11 @@ class SplitMetrics:
 
 @pytest.fixture(scope="module")
 def acts(database: None, client: TestClient) -> Iterator[dict[str, dict[str, object]]]:
-    if not all((DATASET / f"{name}.pdf").exists() for name in ACTS):
+    available = [name for name in ACTS if (DATASET / f"{name}.pdf").exists()]
+    if not available:
         pytest.skip("India Code dataset missing. Run: uv run python -m scripts.fetch_indiacode")
     uploaded: dict[str, dict[str, object]] = {}
-    for name in ACTS:
+    for name in available:
         pdf = (DATASET / f"{name}.pdf").read_bytes()
         response = client.post(
             "/documents", files={"file": (f"{name}.pdf", pdf, "application/pdf")}
@@ -89,12 +90,13 @@ def acts(database: None, client: TestClient) -> Iterator[dict[str, dict[str, obj
 
 @pytest.fixture(scope="module")
 def metrics(client: TestClient, acts: dict[str, dict[str, object]]) -> dict[Split, SplitMetrics]:
-    results: dict[Split, SplitMetrics] = {
-        s: SplitMetrics() for s in ("dev", "test", "test2", "test3")
-    }
+    available_splits = {ACTS[name] for name in acts}
+    results: dict[Split, SplitMetrics] = {s: SplitMetrics() for s in available_splits}
     search_ms: list[float] = []
     ask_ms: list[float] = []
     for q in QUESTIONS:
+        if q.act not in acts:
+            continue
         m = results[q.split]
         m.questions += 1
         document_id = acts[q.act]["id"]
@@ -126,6 +128,8 @@ def metrics(client: TestClient, acts: dict[str, dict[str, object]]) -> dict[Spli
             m.misses.append(_answer_miss(q, answer["found"], cited))
 
     for u in UNANSWERABLE:
+        if u.act not in acts:
+            continue
         m = results[u.split]
         m.unanswerable += 1
         answer = client.post(f"/documents/{acts[u.act]['id']}/ask", json={"question": u.question})
@@ -162,6 +166,8 @@ def test_every_act_is_recognised_as_an_act(acts: dict[str, dict[str, object]]) -
 
 def test_retrieval_on_real_acts(metrics: dict[Split, SplitMetrics]) -> None:
     for split in ("dev", "test", "test2", "test3"):
+        if split not in metrics:
+            continue
         m = metrics[split]
         assert m.recall_at_3 >= 0.85, (split, m.summary())
         assert m.mrr >= 0.75, (split, m.summary())
@@ -169,9 +175,13 @@ def test_retrieval_on_real_acts(metrics: dict[Split, SplitMetrics]) -> None:
 
 def test_answers_cite_the_right_section(metrics: dict[Split, SplitMetrics]) -> None:
     for split in ("dev", "test", "test2", "test3"):
+        if split not in metrics:
+            continue
         assert metrics[split].answer_accuracy >= 0.8, (split, metrics[split].summary())
 
 
 def test_does_not_answer_what_the_act_does_not_say(metrics: dict[Split, SplitMetrics]) -> None:
     for split in ("dev", "test", "test2", "test3"):
+        if split not in metrics:
+            continue
         assert metrics[split].refusal_rate == 1.0, (split, metrics[split].summary())
