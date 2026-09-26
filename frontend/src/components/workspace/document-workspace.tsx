@@ -34,6 +34,7 @@ import {
 import { AskPanel } from "./ask-panel";
 import { CheckPanel } from "./check-panel";
 import { AuthenticityPanel } from "./authenticity-panel";
+import { DocumentSwitcher } from "./document-switcher";
 import { FormatPanel } from "./format-panel";
 import { OverviewPanel } from "./overview-panel";
 import type { ViewerTarget } from "./pdf-viewer";
@@ -103,8 +104,12 @@ export function DocumentWorkspace({
         <span className="text-muted-foreground" aria-hidden>
           /
         </span>
-        <h1 className="truncate text-sm font-medium">
-          {document?.original_filename ?? "Document"}
+        <h1 className="min-w-0 truncate">
+          <DocumentSwitcher
+            documentId={documentId}
+            current={document?.original_filename ?? "Document"}
+            demo={demo}
+          />
         </h1>
         {document?.source_document_id && (
           <Link
