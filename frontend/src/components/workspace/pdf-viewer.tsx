@@ -64,9 +64,14 @@ export default function PdfViewer({ fileUrl, target, onPageCountKnown }: Props) 
     setFocus(target.focus ?? null);
   }
 
-  useEffect(() => {
-    const element = containerRef.current;
+  // Nothing renders until the container's width is known, so measure it as soon as the element
+  // exists rather than waiting for the observer's first delivery: a ResizeObserver reports the
+  // initial size in an ordinary tab, but not in every embedding — a throttled or background
+  // tab can withhold it indefinitely, and then the viewer stays empty with no error.
+  const measureContainer = useCallback((element: HTMLDivElement | null) => {
+    containerRef.current = element;
     if (!element) return;
+    setContainerWidth(element.getBoundingClientRect().width);
     const observer = new ResizeObserver(([entry]) => setContainerWidth(entry.contentRect.width));
     observer.observe(element);
     return () => observer.disconnect();
@@ -214,7 +219,7 @@ export default function PdfViewer({ fileUrl, target, onPageCountKnown }: Props) 
         <HighlightNotice status={highlightStatus} page={page} />
       )}
 
-      <div ref={containerRef} className="min-h-0 flex-1 overflow-auto bg-muted/60 p-4">
+      <div ref={measureContainer} className="min-h-0 flex-1 overflow-auto bg-muted/60 p-4">
         <Document
           file={fileUrl}
           onLoadSuccess={({ numPages }) => {

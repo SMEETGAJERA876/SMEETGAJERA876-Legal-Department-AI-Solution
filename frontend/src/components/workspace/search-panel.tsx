@@ -184,7 +184,11 @@ function FactList({ facts, onShowSource }: { facts: Fact[]; onShowSource: ShowSo
               <li key={`${fact.value}-${index}`}>
                 <button
                   type="button"
-                  onClick={() => onShowSource(fact.source.page_number, fact.source.quote)}
+                  // The value is the focus: two facts often share one sentence, and the value is
+                  // what tells them apart inside it.
+                  onClick={() =>
+                    onShowSource(fact.source.page_number, fact.source.quote, fact.value)
+                  }
                   aria-label={`${fact.value}, ${formatSource(fact.source.page_number, fact.source.clause_ref)}. Show in document`}
                   className="flex w-full items-start justify-between gap-2 rounded-md px-1.5 py-1 text-left text-sm hover:bg-card focus-visible:outline-2 focus-visible:outline-ring"
                 >
