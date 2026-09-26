@@ -16,6 +16,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -58,6 +59,17 @@ function signInErrorMessage(error: unknown): string | null {
   return "Sign-in didn't work. Please try again.";
 }
 
+// How long to wait before saying where the Google window went. signInWithPopup only settles
+// when the popup finishes or Firebase notices it closed, and neither always happens: a window
+// opened behind the browser, moved to another screen, or closed in a way Firebase cannot see
+// leaves the promise pending for ever — and with it a button that says "Waiting for Google…"
+// and can never be pressed again. Re-enabling it is safe, because a second attempt cancels the
+// first and Firebase reports that as auth/cancelled-popup-request, which is ignored above.
+const POPUP_HINT_AFTER_MS = 12_000;
+const POPUP_HINT =
+  "A Google sign-in window should have opened. It may be behind this window, on another " +
+  "screen, or blocked by your browser — check for a blocked pop-up, then try again.";
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const pathname = usePathname();
@@ -80,19 +92,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   }, [active, queryClient]);
 
+  const hintTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clearHint = useCallback(() => {
+    if (hintTimer.current !== null) {
+      clearTimeout(hintTimer.current);
+      hintTimer.current = null;
+    }
+  }, []);
+  useEffect(() => clearHint, [clearHint]);
+
   const signIn = useCallback(async () => {
     setError(null);
     setSigningIn(true);
+    clearHint();
+    hintTimer.current = setTimeout(() => {
+      setSigningIn(false);
+      setError(POPUP_HINT);
+    }, POPUP_HINT_AFTER_MS);
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: "select_account" });
       await signInWithPopup(firebaseAuth(), provider);
+      setError(null);
     } catch (caught) {
       setError(signInErrorMessage(caught));
     } finally {
+      clearHint();
       setSigningIn(false);
     }
-  }, []);
+  }, [clearHint]);
 
   const signOut = useCallback(async () => {
     await firebaseSignOut(firebaseAuth());
