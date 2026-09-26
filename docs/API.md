@@ -59,6 +59,8 @@ Uploads and corrected copies: 20 per 10 minutes · questions: 30 per minute · e
 | GET | `/documents/{id}/issues` | Spelling/format mistakes with page and suggestion |
 | POST | `/documents/{id}/repair` | `{"issue_ids": […]}` → a corrected copy (the original is kept) |
 | GET | `/documents/{id}/summary` | One-file PDF summary: dates, notices, deadlines, money, questions |
+| GET | `/documents/{id}/format-check` | How the document compares with the official format for its kind ([Formats.md](Formats.md)) |
+| POST | `/documents/{id}/simplify` | `{"text"}` → the same wording in everyday words, with the original ([Plain_Language.md](Plain_Language.md)) |
 | GET | `/documents/{id}/normalized` | The document in the normalized JSON schema (`data/schemas`) |
 | GET | `/account/activity` | The user's audit log, newest first |
 | DELETE | `/account/documents` | Delete every document of the user ("right to erasure") |

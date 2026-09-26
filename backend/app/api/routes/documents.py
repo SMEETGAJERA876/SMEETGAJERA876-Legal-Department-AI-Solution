@@ -20,14 +20,30 @@ from app.schemas.documents import (
     DocumentOut,
     DocumentTypeOut,
     FactOut,
+    FormatCheckOut,
+    FormatPartOut,
     OverviewOut,
     ProfessionalQuestionOut,
     QuestionsOut,
     SearchOut,
     SearchResultOut,
+    SimplifyIn,
+    SimplifyOut,
     SourceRef,
+    TermOut,
 )
-from app.services import audit, concepts, jobs, qa, questions, search, storage, taxonomy
+from app.services import (
+    audit,
+    concepts,
+    formats,
+    jobs,
+    qa,
+    questions,
+    search,
+    simplify,
+    storage,
+    taxonomy,
+)
 from app.services.classification import user_verified
 from app.services.normalize import build_normalized_document
 
@@ -319,6 +335,8 @@ def ask_document(document_id: uuid.UUID, body: AskIn, db: DbSession) -> AnswerOu
         points=answer.points,
         note=answer.note,
         searched_as=answer.searched_as,
+        matched_terms=[TermOut(plain=plain, legal=legal) for plain, legal in answer.matched_terms],
+        quoted_terms=[TermOut(legal=legal, plain=plain) for legal, plain in answer.quoted_terms],
     )
 
 
@@ -345,5 +363,61 @@ def professional_questions(document_id: uuid.UUID, db: DbSession) -> QuestionsOu
                 ),
             )
             for q in questions.generate_questions(facts)
+        ],
+    )
+
+
+@router.post("/{document_id}/simplify", response_model=SimplifyOut)
+def simplify_passage(document_id: uuid.UUID, body: SimplifyIn, db: DbSession) -> SimplifyOut:
+    """Formal wording from this document, rewritten in everyday words.
+
+    Runs locally, with no AI provider: a dictionary of legal → plain wording plus a few safe
+    changes that cannot alter the meaning (services/simplify.py). The original is returned with
+    it, because the original is what counts.
+    """
+    get_ready_document(db, document_id)
+    result = simplify.simplified(body.text)
+    return SimplifyOut(
+        original=result.original,
+        simple=result.simple,
+        changed=result.changed,
+        worth_showing=result.worth_showing,
+        terms=[TermOut(legal=legal, plain=plain) for legal, plain in result.terms],
+    )
+
+
+@router.get("/{document_id}/format-check", response_model=FormatCheckOut)
+def check_against_official_format(document_id: uuid.UUID, db: DbSession) -> FormatCheckOut:
+    """Compare the document with the official format for its kind (data/formats)."""
+    document = get_ready_document(db, document_id)
+    result = formats.check(db, document_id, document.document_type_id)
+    if result is None:
+        return FormatCheckOut(
+            available=False,
+            document_type=document.document_type,
+            covered_formats=[f["name"] for f in formats.formats()],
+        )
+    required = [p for p in result.parts if p.required]
+    return FormatCheckOut(
+        available=True,
+        document_type=document.document_type,
+        format_id=result.format_id,
+        format_name=result.format_name,
+        authority=result.authority,
+        note=result.note,
+        score=result.score,
+        required_total=len(required),
+        required_present=sum(1 for p in required if p.status == "present"),
+        parts=[
+            FormatPartOut(
+                id=part.id,
+                label=part.label,
+                required=part.required,
+                status=part.status,
+                why=part.why,
+                page_number=part.page_number,
+                evidence=part.evidence,
+            )
+            for part in result.parts
         ],
     )

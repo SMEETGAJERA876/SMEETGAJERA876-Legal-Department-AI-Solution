@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.core.errors import NotFoundError
 from app.models import Citation, Clause, Conversation, Document, DocumentChunk, LegalFact, Message
-from app.services import about, answerability, concepts
+from app.services import about, answerability, concepts, glossary, simplify
 from app.services.ai_provider import ProviderAnswer, SourceExcerpt, get_chat_provider
 from app.services.search import (
     SearchHit,
@@ -85,6 +85,11 @@ class Answer:
     points: list[str] = field(default_factory=list)
     note: str | None = None
     searched_as: str | None = None  # the question after fixing typos, if it changed
+    #: The everyday words in the question and the formal wording the document uses for them,
+    #: as (plain, legal) — "you said 'builder'; this document says 'promoter'".
+    matched_terms: list[tuple[str, str]] = field(default_factory=list)
+    #: Formal terms the quoted wording uses, and what they mean, as (legal, plain).
+    quoted_terms: list[tuple[str, str]] = field(default_factory=list)
 
 
 def _conversation(
@@ -289,6 +294,47 @@ def _document_answer(
     return answer
 
 
+def _worth_bridging(plain: str, legal: str) -> bool:
+    """Whether "you said X, the document says Y" tells the reader anything.
+
+    "builder" → "promoter" is worth saying. "complain" → "complaint" is the same word with an
+    ending on it, and showing it makes the feature look like it is padding.
+    """
+    plain, legal = plain.casefold(), legal.casefold()
+    if plain == legal:
+        return False
+    shorter, longer = sorted((plain, legal), key=len)
+    return not longer.startswith(shorter)
+
+
+def _add_plain_language(answer: Answer, question: str) -> None:
+    """Say what the formal wording means, and which formal words the question mapped to.
+
+    The simplifier is local and deterministic (services/simplify.py), so this works on a
+    deployment with no AI key. When a provider already wrote an explanation, that one is kept.
+    """
+    if not answer.found or not answer.citations:
+        return
+    quote = answer.citations[0].quote
+    result = simplify.simplified(quote)
+    if answer.simple_explanation is None and result.worth_showing:
+        answer.simple_explanation = result.simple
+    answer.quoted_terms = result.terms
+
+    # "builder" in the question → "promoter" in the Act, but only the pairs that the document
+    # wording actually used, so we never claim a mapping the reader cannot see.
+    quoted = " ".join(c.quote for c in answer.citations).casefold()
+    plain_words = glossary.plain_phrases(question)
+    matched: list[tuple[str, str]] = []
+    for plain in plain_words:
+        for legal in glossary.legal_terms(plain):
+            if legal.casefold() in quoted and _worth_bridging(plain, legal):
+                pair = (plain, legal)
+                if pair not in matched:
+                    matched.append(pair)
+    answer.matched_terms = matched[:4]
+
+
 def ask(
     db: Session, document_id: uuid.UUID, question: str, conversation_id: uuid.UUID | None
 ) -> tuple[Conversation, Message, Answer]:
@@ -299,6 +345,7 @@ def ask(
         answer = _document_answer(db, document_id, question, _history(conversation))
         corrected = correct_query(db, document_id, question)
         answer.searched_as = corrected if corrected != question else None
+        _add_plain_language(answer, question)
 
     db.add(Message(conversation_id=conversation.id, role="user", content=question))
     message = Message(
@@ -313,6 +360,8 @@ def ask(
             "generated_by": answer.generated_by,
             "kind": answer.kind,
             "points": answer.points,
+            "matched_terms": answer.matched_terms,
+            "quoted_terms": answer.quoted_terms,
         },
         citations=[
             Citation(

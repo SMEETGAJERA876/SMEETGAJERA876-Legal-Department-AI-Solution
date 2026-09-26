@@ -154,6 +154,44 @@ export const searchSchema = z.object({
 });
 export type SearchResponse = z.infer<typeof searchSchema>;
 
+const termSchema = z.object({ legal: z.string(), plain: z.string() });
+export type Term = z.infer<typeof termSchema>;
+
+export const simplifiedSchema = z.object({
+  original: z.string(),
+  simple: z.string(),
+  changed: z.boolean(),
+  worth_showing: z.boolean(),
+  terms: z.array(termSchema),
+});
+export type SimplifiedText = z.infer<typeof simplifiedSchema>;
+
+export const formatPartSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  required: z.boolean(),
+  status: z.enum(["present", "empty", "missing"]),
+  why: z.string(),
+  page_number: z.number().nullable(),
+  evidence: z.string().nullable(),
+});
+export type FormatPart = z.infer<typeof formatPartSchema>;
+
+export const formatCheckSchema = z.object({
+  available: z.boolean(),
+  document_type: z.string().nullable().optional(),
+  format_id: z.string().nullable().optional(),
+  format_name: z.string().nullable().optional(),
+  authority: z.string().nullable().optional(),
+  note: z.string().nullable().optional(),
+  score: z.number().default(0),
+  required_total: z.number().default(0),
+  required_present: z.number().default(0),
+  parts: z.array(formatPartSchema).default([]),
+  covered_formats: z.array(z.string()).default([]),
+});
+export type FormatCheck = z.infer<typeof formatCheckSchema>;
+
 export const answerSchema = z.object({
   conversation_id: z.string(),
   message_id: z.string(),
@@ -169,6 +207,8 @@ export const answerSchema = z.object({
   points: z.array(z.string()),
   note: z.string().nullable(),
   searched_as: z.string().nullable(),
+  matched_terms: z.array(termSchema).optional().default([]),
+  quoted_terms: z.array(termSchema).optional().default([]),
 });
 export type Answer = z.infer<typeof answerSchema>;
 
@@ -278,6 +318,19 @@ export function setDocumentType(id: string, documentTypeId: string) {
 }
 
 export const fetchIssues = (id: string) => request(`/documents/${id}/issues`, issuesSchema);
+
+/** How the document compares with the official format for its kind (data/formats). */
+export const fetchFormatCheck = (id: string) =>
+  request(`/documents/${id}/format-check`, formatCheckSchema);
+
+/** Formal wording rewritten in everyday words, returned beside the original. */
+export function simplifyText(id: string, text: string) {
+  return request(`/documents/${id}/simplify`, simplifiedSchema, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text }),
+  });
+}
 
 export function repairDocument(id: string, issueIds: string[]) {
   return request(`/documents/${id}/repair`, repairSchema, {

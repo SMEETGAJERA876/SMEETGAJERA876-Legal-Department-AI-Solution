@@ -26,16 +26,18 @@ DbSession = Annotated[Session, Depends(get_db)]
 # Why each seeded document is worth opening, shown on the demo picker.
 DESCRIPTIONS: dict[str, str] = {
     "consumer_protection_act_2019.pdf": (
-        "A real Act of Parliament, 42 pages, as published on India Code. Ask it what you can do "
-        "about a defective product — and something it doesn't cover, to see it say so."
+        "A real Act of Parliament, 42 pages, as published on India Code. Ask what you can do "
+        "about a defective product — and something it doesn't cover, to see it say so. Every "
+        "answer can be read back in everyday words."
     ),
     "employment_agreement.pdf": (
         "A short employment contract. Notice period, probation, salary and what happens if you "
         "leave early — every answer points at the page."
     ),
     "rental_agreement_with_mistakes.pdf": (
-        "A rental agreement with deliberate mistakes in it. Open Check document to see them "
-        "found, with the page and a suggested fix."
+        "A rental agreement with deliberate mistakes in it. Open Mistakes to see them found with "
+        "a suggested fix, then Format to see what a registrable rent agreement is missing "
+        "— stamp duty, signatures and witnesses."
     ),
 }
 

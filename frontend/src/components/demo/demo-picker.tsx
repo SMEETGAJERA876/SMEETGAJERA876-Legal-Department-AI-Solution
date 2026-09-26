@@ -11,7 +11,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
-import { Disclaimer } from "@/components/system/disclaimer";
+import { SiteFooter } from "@/components/system/site-footer";
 import { Button } from "@/components/ui/button";
 import { fetchDemo } from "@/lib/api";
 
@@ -133,11 +133,7 @@ export function DemoPicker() {
         </p>
       </main>
 
-      <footer className="border-t bg-card">
-        <div className="mx-auto flex max-w-5xl justify-center px-4 py-5">
-          <Disclaimer />
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

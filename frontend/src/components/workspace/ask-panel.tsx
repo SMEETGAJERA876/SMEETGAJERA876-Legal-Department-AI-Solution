@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import {
+  ArrowLeftRight,
   Check,
   CircleHelp,
   Copy,
@@ -16,7 +17,13 @@ import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { askDocument, fetchQuestions, type Answer, type ProfessionalQuestions } from "@/lib/api";
+import {
+  askDocument,
+  fetchQuestions,
+  type Answer,
+  type ProfessionalQuestions,
+  type Term,
+} from "@/lib/api";
 import { formatSource } from "@/lib/format";
 import { SourceQuote, type ShowSource } from "./source-quote";
 
@@ -99,6 +106,7 @@ export function AskPanel({ documentId, onShowSource, conceptLabel }: Props) {
         {answers.map((answer) => (
           <AnswerCard
             key={answer.message_id}
+            documentId={documentId}
             answer={answer}
             onShowSource={onShowSource}
             conceptLabel={conceptLabel}
@@ -176,10 +184,12 @@ export function AskPanel({ documentId, onShowSource, conceptLabel }: Props) {
 
 function AnswerCard({
   answer,
+  documentId,
   onShowSource,
   conceptLabel,
   onAskRelated,
 }: {
+  documentId: string;
   answer: Answer;
   onShowSource: ShowSource;
   conceptLabel: (key: string) => string;
@@ -201,9 +211,11 @@ function AnswerCard({
         ) : answer.found ? (
           <>
             <p className="text-sm font-medium leading-relaxed">{answer.answer}</p>
+            {answer.matched_terms.length > 0 && <TermBridge terms={answer.matched_terms} />}
             {answer.simple_explanation && (
-              <AnswerSection title="In simple language">{answer.simple_explanation}</AnswerSection>
+              <AnswerSection title="In simple words">{answer.simple_explanation}</AnswerSection>
             )}
+            {answer.quoted_terms.length > 0 && <TermGlossary terms={answer.quoted_terms} />}
             {answer.why_it_matters && (
               <AnswerSection title="Why it matters">{answer.why_it_matters}</AnswerSection>
             )}
@@ -216,6 +228,7 @@ function AnswerCard({
                   key={`${citation.page_number}-${index}`}
                   source={citation}
                   onShowSource={onShowSource}
+                  simplifyFor={documentId}
                 />
               ))}
             </div>
@@ -268,6 +281,45 @@ function AboutAnswer({ answer }: { answer: Answer }) {
       </ul>
       {answer.note && <p className="text-xs text-muted-foreground">{answer.note}</p>}
     </div>
+  );
+}
+
+/** "You said 'builder' — this document says 'promoter'." The bridge between the two languages. */
+function TermBridge({ terms }: { terms: Term[] }) {
+  return (
+    <div className="space-y-1 rounded-lg border border-primary/20 bg-accent p-3">
+      <h3 className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-primary uppercase">
+        <ArrowLeftRight className="size-3.5" aria-hidden />
+        Your words in this document&apos;s language
+      </h3>
+      <ul className="space-y-0.5">
+        {terms.map(({ plain, legal }) => (
+          <li key={`${plain}-${legal}`} className="text-sm">
+            You said <span className="font-medium">“{plain}”</span> — this document says{" "}
+            <span className="font-medium">“{legal}”</span>.
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** The formal words inside the quoted passage, and what each one means. */
+function TermGlossary({ terms }: { terms: Term[] }) {
+  return (
+    <details className="rounded-lg border bg-muted/40 p-3">
+      <summary className="cursor-pointer text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+        What these formal words mean ({terms.length})
+      </summary>
+      <dl className="mt-2 space-y-1">
+        {terms.map(({ legal, plain }) => (
+          <div key={legal} className="flex flex-wrap gap-x-1.5 text-sm">
+            <dt className="font-medium">“{legal}”</dt>
+            <dd className="text-muted-foreground">means {plain}</dd>
+          </div>
+        ))}
+      </dl>
+    </details>
   );
 }
 

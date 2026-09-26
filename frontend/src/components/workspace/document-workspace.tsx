@@ -11,6 +11,7 @@ import {
   LoaderCircle,
   LogIn,
   MessageSquareText,
+  Scale,
   Search,
   Sparkles,
   SpellCheck,
@@ -32,6 +33,7 @@ import {
 } from "@/lib/api";
 import { AskPanel } from "./ask-panel";
 import { CheckPanel } from "./check-panel";
+import { FormatPanel } from "./format-panel";
 import { OverviewPanel } from "./overview-panel";
 import type { ViewerTarget } from "./pdf-viewer";
 import { SearchPanel } from "./search-panel";
@@ -49,11 +51,12 @@ const PdfViewer = dynamic(() => import("./pdf-viewer"), {
 const STATUS_POLL_MS = 1500;
 
 type MobileTab = "document" | "search" | "ask";
-type SideTab = "search" | "check";
+type SideTab = "search" | "check" | "format";
 
 const SIDE_TABS: { value: SideTab; label: string; icon: typeof FileText }[] = [
-  { value: "search", label: "Search & overview", icon: Search },
-  { value: "check", label: "Check document", icon: SpellCheck },
+  { value: "search", label: "Search", icon: Search },
+  { value: "check", label: "Mistakes", icon: SpellCheck },
+  { value: "format", label: "Format", icon: Scale },
 ];
 
 const MOBILE_TABS: { value: MobileTab; label: string; icon: typeof FileText }[] = [
@@ -246,8 +249,10 @@ function ReadyWorkspace({ documentId, demo }: { documentId: string; demo: boolea
               <SearchPanel documentId={documentId} onShowSource={showSource} conceptLabel={conceptLabel} />
               <OverviewPanel documentId={documentId} onShowSource={showSource} />
             </>
-          ) : (
+          ) : sideTab === "check" ? (
             <CheckPanel documentId={documentId} onShowSource={showSource} readOnly={demo} />
+          ) : (
+            <FormatPanel documentId={documentId} onShowSource={showSource} />
           )}
         </aside>
 

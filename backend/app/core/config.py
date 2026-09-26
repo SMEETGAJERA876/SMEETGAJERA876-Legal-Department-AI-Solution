@@ -56,6 +56,9 @@ class Settings(BaseSettings):
     upload_dir: str = "storage/uploads"
     # data/taxonomy (document types, legal concepts). Empty = the repository's data/taxonomy.
     taxonomy_dir: str = ""
+    # data/formats (official formats each document kind is compared against). Empty = the
+    # repository's data/formats.
+    formats_dir: str = ""
     max_upload_size_mb: int = 25
 
     # Embeddings run locally (no API key needed); the model is downloaded once.

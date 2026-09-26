@@ -14,6 +14,8 @@ when the document doesn't cover the question — cannot be shown behind a Google
 | Jump to the source and see it highlighted | ✅ | ✅ |
 | Overview, key facts, questions for a professional | ✅ | ✅ |
 | Check document (list the mistakes) | ✅ | ✅ |
+| Compare with the official format ([Formats.md](Formats.md)) | ✅ | ✅ |
+| Plain-language version of any passage ([Plain_Language.md](Plain_Language.md)) | ✅ | ✅ |
 | Download the original PDF / Summary PDF | ✅ | ✅ |
 | Auto-repair into a corrected PDF | ❌ read-only | ✅ on your own document |
 | Change the document type | ❌ read-only | ✅ on your own document |
@@ -26,7 +28,7 @@ when the document doesn't cover the question — cannot be shown behind a Google
 |---|---|
 | `consumer_protection_act_2019.pdf` (42 pages, real, from India Code) | The main benchmark document. "How many days do I have to appeal against the District Commission's order?" → Section 41, **page 25**, highlighted. "What is the penalty for drunk driving?" → **not found**, instead of a confident wrong answer. |
 | `employment_agreement.pdf` (10 pages) | The everyday case: notice period, probation, salary, leaving early. |
-| `rental_agreement_with_mistakes.pdf` (4 pages) | Deliberate mistakes, so **Check document** has something to find: `the the`, `tenent`, `ninety (60)`, an unfilled blank. |
+| `rental_agreement_with_mistakes.pdf` (4 pages) | Deliberate mistakes, so **Check document** has something to find: `the the`, `tenent`, `ninety (60)`, an unfilled blank. It is also the best **Format** example: 6 of 11 required parts, with no stamp duty details, signatures or witnesses. |
 
 ## How the access rule works
 

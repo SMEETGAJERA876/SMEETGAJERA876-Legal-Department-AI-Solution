@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/components/providers/auth-provider";
-import { Disclaimer } from "@/components/system/disclaimer";
+import { SiteFooter } from "@/components/system/site-footer";
 import { SignInDemo } from "@/components/system/sign-in-demo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -387,15 +387,7 @@ export function SignInScreen({ notConfigured = false }: { notConfigured?: boolea
         </section>
       </main>
 
-      <footer className="border-t bg-card">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-6 sm:flex-row">
-          <span className="flex items-center gap-2 text-sm font-semibold text-primary">
-            <FileSearch className="size-4" aria-hidden />
-            ClauseLens AI
-          </span>
-          <Disclaimer />
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

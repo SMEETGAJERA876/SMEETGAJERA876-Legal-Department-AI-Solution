@@ -2,6 +2,7 @@ import { FileSearch, FileUp, Highlighter, MessageSquareText, ShieldCheck } from 
 import { RecentDocuments } from "@/components/documents/recent-documents";
 import { BackendStatus } from "@/components/system/backend-status";
 import { Disclaimer } from "@/components/system/disclaimer";
+import { SiteFooter } from "@/components/system/site-footer";
 import { UserMenu } from "@/components/system/user-menu";
 import { UploadDropzone } from "@/components/upload/upload-dropzone";
 
@@ -81,11 +82,12 @@ export default function Home() {
           </ol>
         </section>
 
-        <footer className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-2">
           <Disclaimer />
           <BackendStatus />
-        </footer>
+        </div>
       </main>
+      <SiteFooter />
     </>
   );
 }

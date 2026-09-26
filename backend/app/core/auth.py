@@ -188,9 +188,10 @@ CurrentUser = Annotated[User, Depends(get_current_user)]
 
 # Reference data with nothing user-specific in it, needed to render the public demo.
 PUBLIC_COLLECTION_PATHS = frozenset({"/documents/concepts", "/documents/types"})
-# The only non-GET thing an anonymous visitor may do with a demo document: ask it a question.
-# (It writes a conversation row, but one keyed to a conversation id the visitor already holds.)
-DEMO_PUBLIC_WRITES = frozenset({"ask"})
+# The non-GET things an anonymous visitor may do with a demo document. "ask" writes a
+# conversation row, but one keyed to a conversation id the visitor already holds; "simplify"
+# only rewrites wording that was passed in and stores nothing. Neither changes the document.
+DEMO_PUBLIC_WRITES = frozenset({"ask", "simplify"})
 
 
 def _demo_allows(request: Request) -> bool:

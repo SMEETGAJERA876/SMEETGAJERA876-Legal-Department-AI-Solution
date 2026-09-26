@@ -81,6 +81,13 @@ class AskIn(BaseModel):
     conversation_id: uuid.UUID | None = None
 
 
+class TermOut(BaseModel):
+    """A formal term and the everyday words that mean the same thing."""
+
+    legal: str
+    plain: str
+
+
 class AnswerOut(BaseModel):
     conversation_id: uuid.UUID
     message_id: uuid.UUID
@@ -96,6 +103,54 @@ class AnswerOut(BaseModel):
     points: list[str]
     note: str | None
     searched_as: str | None
+    #: Everyday words in the question and the formal wording the document uses for them.
+    matched_terms: list[TermOut] = []
+    #: Formal terms in the quoted wording, and what they mean.
+    quoted_terms: list[TermOut] = []
+
+
+class SimplifyIn(BaseModel):
+    text: str = Field(min_length=1, max_length=8000)
+
+
+class SimplifyOut(BaseModel):
+    original: str
+    simple: str
+    #: The text differs from the original at all (including mere tidying).
+    changed: bool
+    #: Formal wording or a number in words was actually replaced — worth showing as a second
+    #: version. False means the passage is already in everyday words.
+    worth_showing: bool
+    terms: list[TermOut]
+
+
+class FormatPartOut(BaseModel):
+    id: str
+    label: str
+    required: bool
+    status: Literal["present", "empty", "missing"]
+    why: str
+    page_number: int | None
+    evidence: str | None
+
+
+class FormatCheckOut(BaseModel):
+    """How an uploaded document compares with the official format for its kind."""
+
+    #: False when we don't describe an official format for this document type.
+    available: bool
+    document_type: str | None = None
+    format_id: str | None = None
+    format_name: str | None = None
+    authority: str | None = None
+    note: str | None = None
+    #: Share of required parts that are present, 0..1.
+    score: float = 0.0
+    required_total: int = 0
+    required_present: int = 0
+    parts: list[FormatPartOut] = []
+    #: What kinds of document we can compare, for the "not available" message.
+    covered_formats: list[str] = []
 
 
 class ProfessionalQuestionOut(BaseModel):

@@ -13,7 +13,7 @@ those documents stay private to your account. Details: [docs/Demo.md](docs/Demo.
 
 Specs: [Problem statement](ProblemStatement.md.txt) · [PRD](PRD.md.txt) · [Architecture](Architecture.md.txt) · [Design](Design.md.txt) · [Phases](Phases.md.txt) · [Rules](Rules.md.txt)
 
-**Docs:** [Public demo](docs/Demo.md) · [Architecture](docs/Architecture.md) · [AI pipeline](docs/AI_Pipeline.md) · [Evaluation](docs/Evaluation.md) · [API](docs/API.md) · [Database](docs/Database.md) · [Security](docs/Security.md) · [Deployment](docs/Deployment.md) · [Demo script](docs/Demo_Script.md)
+**Docs:** [Public demo](docs/Demo.md) · [Plain language](docs/Plain_Language.md) · [Official formats](docs/Formats.md) · [Architecture](docs/Architecture.md) · [AI pipeline](docs/AI_Pipeline.md) · [Evaluation](docs/Evaluation.md) · [API](docs/API.md) · [Database](docs/Database.md) · [Security](docs/Security.md) · [Deployment](docs/Deployment.md) · [Demo script](docs/Demo_Script.md)
 
 ## Why it matters
 
@@ -36,6 +36,35 @@ Employees, tenants, home buyers and citizens receiving government notices sign o
 - **Typo-tolerant**: "notice pperiod" → "Showing results for notice period".
 - **Exact-word search marks the exact word** on the page, not just the paragraph.
 - **Questions about the tool itself** ("Why should I use this?", "Why not a general-purpose assistant?") get a clearly labelled "About ClauseLens" answer — never presented as document content.
+
+### Plain language, both ways
+
+Official documents are written in a language most of the people bound by them do not speak, so
+ClauseLens translates in both directions ([docs/Plain_Language.md](docs/Plain_Language.md)):
+
+- **Your words → the document's words**, to *find* the passage: you ask about a "builder"; the Act
+  says **promoter**, and the answer tells you so.
+- **The document's words → your words**, to *understand* it: "person aggrieved" becomes **person
+  affected**, "forty-five days" becomes **45 days**. Every answer carries an *In simple words*
+  section and any quoted passage has a **Simple words** button that also explains each formal term.
+
+The plain version always sits **beside** the original, never instead of it, and is labelled as a
+simplification. The rewriter is a reviewable dictionary plus a few changes that cannot alter
+meaning — it never drops a number, date, amount, party or negation, and tests hold it to that. It
+needs **no AI key**.
+
+### Compare with the official format
+
+The **Format** tab compares the document against the form the law or the issuing authority asks
+for ([docs/Formats.md](docs/Formats.md)) — rent and lease agreements, employment letters,
+affidavits, RTI applications, legal notices, sale deeds, and Acts as published. Each expected part
+is reported as **found** (with its page and wording), **left blank** (`Date: ______`) or
+**missing**, with one sentence saying what it is for and which provision asks for it. On the
+demo's rental agreement: 6 of 11 required parts, no stamp duty details, no signatures, no
+witnesses.
+
+It is a checklist, not a ruling: a part written in unusual words can be reported missing, so every
+finding shows the page and the exact words, and the panel says so.
 
 ### Check document and auto-repair
 
@@ -91,8 +120,10 @@ Private to the uploading Google account (others get "not found") · files **encr
 | [docs/Architecture.md](docs/Architecture.md) · [docs/API.md](docs/API.md) · [docs/Database.md](docs/Database.md) | System design, endpoints, schema |
 | [docs/Security.md](docs/Security.md) · [docs/Deployment.md](docs/Deployment.md) | Threats and controls; Docker / cloud deployment, backups, scaling |
 | [docs/Demo.md](docs/Demo.md) | The public read-only demo: what a visitor may do, how the access rule works, how to seed it |
+| [docs/Plain_Language.md](docs/Plain_Language.md) | Translating both ways, and the rule that keeps a simplification safe |
+| [docs/Formats.md](docs/Formats.md) | The official formats documents are compared against, and how to add one |
 
-Machine-readable: `data/schemas/` (JSON Schema 2020-12), `data/taxonomy/`, `data/examples/`, `dataset/`. `backend/tests/test_taxonomy_data.py` keeps them consistent with each other, with the docs, and with the extraction engine.
+Machine-readable: `data/schemas/` (JSON Schema 2020-12), `data/taxonomy/`, `data/formats/`, `data/examples/`, `dataset/`. `backend/tests/test_taxonomy_data.py` keeps them consistent with each other, with the docs, and with the extraction engine.
 
 ## Structure
 
@@ -109,7 +140,8 @@ backend/    FastAPI + SQLAlchemy + Alembic + pgvector (Python, managed with uv)
     models/       users, documents, document_pages, document_chunks, clauses,
                   legal_facts, conversations, messages, citations
     services/     pdf_extraction, chunking, concepts, embeddings, search,
-                  ai_provider, qa, questions, processing, storage
+                  ai_provider, qa, questions, processing, storage,
+                  simplify (formal → everyday wording), formats (official formats)
   migrations/     Alembic migrations
   scripts/        dev_db.py (local PostgreSQL + pgvector, no Docker), make_sample_pdf.py,
                   fetch_indiacode.py (real Acts), benchmark.py, new_encryption_key.py
@@ -205,5 +237,8 @@ uv run python -m scripts.evaluate      # prints PASS/FAIL per question; currentl
 - [x] Intelligence system Phase 3: `DocumentParser` interface + `PDFParser`, content-based format detection (DOCX/images recognised and refused with a clear message), `GET /documents/{id}/normalized`
 - [x] Intelligence system Phase 1–2: document taxonomy, legal concepts, normalized document schema, dataset layout, design docs (see docs/AI_Pipeline.md §6 for the next phases)
 - [x] Public read-only demo: three seeded documents anyone can use without signing in, writes refused for everyone ([docs/Demo.md](docs/Demo.md))
+- [x] Plain-language translation both ways (everyday ↔ formal), local and with no AI key, always shown beside the original ([docs/Plain_Language.md](docs/Plain_Language.md))
+- [x] Comparison against the official format for seven kinds of Indian legal and government document, with page-level evidence ([docs/Formats.md](docs/Formats.md))
+- [x] Site footer on every page
 - [ ] Phase 13 — Contract comparison
 - [ ] Live deployment (needs a hosting account) and a recorded demo video

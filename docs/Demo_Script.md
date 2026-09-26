@@ -13,6 +13,8 @@ Files: `dataset/indiacode/consumer_protection_act_2019.pdf` (real Act, 42 pages)
 | 1:15 | Ask: *"How many days do I have to appeal against the District Commission's order?"* | "Answer with Section 41, page 25 — click the source and the exact words are highlighted." |
 | 1:40 | Ask: *"What is the penalty for drunk driving?"* | "Not in this Act — so it says so, instead of quoting the penalty section. That's the difference from a general chatbot." |
 | 2:00 | Search *"builder refund"* in a RERA Act, or ask *"Will I get my money back if the builder delays possession?"* | "Everyday words are mapped to legal ones — 'builder' is 'promoter' in the law." |
-| 2:20 | Employment agreement → *Check document* → auto-repair → download corrected PDF | "Mistakes with page and fix; the original is never changed." |
+| 2:05 | On the answer, click **Simple words** | "Same clause, everyday words — 'person aggrieved' becomes 'person affected', 'forty-five days' becomes '45 days'. The original stays above it, because the original is what counts." |
+| 2:20 | Rental agreement → **Format** tab | "And this compares the document with the form the law asks for: 6 of 11 required parts. No stamp duty, no signatures, no witnesses — each with the provision that asks for it." |
+| 2:30 | Employment agreement → *Check document* → auto-repair → download corrected PDF | "Mistakes with page and fix; the original is never changed." |
 | 2:40 | *Summary PDF* | "Dates, notice periods, deadlines and money in one page each with its source." |
 | 2:50 | [Evaluation.md](Evaluation.md) table | "Measured on 8 real Acts with a held-out split: right section in the top 3 for 100 % of held-out questions." |

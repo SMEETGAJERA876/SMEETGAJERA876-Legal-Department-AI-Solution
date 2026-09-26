@@ -1,0 +1,140 @@
+{
+  "version": "1.0.0",
+  "description": "What an official Indian document of each kind is expected to contain, so an uploaded document can be compared against the form the law or the issuing authority asks for (app/services/formats.py). Each part is matched by looking for any of its patterns in the document text. A part that is found but sits next to an unfilled blank is reported as empty rather than present. 'why' explains, in one sentence, what the part is for and which provision asks for it. This is a checklist, not legal advice: a missing part is something to look at, not a ruling that the document is invalid.",
+  "formats": [
+    {
+      "id": "rent_or_lease_agreement",
+      "name": "Rent or lease agreement",
+      "document_type_ids": ["property.rental_agreement", "property.lease_agreement"],
+      "authority": "Registration Act 1908, Indian Stamp Act 1899, and the State's Rent Control / Tenancy Act",
+      "note": "A lease from year to year, for a term over one year, or reserving a yearly rent must be registered (Registration Act 1908, s. 17(1)(d)). Stamp duty and registration charges differ by State.",
+      "parts": [
+        {"id": "parties", "label": "Both parties named in full, with addresses", "required": true, "patterns": ["lessor", "lessee", "landlord", "tenant", "between"], "why": "The agreement must say who is bound by it."},
+        {"id": "property", "label": "Description of the property being let", "required": true, "patterns": ["premises", "property situated", "schedule of the property", "described in the schedule", "flat no", "house no", "door no"], "why": "The property must be identifiable, usually in a schedule at the end."},
+        {"id": "term", "label": "Term: start date and duration", "required": true, "patterns": ["period of", "term of", "commencing from", "with effect from", "months from", "eleven months", "11 months"], "why": "Fixes how long the tenancy runs, which also decides whether registration is compulsory."},
+        {"id": "rent", "label": "Rent amount and the date it is payable", "required": true, "patterns": ["monthly rent", "rent of rs", "rent of ₹", "rent payable", "shall pay a rent"], "why": "The core obligation of the tenant."},
+        {"id": "deposit", "label": "Security deposit and how it is refunded", "required": true, "patterns": ["security deposit", "advance amount", "refundable deposit", "interest free deposit"], "why": "Disputes about deposits are the most common tenancy dispute; the refund terms must be written."},
+        {"id": "notice", "label": "Notice period for ending the tenancy", "required": true, "patterns": ["notice period", "months notice", "month's notice", "days notice", "days' notice", "written notice", "terminate this agreement"], "why": "Either side must know how much warning to give."},
+        {"id": "maintenance", "label": "Who pays maintenance, electricity and water", "required": true, "patterns": ["maintenance charges", "electricity", "water charges", "utility", "society charges"], "why": "Leaving this out is a frequent source of dispute."},
+        {"id": "use", "label": "Permitted use of the property", "required": false, "patterns": ["residential purpose", "commercial purpose", "shall use the premises", "purpose of"], "why": "Says what the property may be used for."},
+        {"id": "subletting", "label": "Whether subletting is allowed", "required": false, "patterns": ["sublet", "sub-let", "sublease", "sub-lease", "assign"], "why": "Decides whether the tenant may pass the property to someone else."},
+        {"id": "stamp", "label": "Stamp duty / e-stamp details", "required": true, "patterns": ["stamp duty", "e-stamp", "stamp paper", "non-judicial", "franking"], "why": "An instrument that is not duly stamped is not admissible as evidence (Indian Stamp Act 1899, s. 35)."},
+        {"id": "registration", "label": "Registration details, where registration is compulsory", "required": false, "patterns": ["registered", "registration", "sub-registrar", "registrar"], "why": "A lease over a year must be registered (Registration Act 1908, s. 17(1)(d)); an unregistered one cannot be used to prove its terms."},
+        {"id": "signatures", "label": "Signatures of both parties", "required": true, "patterns": ["signature", "signed by", "sd/-", "in witness whereof"], "why": "An unsigned agreement binds nobody."},
+        {"id": "witnesses", "label": "Two witnesses", "required": true, "patterns": ["witness", "witnesses", "witness 1", "witness no"], "why": "Two attesting witnesses are the normal practice for a registrable instrument."},
+        {"id": "date", "label": "Date of the agreement", "required": true, "patterns": ["this agreement is made on", "dated", "day of", "date of execution"], "why": "The date decides when the term begins and the stamp duty rate that applies."}
+      ]
+    },
+    {
+      "id": "employment_agreement",
+      "name": "Employment agreement or appointment letter",
+      "document_type_ids": ["employment.employment_agreement", "employment.appointment_letter", "employment.offer_letter"],
+      "authority": "Code on Wages 2019, Industrial Employment (Standing Orders) Act 1946, and the State Shops and Establishments Act",
+      "note": "Most State Shops and Establishments Acts require an employer to give a written appointment letter stating at least the job, the wages and the hours.",
+      "parts": [
+        {"id": "parties", "label": "Employer and employee named in full", "required": true, "patterns": ["employer", "employee", "between", "company"], "why": "Says who the contract is between."},
+        {"id": "job_title", "label": "Job title and duties", "required": true, "patterns": ["designation", "job title", "position of", "role of", "duties", "responsibilities"], "why": "Fixes what the employee is engaged to do."},
+        {"id": "start_date", "label": "Date of joining", "required": true, "patterns": ["date of joining", "joining date", "commence", "with effect from", "start date"], "why": "Service benefits and notice periods are counted from this date."},
+        {"id": "salary", "label": "Salary or wages, and when they are paid", "required": true, "patterns": ["salary", "wages", "remuneration", "ctc", "per month", "per annum"], "why": "Wages must be stated; delayed or unstated wages are an offence under the Code on Wages 2019."},
+        {"id": "working_hours", "label": "Working hours", "required": true, "patterns": ["working hours", "hours of work", "shift", "working days", "hours per week"], "why": "Shops and Establishments Acts cap daily and weekly hours."},
+        {"id": "leave", "label": "Leave entitlement", "required": true, "patterns": ["leave", "casual leave", "sick leave", "earned leave", "holidays"], "why": "Statutory leave cannot be reduced by contract."},
+        {"id": "probation", "label": "Probation period, if any", "required": false, "patterns": ["probation", "probationary period", "confirmation"], "why": "Probation usually carries a shorter notice period, so it must be written."},
+        {"id": "notice", "label": "Notice period for either side to end the employment", "required": true, "patterns": ["notice period", "months notice", "month's notice", "days notice", "days' notice", "terminate", "termination"], "why": "Both sides must know how much warning is required."},
+        {"id": "place", "label": "Place of work", "required": false, "patterns": ["place of work", "location", "posted at", "office at", "branch"], "why": "Says where the employee is required to work, and whether they can be transferred."},
+        {"id": "confidentiality", "label": "Confidentiality obligation", "required": false, "patterns": ["confidential", "confidentiality", "non-disclosure", "trade secret"], "why": "Protects the employer's information; should be limited to what is reasonable."},
+        {"id": "governing_law", "label": "Governing law and jurisdiction", "required": false, "patterns": ["governing law", "jurisdiction", "courts at", "subject to the jurisdiction"], "why": "Decides which court hears a dispute."},
+        {"id": "signatures", "label": "Signatures of employer and employee", "required": true, "patterns": ["signature", "signed by", "sd/-", "for and on behalf of", "accepted"], "why": "An unsigned letter is an offer, not a contract."}
+      ]
+    },
+    {
+      "id": "affidavit",
+      "name": "Affidavit",
+      "document_type_ids": ["court.affidavit", "court.counter_affidavit"],
+      "authority": "Code of Civil Procedure 1908, Order XIX and s. 139",
+      "note": "An affidavit must be confined to facts the deponent can prove of their own knowledge, and must be verified and sworn before an authorised officer.",
+      "parts": [
+        {"id": "court", "label": "Name of the court or authority it is filed before", "required": true, "patterns": ["in the court of", "before the", "high court", "district court", "tribunal", "in the matter of"], "why": "An affidavit is addressed to the forum it is filed in."},
+        {"id": "cause_title", "label": "Case number and the names of the parties", "required": false, "patterns": ["petition no", "case no", "suit no", "o.s. no", "versus", " vs ", "petitioner", "respondent"], "why": "Ties the affidavit to the proceeding it belongs to."},
+        {"id": "deponent", "label": "Deponent's name, age, occupation and address", "required": true, "patterns": ["deponent", "i,", "aged about", "son of", "daughter of", "r/o", "resident of"], "why": "Order XIX requires the person swearing it to be identified."},
+        {"id": "statement", "label": "Numbered paragraphs of facts", "required": true, "patterns": ["i state that", "it is submitted", "i say that", "i submit that", "that the deponent"], "why": "Facts must be set out in numbered paragraphs, each confined to what the deponent knows."},
+        {"id": "verification", "label": "Verification clause", "required": true, "patterns": ["verification", "verified at", "i verify", "true to my knowledge", "true to the best of my knowledge", "nothing material has been concealed"], "why": "Section 139 CPC requires the deponent to verify which paragraphs are true to knowledge and which to belief."},
+        {"id": "place_date", "label": "Place and date of swearing", "required": true, "patterns": ["verified at", "place:", "date:", "on this", "day of"], "why": "An affidavit must show where and when it was sworn."},
+        {"id": "deponent_signature", "label": "Signature of the deponent", "required": true, "patterns": ["deponent", "signature", "sd/-"], "why": "The deponent signs below the verification."},
+        {"id": "attestation", "label": "Attestation by a notary or oath commissioner", "required": true, "patterns": ["notary", "oath commissioner", "sworn before me", "attested", "magistrate"], "why": "An affidavit that was not sworn before an authorised officer has no value."}
+      ]
+    },
+    {
+      "id": "rti_application",
+      "name": "RTI application",
+      "document_type_ids": ["government.rti_document"],
+      "authority": "Right to Information Act 2005, s. 6",
+      "note": "Section 6(2): the applicant need not give any reason for the request, or any personal details beyond what is needed to contact them.",
+      "parts": [
+        {"id": "addressee", "label": "Addressed to the Public Information Officer", "required": true, "patterns": ["public information officer", "pio", "cpio", "state public information officer", "spio"], "why": "Section 6(1) requires the request to be made to the PIO of the public authority."},
+        {"id": "authority", "label": "Name of the public authority", "required": true, "patterns": ["department", "ministry", "office of", "public authority", "corporation", "municipal"], "why": "Says which body holds the information."},
+        {"id": "subject", "label": "Subject line: request for information under the RTI Act", "required": true, "patterns": ["request for information", "under the right to information", "rti act", "under section 6", "seeking information"], "why": "Identifies the application as an RTI request rather than an ordinary letter."},
+        {"id": "information_sought", "label": "The information asked for, clearly listed", "required": true, "patterns": ["information sought", "particulars of information", "please provide", "kindly provide", "details of", "certified copies"], "why": "The request must be specific enough for the PIO to identify the records."},
+        {"id": "period", "label": "Period the information relates to", "required": false, "patterns": ["period", "from the year", "financial year", "between", "during"], "why": "Narrowing the period avoids a rejection for being too vague."},
+        {"id": "fee", "label": "Application fee and how it was paid", "required": true, "patterns": ["application fee", "rs. 10", "rs.10", "₹10", "indian postal order", "ipo", "demand draft", "court fee stamp", "bpl"], "why": "Section 6(1) requires the prescribed fee; the Central fee is ₹10, and an applicant below the poverty line pays nothing."},
+        {"id": "applicant", "label": "Applicant's name and full postal address", "required": true, "patterns": ["name of the applicant", "applicant", "address", "pin code", "mobile", "email"], "why": "Section 6(2) allows the authority to ask only for the contact details needed to reply."},
+        {"id": "citizenship", "label": "Declaration that the applicant is an Indian citizen", "required": false, "patterns": ["citizen of india", "indian citizen", "citizenship"], "why": "The right under s. 3 belongs to citizens, so many forms ask for this declaration."},
+        {"id": "signature_date", "label": "Signature, place and date", "required": true, "patterns": ["signature", "place:", "date:", "yours faithfully", "sd/-"], "why": "A written request must be signed and dated."}
+      ]
+    },
+    {
+      "id": "legal_notice",
+      "name": "Legal notice",
+      "document_type_ids": ["other.legal_notice", "employment.show_cause_notice", "financial.recovery_notice"],
+      "authority": "General practice; for a dishonoured cheque, Negotiable Instruments Act 1881, s. 138(b)",
+      "note": "For a cheque bounce the notice must be sent within 30 days of the bank's memo and must demand payment within 15 days.",
+      "parts": [
+        {"id": "sender", "label": "Sender or their advocate, with address", "required": true, "patterns": ["advocate", "counsel", "on behalf of my client", "office of", "chamber"], "why": "The recipient must know who the notice is from and where to reply."},
+        {"id": "recipient", "label": "Recipient's name and address", "required": true, "patterns": ["to,", "to:", "addressed to", "resident of", "r/o", "having its office"], "why": "A notice served on the wrong address is no notice."},
+        {"id": "subject", "label": "Subject line", "required": true, "patterns": ["subject", "sub:", "re:", "legal notice", "notice under"], "why": "States in one line what the notice is about."},
+        {"id": "facts", "label": "The facts, in numbered paragraphs", "required": true, "patterns": ["that my client", "my client", "whereas", "it is stated that", "the facts are"], "why": "Sets out what happened, so the recipient can answer it."},
+        {"id": "demand", "label": "What is demanded, and by when", "required": true, "patterns": ["hereby call upon", "called upon", "demand", "within 15 days", "within fifteen days", "within 30 days", "failing which"], "why": "A notice without a clear demand and deadline cannot be acted on."},
+        {"id": "consequence", "label": "What follows if the demand is not met", "required": true, "patterns": ["failing which", "legal proceedings", "civil and criminal", "at your risk", "cost and consequences"], "why": "Warns the recipient of the step the sender will take next."},
+        {"id": "signature_date", "label": "Signature and date", "required": true, "patterns": ["signature", "sd/-", "advocate", "date:", "dated"], "why": "The date starts the clock on the deadline in the notice."}
+      ]
+    },
+    {
+      "id": "sale_deed",
+      "name": "Sale deed for immovable property",
+      "document_type_ids": ["property.sale_deed"],
+      "authority": "Transfer of Property Act 1882, s. 54; Registration Act 1908, s. 17; Indian Stamp Act 1899",
+      "note": "A sale of immovable property worth ₹100 or more can be made only by a registered instrument (Transfer of Property Act 1882, s. 54).",
+      "parts": [
+        {"id": "parties", "label": "Seller and buyer named in full, with addresses", "required": true, "patterns": ["vendor", "vendee", "seller", "purchaser", "between"], "why": "Identifies who is transferring the property and to whom."},
+        {"id": "recitals", "label": "How the seller came to own the property", "required": true, "patterns": ["whereas", "absolutely seized and possessed", "acquired", "title", "previous owner"], "why": "Shows the chain of title the buyer is relying on."},
+        {"id": "consideration", "label": "Sale price and how it was paid", "required": true, "patterns": ["consideration", "sale consideration", "paid a sum", "total consideration", "receipt"], "why": "Sale requires a price paid or promised (Transfer of Property Act 1882, s. 54)."},
+        {"id": "schedule", "label": "Schedule of the property with boundaries and area", "required": true, "patterns": ["schedule", "boundaries", "bounded on the", "east", "west", "survey no", "measuring"], "why": "The property must be described precisely enough to be identified on the ground."},
+        {"id": "possession", "label": "Delivery of possession", "required": true, "patterns": ["possession", "handed over", "delivered possession", "vacant possession"], "why": "Records when the buyer takes the property."},
+        {"id": "encumbrance", "label": "Declaration that the property is free of loans and claims", "required": true, "patterns": ["free from all encumbrances", "encumbrance", "no charge", "not mortgaged", "lien"], "why": "The buyer needs the seller's assurance that no lender or claimant has a right over it."},
+        {"id": "indemnity", "label": "Indemnity by the seller", "required": false, "patterns": ["indemnify", "indemnity", "keep harmless", "make good"], "why": "Gives the buyer a remedy if the title turns out to be defective."},
+        {"id": "stamp", "label": "Stamp duty paid", "required": true, "patterns": ["stamp duty", "e-stamp", "stamp paper", "non-judicial", "franking"], "why": "Stamp duty is payable on the market value; an unstamped deed is inadmissible (Indian Stamp Act 1899, s. 35)."},
+        {"id": "registration", "label": "Registration before the Sub-Registrar", "required": true, "patterns": ["registered", "registration", "sub-registrar", "registrar", "presented for registration"], "why": "An unregistered sale deed does not transfer ownership (Registration Act 1908, s. 17)."},
+        {"id": "witnesses", "label": "Two attesting witnesses", "required": true, "patterns": ["witness", "witnesses", "in the presence of"], "why": "Two witnesses must attest the execution."},
+        {"id": "signatures", "label": "Signatures of seller and buyer", "required": true, "patterns": ["signature", "signed by", "sd/-", "in witness whereof"], "why": "Both sides must execute the deed."}
+      ]
+    },
+    {
+      "id": "central_act",
+      "name": "Act of Parliament as published",
+      "document_type_ids": ["policy.act"],
+      "authority": "The form in which Central Acts are published in the Gazette of India and on India Code",
+      "note": "This checks the published structure of an Act, not its contents. A missing part usually means the copy is an extract rather than the full Act.",
+      "parts": [
+        {"id": "short_title", "label": "Short title with the Act number and year", "required": true, "patterns": ["act no", "act, 20", "act, 19", "short title"], "why": "Every Act carries an official number and year, e.g. \"ACT NO. 35 OF 2019\"."},
+        {"id": "long_title", "label": "Long title: what the Act is for", "required": true, "patterns": ["an act to", "an act further to amend", "to provide for"], "why": "The long title states the purpose and is used to interpret the Act."},
+        {"id": "enacting_formula", "label": "Enacting formula", "required": true, "patterns": ["be it enacted by parliament", "be it enacted by the legislature", "year of the republic of india"], "why": "The words by which Parliament enacts the law."},
+        {"id": "commencement", "label": "Extent and commencement section", "required": true, "patterns": ["extends to the whole of india", "shall come into force", "commencement", "extent"], "why": "Says where the Act applies and from when."},
+        {"id": "definitions", "label": "Definitions section", "required": true, "patterns": ["in this act, unless the context otherwise requires", "definitions", "means and includes"], "why": "Defines the terms the rest of the Act uses."},
+        {"id": "arrangement", "label": "Arrangement of sections (table of contents)", "required": false, "patterns": ["arrangement of sections", "arrangement of clauses", "contents", "chapter i"], "why": "Published Acts carry a table of sections at the front."},
+        {"id": "chapters", "label": "Chapters and numbered sections", "required": true, "patterns": ["chapter", "section"], "why": "The body of the Act."},
+        {"id": "penalties", "label": "Offences and penalties", "required": false, "patterns": ["penalty", "punishable", "imprisonment", "fine which may extend", "offence"], "why": "Most regulatory Acts set out what happens when they are broken."},
+        {"id": "rule_making", "label": "Power to make rules", "required": false, "patterns": ["power to make rules", "may, by notification", "make rules for carrying out"], "why": "Delegates the detail to rules made by the government."},
+        {"id": "schedules", "label": "Schedules", "required": false, "patterns": ["schedule", "the first schedule", "annexure"], "why": "Schedules carry forms, lists and rates referred to in the sections."}
+      ]
+    }
+  ]
+}
