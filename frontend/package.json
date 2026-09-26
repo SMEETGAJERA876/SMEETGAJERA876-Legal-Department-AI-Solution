@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "postinstall": "node scripts/copy-pdf-worker.mjs",
-    "typecheck": "next typegen && tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit",
+    "cf:build": "cross-env OPEN_NEXT_CLOUDFLARE=1 opennextjs-cloudflare build",
+    "cf:preview": "cross-env OPEN_NEXT_CLOUDFLARE=1 opennextjs-cloudflare preview",
+    "cf:deploy": "cross-env OPEN_NEXT_CLOUDFLARE=1 opennextjs-cloudflare build && wrangler deploy"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
@@ -26,14 +29,17 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.6",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.141.0"
   }
 }

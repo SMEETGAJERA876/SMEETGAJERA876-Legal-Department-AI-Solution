@@ -1,0 +1,13 @@
+{
+  // Cloudflare Workers config for the ClauseLens web app, built by @opennextjs/cloudflare.
+  // See open-next.config.ts and package.json's cf:build / cf:deploy scripts.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "clauselens-web",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-26",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  }
+}
