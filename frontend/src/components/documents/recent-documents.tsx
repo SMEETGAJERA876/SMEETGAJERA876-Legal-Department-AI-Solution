@@ -3,8 +3,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CircleAlert, FileText, LoaderCircle, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { deleteDocument, fetchDocuments, type DocumentInfo } from "@/lib/api";
 import { formatBytes, formatDate } from "@/lib/format";
 
@@ -20,9 +29,15 @@ export function RecentDocuments() {
         ? PROCESSING_POLL_MS
         : false,
   });
+  // Deleting removes the file and everything extracted from it, and cannot be undone, so it
+  // is never one click on an icon: the document is named back before anything happens.
+  const [confirming, setConfirming] = useState<DocumentInfo | null>(null);
   const remove = useMutation({
     mutationFn: deleteDocument,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["documents"] }),
+    onSuccess: () => {
+      setConfirming(null);
+      return queryClient.invalidateQueries({ queryKey: ["documents"] });
+    },
   });
 
   if (isPending) return null;
@@ -71,16 +86,83 @@ export function RecentDocuments() {
             <Button
               variant="ghost"
               size="icon-sm"
+              className="text-muted-foreground hover:bg-red-50 hover:text-danger"
               aria-label={`Delete ${document.original_filename}`}
-              disabled={remove.isPending}
-              onClick={() => remove.mutate(document.id)}
+              onClick={() => {
+                remove.reset();
+                setConfirming(document);
+              }}
             >
               <Trash2 />
             </Button>
           </li>
         ))}
       </ul>
+
+      <ConfirmDelete
+        document={confirming}
+        pending={remove.isPending}
+        error={remove.error?.message ?? null}
+        onCancel={() => setConfirming(null)}
+        onConfirm={(id) => remove.mutate(id)}
+      />
     </section>
+  );
+}
+
+function ConfirmDelete({
+  document,
+  pending,
+  error,
+  onCancel,
+  onConfirm,
+}: {
+  document: DocumentInfo | null;
+  pending: boolean;
+  error: string | null;
+  onCancel: () => void;
+  onConfirm: (id: string) => void;
+}) {
+  // The dialog fades out rather than vanishing, so it is still on screen after the choice is
+  // made. Keep the last document to name during that moment, or the title reads Delete “”?
+  const [shown, setShown] = useState(document);
+  if (document !== null && document !== shown) setShown(document);
+
+  return (
+    <Dialog open={document !== null} onOpenChange={(next) => !next && !pending && onCancel()}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Delete “{shown?.original_filename}”?</DialogTitle>
+          <DialogDescription>
+            The file and everything read from it — pages, clauses, key facts and your questions
+            about it — are removed. This cannot be undone.
+          </DialogDescription>
+        </DialogHeader>
+        <p className="flex gap-2 rounded-lg border border-warning/30 bg-amber-50 p-3 text-xs text-foreground/80">
+          <CircleAlert className="mt-0.5 size-4 shrink-0 text-warning" aria-hidden />
+          Deleting the copy here does not affect the original document you were given, and is
+          not a substitute for telling whoever issued it.
+        </p>
+        {error && (
+          <p className="text-sm text-danger" role="alert">
+            {error}
+          </p>
+        )}
+        <DialogFooter>
+          <Button variant="outline" onClick={onCancel} disabled={pending}>
+            Keep it
+          </Button>
+          <Button
+            className="bg-danger text-white hover:bg-danger/90"
+            disabled={pending || !document}
+            onClick={() => document && onConfirm(document.id)}
+          >
+            {pending ? <LoaderCircle className="animate-spin" aria-hidden /> : <Trash2 aria-hidden />}
+            Delete permanently
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
