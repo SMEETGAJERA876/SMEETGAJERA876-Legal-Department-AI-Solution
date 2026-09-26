@@ -15,6 +15,7 @@ Files: `dataset/indiacode/consumer_protection_act_2019.pdf` (real Act, 42 pages)
 | 2:00 | Search *"builder refund"* in a RERA Act, or ask *"Will I get my money back if the builder delays possession?"* | "Everyday words are mapped to legal ones — 'builder' is 'promoter' in the law." |
 | 2:05 | On the answer, click **Simple words** | "Same clause, everyday words — 'person aggrieved' becomes 'person affected', 'forty-five days' becomes '45 days'. The original stays above it, because the original is what counts." |
 | 2:20 | Rental agreement → **Format** tab | "And this compares the document with the form the law asks for: 6 of 11 required parts. No stamp duty, no signatures, no witnesses — each with the provision that asks for it." |
-| 2:30 | Employment agreement → *Check document* → auto-repair → download corrected PDF | "Mistakes with page and fix; the original is never changed." |
+| 2:25 | Upload an AI-drafted “rent agreement” → **Not accepted** | "And a document that was never issued by anyone is refused, with the reason: the file itself names the tool that wrote it, and the assistant's own words are still in the text. We never judge this from writing style — that would reject real government notices." |
+| 2:35 | Employment agreement → *Check document* → auto-repair → download corrected PDF | "Mistakes with page and fix; the original is never changed." |
 | 2:40 | *Summary PDF* | "Dates, notice periods, deadlines and money in one page each with its source." |
 | 2:50 | [Evaluation.md](Evaluation.md) table | "Measured on 8 real Acts with a held-out split: right section in the top 3 for 100 % of held-out questions." |

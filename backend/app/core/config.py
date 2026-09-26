@@ -59,6 +59,11 @@ class Settings(BaseSettings):
     # data/formats (official formats each document kind is compared against). Empty = the
     # repository's data/formats.
     formats_dir: str = ""
+
+    # What to do when there is strong, checkable evidence that a document is not what it
+    # claims to be (services/authenticity.py): "warn" accepts it and says so prominently,
+    # "reject" refuses it, "off" does not look. Never decided from writing style.
+    authenticity_policy: Literal["warn", "reject", "off"] = "warn"
     max_upload_size_mb: int = 25
 
     # Embeddings run locally (no API key needed); the model is downloaded once.

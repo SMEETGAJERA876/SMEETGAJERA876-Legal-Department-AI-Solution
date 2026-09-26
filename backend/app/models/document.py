@@ -76,6 +76,10 @@ class Document(IdMixin, CreatedAtMixin, Base):
     is_demo: Mapped[bool] = mapped_column(
         Boolean, default=False, server_default="false", index=True
     )
+    # Evidence about how the document was made (services/authenticity.py): "ordinary",
+    # "check" or "concerns", and the signals behind it.
+    authenticity_verdict: Mapped[str | None] = mapped_column(String(20), index=True)
+    authenticity: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
 
     pages: Mapped[list["DocumentPage"]] = relationship(
         back_populates="document",

@@ -33,6 +33,7 @@ import {
 } from "@/lib/api";
 import { AskPanel } from "./ask-panel";
 import { CheckPanel } from "./check-panel";
+import { AuthenticityPanel } from "./authenticity-panel";
 import { FormatPanel } from "./format-panel";
 import { OverviewPanel } from "./overview-panel";
 import type { ViewerTarget } from "./pdf-viewer";
@@ -56,7 +57,7 @@ type SideTab = "search" | "check" | "format";
 const SIDE_TABS: { value: SideTab; label: string; icon: typeof FileText }[] = [
   { value: "search", label: "Search", icon: Search },
   { value: "check", label: "Mistakes", icon: SpellCheck },
-  { value: "format", label: "Format", icon: Scale },
+  { value: "format", label: "Verify", icon: Scale },
 ];
 
 const MOBILE_TABS: { value: MobileTab; label: string; icon: typeof FileText }[] = [
@@ -165,10 +166,28 @@ export function DocumentWorkspace({
       ) : (
         <>
           {demo && <DemoBanner />}
+          {document.authenticity_verdict === "concerns" && <AuthenticityBanner />}
           <ReadyWorkspace documentId={documentId} demo={demo} />
         </>
       )}
     </div>
+  );
+}
+
+/** Strong evidence that the file is not an issued document — said before anything is read. */
+function AuthenticityBanner() {
+  return (
+    <p
+      className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 border-b border-danger/30 bg-red-50 px-4 py-1.5 text-center text-xs text-foreground"
+      role="alert"
+    >
+      <CircleAlert className="size-3.5 shrink-0 text-danger" aria-hidden />
+      <span>
+        <strong className="font-semibold">Check this document before relying on it.</strong>{" "}
+        Something about how this file was made does not match an issued document — see{" "}
+        <em>Verify</em>.
+      </span>
+    </p>
   );
 }
 
@@ -252,7 +271,10 @@ function ReadyWorkspace({ documentId, demo }: { documentId: string; demo: boolea
           ) : sideTab === "check" ? (
             <CheckPanel documentId={documentId} onShowSource={showSource} readOnly={demo} />
           ) : (
-            <FormatPanel documentId={documentId} onShowSource={showSource} />
+            <>
+              <AuthenticityPanel documentId={documentId} onShowSource={showSource} />
+              <FormatPanel documentId={documentId} onShowSource={showSource} />
+            </>
           )}
         </aside>
 

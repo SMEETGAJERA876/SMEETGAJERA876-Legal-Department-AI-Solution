@@ -16,6 +16,8 @@ automated tests (`backend/tests/test_auth.py`, `test_security.py`, `test_demo.py
 | Insecure deployment | With `ENVIRONMENT=production` the API refuses to start without sign-in, an encryption key, a specific CORS origin and rate limits | `core/security.py::check_production_settings` |
 | Leaking internals | Uniform error format, no stack traces to clients | `main.py` |
 | AI making things up | Answers only from the document, with citations checked against it; "not found" when the subject isn't in the document | `services/answerability.py`, [Evaluation.md](Evaluation.md) |
+| A forged or AI-drafted document passed off as official | Evidence-based checks on the file itself: producer metadata, impossible or late edit dates, an assistant's own words, unfilled placeholders, missing official markings. `AUTHENTICITY_POLICY=reject` refuses a document on strong evidence. Never decided from writing style | `services/authenticity.py`, [Authenticity.md](Authenticity.md) |
+| Wrongly accusing a genuine document | Only checkable facts can refuse a document, never prose style; all 25 real documents in the repository are asserted to pass on every test run | `tests/test_authenticity.py` |
 | Training on user data | Uploads are never used to train or tune models; evaluation uses public statutes and synthetic samples only | [Data_Governance.md](Data_Governance.md) |
 
 ## Secrets

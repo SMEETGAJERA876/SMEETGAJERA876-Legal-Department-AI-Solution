@@ -1,4 +1,4 @@
-import { Code2, FileSearch, Lock, ScrollText, Sparkles } from "lucide-react";
+import { Lock, ScrollText, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Disclaimer } from "@/components/system/disclaimer";
 
@@ -21,32 +21,11 @@ const SAFEGUARDS = [
   { icon: Lock, text: "Your documents are private to your Google account and encrypted at rest" },
 ];
 
-const REPOSITORY = "https://github.com/SMEETGAJERA876/SMEETGAJERA876-Legal-Department-AI-Solution";
-
-/** The footer at the end of every page: what this is, what it can read, and what it will not do. */
+/** The footer at the end of every page: where to start, what it reads, and what it will not do. */
 export function SiteFooter() {
   return (
     <footer className="mt-auto border-t bg-card">
-      <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="space-y-3">
-          <span className="flex items-center gap-2 text-sm font-semibold text-primary">
-            <FileSearch className="size-5" aria-hidden />
-            ClauseLens AI
-          </span>
-          <p className="text-sm text-pretty text-muted-foreground">
-            Understand any legal or official document — and see the page that proves it.
-          </p>
-          <a
-            href={REPOSITORY}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-          >
-            <Code2 className="size-4" aria-hidden />
-            Source code
-          </a>
-        </div>
-
+      <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-3">
         <nav aria-labelledby="footer-product" className="space-y-3">
           <h2 id="footer-product" className="text-sm font-semibold">
             Start here

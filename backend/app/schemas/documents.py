@@ -29,6 +29,8 @@ class DocumentOut(BaseModel):
     changes: list[dict[str, Any]] = []
     # Part of the public read-only demo: the website hides anything that would change it.
     is_demo: bool = False
+    #: "concerns", "check" or "ordinary" — see AuthenticityOut.
+    authenticity_verdict: str | None = None
 
 
 class SourceRef(BaseModel):
@@ -122,6 +124,29 @@ class SimplifyOut(BaseModel):
     #: version. False means the passage is already in everyday words.
     worth_showing: bool
     terms: list[TermOut]
+
+
+class AuthenticitySignalOut(BaseModel):
+    id: str
+    label: str
+    severity: Literal["high", "medium", "info"]
+    detail: str
+    evidence: str | None
+    page_number: int | None
+
+
+class AuthenticityOut(BaseModel):
+    """Evidence about how a document was made — never a verdict of "fake" or "genuine"."""
+
+    #: False when the check is switched off or the document has not been checked yet.
+    available: bool
+    #: "concerns" (strong evidence), "check" (worth a look), "ordinary" (nothing found).
+    verdict: Literal["concerns", "check", "ordinary"] | None = None
+    #: What the file records about itself, shown as-is.
+    provenance: dict[str, str] = {}
+    signals: list[AuthenticitySignalOut] = []
+    #: What the server does on strong evidence: "warn", "reject" or "off".
+    policy: str = "warn"
 
 
 class FormatPartOut(BaseModel):

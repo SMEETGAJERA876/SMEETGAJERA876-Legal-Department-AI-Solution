@@ -13,7 +13,7 @@ those documents stay private to your account. Details: [docs/Demo.md](docs/Demo.
 
 Specs: [Problem statement](ProblemStatement.md.txt) · [PRD](PRD.md.txt) · [Architecture](Architecture.md.txt) · [Design](Design.md.txt) · [Phases](Phases.md.txt) · [Rules](Rules.md.txt)
 
-**Docs:** [Public demo](docs/Demo.md) · [Plain language](docs/Plain_Language.md) · [Official formats](docs/Formats.md) · [Architecture](docs/Architecture.md) · [AI pipeline](docs/AI_Pipeline.md) · [Evaluation](docs/Evaluation.md) · [API](docs/API.md) · [Database](docs/Database.md) · [Security](docs/Security.md) · [Deployment](docs/Deployment.md) · [Demo script](docs/Demo_Script.md)
+**Docs:** [Public demo](docs/Demo.md) · [Plain language](docs/Plain_Language.md) · [Official formats](docs/Formats.md) · [Authenticity](docs/Authenticity.md) · [Architecture](docs/Architecture.md) · [AI pipeline](docs/AI_Pipeline.md) · [Evaluation](docs/Evaluation.md) · [API](docs/API.md) · [Database](docs/Database.md) · [Security](docs/Security.md) · [Deployment](docs/Deployment.md) · [Demo script](docs/Demo_Script.md)
 
 ## Why it matters
 
@@ -36,6 +36,24 @@ Employees, tenants, home buyers and citizens receiving government notices sign o
 - **Typo-tolerant**: "notice pperiod" → "Showing results for notice period".
 - **Exact-word search marks the exact word** on the page, not just the paragraph.
 - **Questions about the tool itself** ("Why should I use this?", "Why not a general-purpose assistant?") get a clearly labelled "About ClauseLens" answer — never presented as document content.
+
+### Is this document what it claims to be?
+
+The **Verify** tab reports evidence about how the file was made
+([docs/Authenticity.md](docs/Authenticity.md)): the PDF naming an AI writing tool as its
+producer, an assistant's own words left in the text (*"Here is a draft"*), impossible or late
+edit dates, an earlier version saved inside the file, unfilled template placeholders, a few words
+in a typeface used nowhere else, or an official notice with no reference number, authority, date
+or signature. Each finding carries the page and the exact words.
+
+`AUTHENTICITY_POLICY=reject` refuses such a document outright — it is marked *Not accepted* with
+the reason, and none of its content is offered.
+
+**It never decides this from writing style.** AI-text detectors are unreliable and fail worst on
+formal, templated prose, which is what legal and government writing is; refusing a citizen's
+genuine notice because a detector disliked its wording is a worse failure than missing a fake.
+Only checkable facts about the file can refuse it. All 25 real documents in this repository are
+asserted to pass, with zero rejections, on every test run.
 
 ### Plain language, both ways
 
@@ -122,6 +140,7 @@ Private to the uploading Google account (others get "not found") · files **encr
 | [docs/Demo.md](docs/Demo.md) | The public read-only demo: what a visitor may do, how the access rule works, how to seed it |
 | [docs/Plain_Language.md](docs/Plain_Language.md) | Translating both ways, and the rule that keeps a simplification safe |
 | [docs/Formats.md](docs/Formats.md) | The official formats documents are compared against, and how to add one |
+| [docs/Authenticity.md](docs/Authenticity.md) | Evidence that a document is not what it claims to be, and the line this feature does not cross |
 
 Machine-readable: `data/schemas/` (JSON Schema 2020-12), `data/taxonomy/`, `data/formats/`, `data/examples/`, `dataset/`. `backend/tests/test_taxonomy_data.py` keeps them consistent with each other, with the docs, and with the extraction engine.
 
@@ -141,7 +160,8 @@ backend/    FastAPI + SQLAlchemy + Alembic + pgvector (Python, managed with uv)
                   legal_facts, conversations, messages, citations
     services/     pdf_extraction, chunking, concepts, embeddings, search,
                   ai_provider, qa, questions, processing, storage,
-                  simplify (formal → everyday wording), formats (official formats)
+                  simplify (formal → everyday wording), formats (official formats),
+                  authenticity (evidence about how a document was made)
   migrations/     Alembic migrations
   scripts/        dev_db.py (local PostgreSQL + pgvector, no Docker), make_sample_pdf.py,
                   fetch_indiacode.py (real Acts), benchmark.py, new_encryption_key.py
@@ -239,6 +259,7 @@ uv run python -m scripts.evaluate      # prints PASS/FAIL per question; currentl
 - [x] Public read-only demo: three seeded documents anyone can use without signing in, writes refused for everyone ([docs/Demo.md](docs/Demo.md))
 - [x] Plain-language translation both ways (everyday ↔ formal), local and with no AI key, always shown beside the original ([docs/Plain_Language.md](docs/Plain_Language.md))
 - [x] Comparison against the official format for seven kinds of Indian legal and government document, with page-level evidence ([docs/Formats.md](docs/Formats.md))
+- [x] Forged / AI-drafted document detection from checkable evidence, with an optional reject policy; never judged from writing style ([docs/Authenticity.md](docs/Authenticity.md))
 - [x] Site footer on every page
 - [ ] Phase 13 — Contract comparison
 - [ ] Live deployment (needs a hosting account) and a recorded demo video

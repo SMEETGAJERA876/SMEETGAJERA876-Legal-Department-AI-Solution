@@ -8,12 +8,15 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.auth import current_user, require_document_access
+from app.core.config import get_settings
 from app.core.errors import AppError, NotFoundError, ValidationError
 from app.db.session import get_db
 from app.models import Clause, Document, DocumentStatus, LegalFact
 from app.schemas.documents import (
     AnswerOut,
     AskIn,
+    AuthenticityOut,
+    AuthenticitySignalOut,
     ClassificationIn,
     ConceptOut,
     ConceptSummary,
@@ -420,4 +423,25 @@ def check_against_official_format(document_id: uuid.UUID, db: DbSession) -> Form
             )
             for part in result.parts
         ],
+    )
+
+
+@router.get("/{document_id}/authenticity", response_model=AuthenticityOut)
+def document_authenticity(document_id: uuid.UUID, db: DbSession) -> AuthenticityOut:
+    """Evidence about how this document was made (docs/Authenticity.md).
+
+    Never a verdict of "fake" or "genuine", and never a judgement of writing style — only
+    findings a person can check, each with the page and the exact words.
+    """
+    document = _get_document(db, document_id)
+    policy = get_settings().authenticity_policy
+    report = document.authenticity
+    if policy == "off" or not report:
+        return AuthenticityOut(available=False, policy=policy)
+    return AuthenticityOut(
+        available=True,
+        verdict=report.get("verdict"),
+        provenance=report.get("provenance", {}),
+        signals=[AuthenticitySignalOut(**signal) for signal in report.get("signals", [])],
+        policy=policy,
     )

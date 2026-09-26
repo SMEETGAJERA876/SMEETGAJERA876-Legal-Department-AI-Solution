@@ -63,7 +63,13 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 # PyMuPDF ships partial type hints.
-module = ["app.services.repair", "app.services.pdf_extraction", "app.services.parsing.pdf", "app.core.auth"]
+module = [
+    "app.services.repair",
+    "app.services.pdf_extraction",
+    "app.services.parsing.pdf",
+    "app.services.authenticity",
+    "app.core.auth",
+]
 disallow_untyped_calls = false
 warn_return_any = false
 

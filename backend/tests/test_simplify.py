@@ -106,7 +106,9 @@ def test_plain_words_map_to_the_formal_ones_the_document_uses() -> None:
         ("notice", "notice", False),
     ],
 )
-def test_only_a_real_change_of_word_is_worth_showing(plain: str, legal: str, expected: bool) -> None:
+def test_only_a_real_change_of_word_is_worth_showing(
+    plain: str, legal: str, expected: bool
+) -> None:
     """"complain" → "complaint" is the same word; showing it would be padding."""
     from app.services.qa import _worth_bridging
 

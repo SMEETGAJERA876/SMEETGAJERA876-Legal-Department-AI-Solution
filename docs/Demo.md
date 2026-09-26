@@ -15,6 +15,7 @@ when the document doesn't cover the question — cannot be shown behind a Google
 | Overview, key facts, questions for a professional | ✅ | ✅ |
 | Check document (list the mistakes) | ✅ | ✅ |
 | Compare with the official format ([Formats.md](Formats.md)) | ✅ | ✅ |
+| See where the document came from ([Authenticity.md](Authenticity.md)) | ✅ | ✅ |
 | Plain-language version of any passage ([Plain_Language.md](Plain_Language.md)) | ✅ | ✅ |
 | Download the original PDF / Summary PDF | ✅ | ✅ |
 | Auto-repair into a corrected PDF | ❌ read-only | ✅ on your own document |

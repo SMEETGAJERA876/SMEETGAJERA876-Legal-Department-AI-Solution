@@ -93,6 +93,7 @@ export const documentSchema = z.object({
   processed_at: z.string().nullable(),
   source_document_id: z.string().nullable().optional(),
   is_demo: z.boolean().optional().default(false),
+  authenticity_verdict: z.enum(["concerns", "check", "ordinary"]).nullable().optional(),
   changes: z
     .array(
       z.object({
@@ -165,6 +166,25 @@ export const simplifiedSchema = z.object({
   terms: z.array(termSchema),
 });
 export type SimplifiedText = z.infer<typeof simplifiedSchema>;
+
+export const authenticitySignalSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  severity: z.enum(["high", "medium", "info"]),
+  detail: z.string(),
+  evidence: z.string().nullable(),
+  page_number: z.number().nullable(),
+});
+export type AuthenticitySignal = z.infer<typeof authenticitySignalSchema>;
+
+export const authenticitySchema = z.object({
+  available: z.boolean(),
+  verdict: z.enum(["concerns", "check", "ordinary"]).nullable().optional(),
+  provenance: z.record(z.string(), z.string()).default({}),
+  signals: z.array(authenticitySignalSchema).default([]),
+  policy: z.string().default("warn"),
+});
+export type Authenticity = z.infer<typeof authenticitySchema>;
 
 export const formatPartSchema = z.object({
   id: z.string(),
@@ -318,6 +338,10 @@ export function setDocumentType(id: string, documentTypeId: string) {
 }
 
 export const fetchIssues = (id: string) => request(`/documents/${id}/issues`, issuesSchema);
+
+/** Evidence about how the document was made (docs/Authenticity.md). */
+export const fetchAuthenticity = (id: string) =>
+  request(`/documents/${id}/authenticity`, authenticitySchema);
 
 /** How the document compares with the official format for its kind (data/formats). */
 export const fetchFormatCheck = (id: string) =>

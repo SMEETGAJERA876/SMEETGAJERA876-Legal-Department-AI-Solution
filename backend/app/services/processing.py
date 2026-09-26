@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
+from app.core.config import get_settings
 from app.db.session import SessionLocal
 from app.models import (
     Clause,
@@ -16,7 +17,7 @@ from app.models import (
     DocumentStatus,
     LegalFact,
 )
-from app.services import embeddings, extraction, storage
+from app.services import authenticity, embeddings, extraction, storage
 from app.services.chunking import chunk_pages
 from app.services.classification import classify
 from app.services.parsing import DocumentParseError, parse_file
@@ -48,6 +49,14 @@ def process_document(document_id: uuid.UUID) -> None:
             return
         try:
             _run_pipeline(db, document)
+        except authenticity.DocumentRejected as error:
+            # Not a failure to read the document — a decision not to accept it. The evidence is
+            # kept so the person is told exactly what was found, and where.
+            db.rollback()
+            document.error_message = str(error)
+            document.authenticity_verdict = "concerns"
+            document.authenticity = error.report
+            _set_status(db, document, DocumentStatus.FAILED, "Not accepted")
         except DocumentParseError as error:
             db.rollback()
             document.error_message = str(error)
@@ -136,5 +145,35 @@ def _run_pipeline(db: Session, document: Document) -> None:
     document.category = classification.category
     document.classification = classification.to_json()
     document.parties = extraction.detect_parties(" ".join(pages[:PARTY_DETECTION_PAGES]))
+
+    # Is this document what it claims to be? Runs after classification, because what counts as
+    # a missing marking depends on the kind of document (services/authenticity.py).
+    _check_authenticity(db, document, data, pages, classification.category)
+
     document.processed_at = datetime.now(UTC)
     _set_status(db, document, DocumentStatus.READY, "Ready")
+
+
+def _check_authenticity(
+    db: Session,
+    document: Document,
+    data: bytes,
+    pages: list[str],
+    category: str | None,
+) -> None:
+    """Record the evidence, and refuse the document when the policy says to.
+
+    Only direct, checkable evidence can refuse a document — never how its prose reads. With
+    AUTHENTICITY_POLICY=warn (the default) nothing is refused; the finding is shown instead.
+    """
+    policy = get_settings().authenticity_policy
+    if policy == "off":
+        return
+    _set_status(db, document, DocumentStatus.PROCESSING, "Checking where this document came from")
+    report = authenticity.inspect(data, list(enumerate(pages, start=1)), category)
+    document.authenticity_verdict = report.verdict
+    document.authenticity = report.as_dict()
+    if policy == "reject":
+        reason = authenticity.rejection_reason(report)
+        if reason is not None:
+            raise authenticity.DocumentRejected(reason, report.as_dict())
