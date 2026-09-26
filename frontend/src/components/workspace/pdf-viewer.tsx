@@ -52,9 +52,8 @@ export default function PdfViewer({ fileUrl, target, onPageCountKnown }: Props) 
   const [pageInput, setPageInput] = useState("1");
   const [quote, setQuote] = useState<string | null>(null);
   const [focus, setFocus] = useState<string | null>(null);
-  const [highlights, setHighlights] = useState<HighlightMap>(new Map());
-  const [highlightStatus, setHighlightStatus] = useState<HighlightStatus>("none");
   const [handledRequest, setHandledRequest] = useState<number | null>(null);
+  const [textLayer, setTextLayer] = useState<{ page: number; items: string[] } | null>(null);
 
   // Navigate when a new target (e.g. "View source") arrives — adjusted during render.
   if (target && target.requestId !== handledRequest) {
@@ -63,7 +62,6 @@ export default function PdfViewer({ fileUrl, target, onPageCountKnown }: Props) 
     setPageInput(String(target.page));
     setQuote(target.quote);
     setFocus(target.focus ?? null);
-    setHighlightStatus("none");
   }
 
   useEffect(() => {
@@ -81,25 +79,39 @@ export default function PdfViewer({ fileUrl, target, onPageCountKnown }: Props) 
       setPageInput(String(clamped));
       setQuote(null);
       setFocus(null);
-      setHighlightStatus("none");
     },
     [pageCount],
   );
 
+  // The text layer loads once per page, but a reader can ask for a second clause on the page
+  // they are already looking at. Keep the page's text so the highlight can be recomputed
+  // without waiting for a load that will not happen again.
   const onTextLoaded = useCallback(
     (textContent: TextContent) => {
-      if (!quote) {
-        setHighlights(new Map());
-        return;
-      }
       // Indices must line up with the text layer, so non-text items count as empty.
-      const items = textContent.items.map((item) => ("str" in item ? item.str : ""));
-      const map = locateQuote(items, quote, focus);
-      setHighlights(map);
-      setHighlightStatus(map.size > 0 ? "found" : "not-found");
+      setTextLayer({
+        page,
+        items: textContent.items.map((item) => ("str" in item ? item.str : "")),
+      });
     },
-    [quote, focus],
+    [page],
   );
+
+  // Derived, not stored: asking for a second clause on the page already open changes `quote`
+  // without reloading the text layer, and state written from a load callback would keep the
+  // previous clause's marks.
+  const ready = textLayer !== null && textLayer.page === page;
+  const highlights = useMemo<HighlightMap>(
+    () => (quote && ready && textLayer ? locateQuote(textLayer.items, quote, focus) : new Map()),
+    [textLayer, ready, quote, focus],
+  );
+  const highlightStatus: HighlightStatus = !quote
+    ? "none"
+    : !ready
+      ? "none" // the page's text has not arrived yet; saying "not found" now would be wrong
+      : highlights.size > 0
+        ? "found"
+        : "not-found";
 
   const textRenderer = useCallback(
     ({ str, itemIndex }: { str: string; itemIndex: number }) =>
@@ -112,6 +124,15 @@ export default function PdfViewer({ fileUrl, target, onPageCountKnown }: Props) 
       ?.querySelector("mark.clause-highlight")
       ?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, []);
+
+  // Scroll for a clause on the page already open, where the text layer never reloads and so
+  // onRenderTextLayerSuccess never fires again. handledRequest is a dependency so that asking
+  // for the same source twice scrolls back to it both times.
+  useEffect(() => {
+    if (highlights.size === 0) return;
+    const frame = requestAnimationFrame(scrollToHighlight);
+    return () => cancelAnimationFrame(frame);
+  }, [highlights, handledRequest, scrollToHighlight]);
 
   const pageWidth = useMemo(() => {
     const available = Math.max(0, containerWidth - PAGE_GUTTER_PX);
